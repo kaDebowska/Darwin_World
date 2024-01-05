@@ -1,0 +1,29 @@
+.root {
+    -fx-background-color: #f0f0f0;
+    -fx-padding: 20px;
+}
+
+Button {
+    -fx-background-color: #0078d7;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-margin: 10px;
+    -fx-alignment: center;
+}
+
+TextField, Label {
+    -fx-font-size: 14px;
+    -fx-margin: 10px;
+}
+
+VBox, GridPane {
+    -fx-alignment: center;
+    -fx-spacing: 10px;
+    -fx-margin: 10px;
+}
+
+ScrollPane {
+    -fx-alignment: center;
+    -fx-fit-to-height: true;
+    -fx-fit-to-width: true;
+}
