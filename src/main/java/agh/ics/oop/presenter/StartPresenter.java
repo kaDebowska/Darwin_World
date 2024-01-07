@@ -11,7 +11,7 @@ public class StartPresenter {
     private SimulationApp application;
 
     @FXML
-    private TextField movesField;
+//    private TextField movesField;
 
     public void setApplication(SimulationApp application) {
         this.application = application;
@@ -19,9 +19,9 @@ public class StartPresenter {
 
     @FXML
     private void onSimulationStartClicked() {
-        String moves = movesField.getText();
+//        String moves = movesField.getText();
         try {
-            application.startNewSimulation(moves);
+            application.startNewSimulation();
         } catch (IOException e) {
             e.printStackTrace();
         }

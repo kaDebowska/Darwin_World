@@ -9,13 +9,13 @@
             minHeight="200.0" minWidth="550.0"
             fx:controller="agh.ics.oop.presenter.StartPresenter">
     <top>
-        <Label text="Provide your moves for the simulation (f, b, l, r). Each animation will start in new window."
+        <Label text="Click start to start the simulation."
                textAlignment="CENTER"/>
     </top>
     <center>
 
         <VBox>
-            <TextField fx:id="movesField"/>
+<!--            <TextField fx:id="movesField"/>-->
             <Button text="Start" onAction="#onSimulationStartClicked"/>
         </VBox>
     </center>

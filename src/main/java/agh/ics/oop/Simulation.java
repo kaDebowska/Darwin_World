@@ -8,23 +8,27 @@ import java.util.List;
 public class Simulation implements Runnable {
 
     private List<Animal> listOfAnimals;
-    private List<MoveDirection> movements;
     private WorldMap map;
+    private volatile boolean running = true;
 
-    // I prefer to use ArrayList here, since in the run method I need to often access animals by their index.
-    public Simulation(List<Vector2d> positions, List<MoveDirection> movements, WorldMap map) {
+    public Simulation(List<Vector2d> positions, WorldMap map) {
         this.listOfAnimals = new ArrayList<>();
         for (Vector2d position : positions) {
             this.listOfAnimals.add(new Animal(position));
         }
-        this.movements = movements;
         this.map = map;
+    }
+
+    public void pause() {
+        running = false;
+    }
+
+    public void resume() {
+        running = true;
     }
 
     @Override
     public void run() {
-        int numberOfAnimals = this.listOfAnimals.size();
-
         for (Animal animal : this.listOfAnimals) {
             try {
                 map.place(animal);
@@ -32,11 +36,9 @@ public class Simulation implements Runnable {
                 ex.printStackTrace();
             }
         }
-        if (this.movements != null && this.listOfAnimals != null && this.map != null) {
-            for (int i = 0; i < this.movements.size(); i++) {
-                Animal animal = this.listOfAnimals.get(i % numberOfAnimals);
-                MoveDirection move = this.movements.get(i);
-                this.map.move(animal, move);
+        while (running) {
+            for (Animal animal : this.listOfAnimals) {
+                this.map.move(animal);
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {

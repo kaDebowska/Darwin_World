@@ -116,18 +116,9 @@ public class SimulationPresenter implements MapChangeListener {
 
     @FXML
     public void onSimulationStartClicked() {
-        List<MoveDirection> directions;
-//        we could place some small validation here, by I am leaving it as is, since I like exception handling here :)
-        String[] moves = this.moves.replaceAll("[^a-zA-Z]", "").split("");
-        try {
-            directions = OptionsParser.parseDirections(moves);
-        } catch (IllegalArgumentException ex) {
-            this.movesLabel.setText(ex.getMessage());
-            return;
-        }
 
         List<Vector2d> positions = List.of(new Vector2d(2, 2), new Vector2d(3, 4));
-        Simulation grassFieldSimulation = new Simulation(positions, directions, this.worldMap);
+        Simulation grassFieldSimulation = new Simulation(positions, this.worldMap);
         List<Simulation> simulations = new ArrayList<>();
         simulations.add(grassFieldSimulation);
 

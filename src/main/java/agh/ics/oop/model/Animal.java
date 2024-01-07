@@ -1,10 +1,15 @@
 package agh.ics.oop.model;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+
 public class Animal implements WorldElement {
 
-    private MapDirection orientation;
-
+    private int orientation;
     private Vector2d position;
+    private List<Integer> genome;
+    private Iterator<Integer> genomeIterator;
 
 
     public Animal() {
@@ -12,11 +17,13 @@ public class Animal implements WorldElement {
     }
 
     public Animal(Vector2d position) {
-        this.orientation = MapDirection.NORTH;
+        this.orientation = new Random().nextInt(8);
         this.position = position;
+        this.genome = List.of(6,6,6,2,1,3,7);
+        this.genomeIterator = genome.iterator();
     }
 
-    private void setOrientation(MapDirection orientation) {
+    private void setOrientation(int orientation) {
         this.orientation = orientation;
     }
 
@@ -24,40 +31,59 @@ public class Animal implements WorldElement {
         this.position = position;
     }
 
-    public MapDirection getOrientation() {
-        return orientation;
-    }
+//    public MapDirection getOrientation() {
+//        return orientation;
+//    }
 
     public Vector2d getPosition() {
         return position;
     }
 
+    public List<Integer> getGenome() {
+        return this.genome;
+    }
+
+    public int getNextGene() {
+        if (!genomeIterator.hasNext()) {
+            genomeIterator = genome.iterator();
+        }
+        return genomeIterator.next();
+    }
+
     @Override
     public String toString() {
-        return this.orientation.toString();
+        return String.valueOf(this.orientation);
     }
 
     public boolean isAt(Vector2d position) {
         return this.position.equals(position);
     }
 
+    public Vector2d toUnitVector(int orientation) {
+        return getVector2d(orientation);
+    }
 
-    public void move(MoveValidator moveValidator, MoveDirection direction) {
+    static Vector2d getVector2d(int orientation) {
+        return switch (orientation) {
+            case 0 -> new Vector2d(0, 1);
+            case 1 -> new Vector2d(1, 1);
+            case 2 -> new Vector2d(1, 0);
+            case 3 -> new Vector2d(1, -1);
+            case 4 -> new Vector2d(0, -1);
+            case 5 -> new Vector2d(-1, -1);
+            case 6 -> new Vector2d(-1, 0);
+            case 7 -> new Vector2d(-1, 1);
+            default -> throw new IllegalArgumentException("Invalid orientation");
+        };
+    }
+
+
+    public void move(MoveValidator moveValidator, int direction) {
         Vector2d newPosition;
-        switch (direction) {
-            case RIGHT -> this.setOrientation(this.orientation.next());
-            case LEFT -> this.setOrientation(this.orientation.previous());
-            case FORWARD -> {
-                newPosition = this.position.add(this.orientation.toUnitVector());
-                if (moveValidator.canMoveTo(newPosition))
-                    this.setPosition(newPosition);
-            }
-            case BACKWARD -> {
-                newPosition = this.position.substract(this.orientation.toUnitVector());
-                if (moveValidator.canMoveTo(newPosition))
-                    this.setPosition(newPosition);
-            }
-        }
+        this.setOrientation((this.orientation + direction) % 8); // Add direction to orientation and take modulo 8
+        newPosition = this.position.add(this.toUnitVector(this.orientation));
+        if (moveValidator.canMoveTo(newPosition))
+            this.setPosition(newPosition);
     }
 
 

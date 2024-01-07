@@ -35,7 +35,7 @@ public class SimulationApp extends Application {
         });
     }
 
-    public void startNewSimulation(String moves) throws IOException {
+    public void startNewSimulation() throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
         BorderPane viewRoot = loader.load();
@@ -43,7 +43,7 @@ public class SimulationApp extends Application {
         SimulationPresenter presenter = loader.getController();
         AbstractWorldMap grassFieldMap = new GrassField(10);
         presenter.setWorldMap(grassFieldMap);
-        presenter.setMoves(moves);
+//        presenter.setMoves(moves);
 
         Stage stage = new Stage();
         configureStage(stage, viewRoot);

@@ -25,11 +25,11 @@ public class World {
         for (int i = 0; i < 500; i++) {
             AbstractWorldMap grassFieldMap = new GrassField(10);
             grassFieldMap.subscribe(consoleDisplay);
-            Simulation grassFieldSimulation = new Simulation(positions, directions, grassFieldMap);
+            Simulation grassFieldSimulation = new Simulation(positions, grassFieldMap);
             simulations.add(grassFieldSimulation);
             AbstractWorldMap rectangularMap = new RectangularMap(5, 5);
             rectangularMap.subscribe(consoleDisplay);
-            Simulation rectangularMapSimulation = new Simulation(positions, directions, rectangularMap);
+            Simulation rectangularMapSimulation = new Simulation(positions, rectangularMap);
             simulations.add(rectangularMapSimulation);
         }
 

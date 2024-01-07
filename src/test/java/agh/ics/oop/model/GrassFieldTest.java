@@ -32,11 +32,11 @@ public class GrassFieldTest {
         assertTrue(field.place(newAnimal));
     }
 
-    @Test
-    public void testMove() {
-        field.move(animal, MoveDirection.FORWARD);
-        assertEquals(new Vector2d(2, 3), animal.getPosition());
-    }
+//    @Test
+//    public void testMove() {
+//        field.move(animal, MoveDirection.FORWARD);
+//        assertEquals(new Vector2d(2, 3), animal.getPosition());
+//    }
 
     @Test
     public void testIsOccupied() {
