@@ -39,11 +39,11 @@ public class Simulation implements Runnable {
         while (running) {
             for (Animal animal : this.listOfAnimals) {
                 this.map.move(animal);
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+            }
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
         }
     }
