@@ -4,12 +4,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import static java.lang.Math.abs;
+
 public class Animal implements WorldElement {
 
     private int orientation;
     private Vector2d position;
     private List<Integer> genome;
     private Iterator<Integer> genomeIterator;
+
+    private WorldMap map;
 
 
     public Animal() {
@@ -22,6 +26,18 @@ public class Animal implements WorldElement {
         this.genome = List.of(6,6,6,2,1,3,7);
         this.genomeIterator = genome.iterator();
     }
+
+    public Animal(WorldMap map, Vector2d position, int orientation){
+        this(map, position);
+        this.orientation = orientation;
+    }
+
+    public Animal(WorldMap map, Vector2d position){
+        this(position);
+        this.map = map;
+    }
+
+
 
     private void setOrientation(int orientation) {
         this.orientation = orientation;
@@ -37,6 +53,10 @@ public class Animal implements WorldElement {
 
     public Vector2d getPosition() {
         return position;
+    }
+
+    public int getOrientation() {
+        return orientation;
     }
 
     public List<Integer> getGenome() {
@@ -84,7 +104,17 @@ public class Animal implements WorldElement {
         newPosition = this.position.add(this.toUnitVector(this.orientation));
         if (moveValidator.canMoveTo(newPosition))
             this.setPosition(newPosition);
+        else if (moveValidator.isTopOrBottomMapEdge(newPosition) & moveValidator.isLeftOrRightMapEdge(newPosition)){
+            newPosition = new Vector2d((abs(newPosition.getX() - map.getCurrentBounds().topRight().getX()) - 1), (abs(newPosition.getY()) - 1));
+            this.setPosition(newPosition);
+            this.setOrientation((this.orientation + 4) % 8);
+        }
+        else if (moveValidator.isLeftOrRightMapEdge(newPosition)){
+            newPosition = new Vector2d((abs(newPosition.getX() - map.getCurrentBounds().topRight().getX()) - 1), newPosition.getY());
+            this.setPosition(newPosition);
+        }
+        else if (moveValidator.isTopOrBottomMapEdge(newPosition)){
+            this.setOrientation((this.orientation + 4) % 8);
+        }
     }
-
-
 }

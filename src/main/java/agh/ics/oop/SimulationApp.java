@@ -41,8 +41,8 @@ public class SimulationApp extends Application {
         BorderPane viewRoot = loader.load();
 
         SimulationPresenter presenter = loader.getController();
-        AbstractWorldMap grassFieldMap = new GrassField(10);
-        presenter.setWorldMap(grassFieldMap);
+//        AbstractWorldMap grassFieldMap = new GrassField(10);
+//        presenter.setWorldMap(grassFieldMap);
 //        presenter.setMoves(moves);
 
         Stage stage = new Stage();

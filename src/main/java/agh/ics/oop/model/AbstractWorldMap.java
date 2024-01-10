@@ -7,18 +7,47 @@ import java.util.*;
 public abstract class AbstractWorldMap implements WorldMap {
 
     protected Map<Vector2d, Animal> animals;
+
+    private final Map<Vector2d, Grass> grassClumps;
     private List<MapChangeListener> listeners;
     private UUID uuid;
 
-    public AbstractWorldMap() {
+    private final int width;
+    private final int height;
+
+    public AbstractWorldMap(int width, int height) {
         this.animals = new HashMap<>();
+        this.grassClumps = new HashMap<>();
         this.listeners = new ArrayList<>();
         this.uuid = UUID.randomUUID();
+        this.width = width;
+        this.height = height;
+
+    }
+
+
+    private boolean isWithinMap(Vector2d position) {
+        return position.precedes(new Vector2d(this.width, this.height)) && position.follows(new Vector2d(0, 0));
+    }
+
+
+    public boolean canMoveTo(Vector2d position) {
+        return isWithinMap(position);
+    }
+
+    public boolean isTopOrBottomMapEdge(Vector2d position){
+        return position.getY() == this.height + 1 || position.getY() == - 1;
+    }
+
+    public boolean isLeftOrRightMapEdge(Vector2d position){
+        return position.getX() == this.width + 1 || position.getX() == -1;
     }
 
     @Override
-    public boolean canMoveTo(Vector2d position) {
-        return !animals.containsKey(position);
+    public Boundary getCurrentBounds() {
+        Vector2d bottomLeft = new Vector2d(0, 0);
+        Vector2d topRight = new Vector2d(this.width, this.height);
+        return new Boundary(bottomLeft, topRight);
     }
 
     @Override

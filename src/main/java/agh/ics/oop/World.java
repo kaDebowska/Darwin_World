@@ -23,10 +23,10 @@ public class World {
         List<Simulation> simulations = new ArrayList<>();
 
         for (int i = 0; i < 500; i++) {
-            AbstractWorldMap grassFieldMap = new GrassField(10);
-            grassFieldMap.subscribe(consoleDisplay);
-            Simulation grassFieldSimulation = new Simulation(positions, grassFieldMap);
-            simulations.add(grassFieldSimulation);
+//            AbstractWorldMap grassFieldMap = new GrassField(10);
+//            grassFieldMap.subscribe(consoleDisplay);
+//            Simulation grassFieldSimulation = new Simulation(positions, grassFieldMap);
+//            simulations.add(grassFieldSimulation);
             AbstractWorldMap rectangularMap = new RectangularMap(5, 5);
             rectangularMap.subscribe(consoleDisplay);
             Simulation rectangularMapSimulation = new Simulation(positions, rectangularMap);
