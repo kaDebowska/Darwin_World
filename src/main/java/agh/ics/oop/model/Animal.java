@@ -98,22 +98,22 @@ public class Animal implements WorldElement {
     }
 
 
-    public void move(MoveValidator moveValidator, int direction) {
+    public void move(AbstractWorldMap abstractWorldMap, int direction) {
         Vector2d newPosition;
         this.setOrientation((this.orientation + direction) % 8);
         newPosition = this.position.add(this.toUnitVector(this.orientation));
-        if (moveValidator.canMoveTo(newPosition))
+        if (abstractWorldMap.canMoveTo(newPosition))
             this.setPosition(newPosition);
-        else if (moveValidator.isTopOrBottomMapEdge(newPosition) & moveValidator.isLeftOrRightMapEdge(newPosition)){
+        else if (abstractWorldMap.isTopOrBottomMapEdge(newPosition) & abstractWorldMap.isLeftOrRightMapEdge(newPosition)){
             newPosition = new Vector2d((abs(newPosition.getX() - map.getCurrentBounds().topRight().getX()) - 1), (abs(newPosition.getY()) - 1));
             this.setPosition(newPosition);
             this.setOrientation((this.orientation + 4) % 8);
         }
-        else if (moveValidator.isLeftOrRightMapEdge(newPosition)){
+        else if (abstractWorldMap.isLeftOrRightMapEdge(newPosition)){
             newPosition = new Vector2d((abs(newPosition.getX() - map.getCurrentBounds().topRight().getX()) - 1), newPosition.getY());
             this.setPosition(newPosition);
         }
-        else if (moveValidator.isTopOrBottomMapEdge(newPosition)){
+        else if (abstractWorldMap.isTopOrBottomMapEdge(newPosition)){
             this.setOrientation((this.orientation + 4) % 8);
         }
     }

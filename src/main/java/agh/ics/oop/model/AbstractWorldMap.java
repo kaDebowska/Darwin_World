@@ -8,16 +8,14 @@ public abstract class AbstractWorldMap implements WorldMap {
 
     protected Map<Vector2d, Animal> animals;
 
-    private final Map<Vector2d, Grass> grassClumps;
     private List<MapChangeListener> listeners;
     private UUID uuid;
 
-    private final int width;
-    private final int height;
+    protected final int width;
+    protected final int height;
 
     public AbstractWorldMap(int width, int height) {
         this.animals = new HashMap<>();
-        this.grassClumps = new HashMap<>();
         this.listeners = new ArrayList<>();
         this.uuid = UUID.randomUUID();
         this.width = width;
