@@ -4,16 +4,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import static java.lang.Math.abs;
-
 public class Animal implements WorldElement {
 
     private int orientation;
     private Vector2d position;
     private List<Integer> genome;
     private Iterator<Integer> genomeIterator;
-
-    private WorldMap map;
 
 
     public Animal() {
@@ -27,19 +23,7 @@ public class Animal implements WorldElement {
         this.genomeIterator = genome.iterator();
     }
 
-    public Animal(WorldMap map, Vector2d position, int orientation){
-        this(map, position);
-        this.orientation = orientation;
-    }
-
-    public Animal(WorldMap map, Vector2d position){
-        this(position);
-        this.map = map;
-    }
-
-
-
-    private void setOrientation(int orientation) {
+    public void setOrientation(int orientation) {
         this.orientation = orientation;
     }
 
@@ -53,10 +37,6 @@ public class Animal implements WorldElement {
 
     public Vector2d getPosition() {
         return position;
-    }
-
-    public int getOrientation() {
-        return orientation;
     }
 
     public List<Integer> getGenome() {
@@ -98,23 +78,13 @@ public class Animal implements WorldElement {
     }
 
 
-    public void move(AbstractWorldMap abstractWorldMap, int direction) {
+    public void move(MoveValidator moveValidator, int direction) {
         Vector2d newPosition;
         this.setOrientation((this.orientation + direction) % 8);
         newPosition = this.position.add(this.toUnitVector(this.orientation));
-        if (abstractWorldMap.canMoveTo(newPosition))
+        if (moveValidator.canMoveTo(newPosition))
             this.setPosition(newPosition);
-        else if (abstractWorldMap.isTopOrBottomMapEdge(newPosition) & abstractWorldMap.isLeftOrRightMapEdge(newPosition)){
-            newPosition = new Vector2d((abs(newPosition.getX() - map.getCurrentBounds().topRight().getX()) - 1), (abs(newPosition.getY()) - 1));
-            this.setPosition(newPosition);
-            this.setOrientation((this.orientation + 4) % 8);
-        }
-        else if (abstractWorldMap.isLeftOrRightMapEdge(newPosition)){
-            newPosition = new Vector2d((abs(newPosition.getX() - map.getCurrentBounds().topRight().getX()) - 1), newPosition.getY());
-            this.setPosition(newPosition);
-        }
-        else if (abstractWorldMap.isTopOrBottomMapEdge(newPosition)){
-            this.setOrientation((this.orientation + 4) % 8);
-        }
     }
+
+
 }

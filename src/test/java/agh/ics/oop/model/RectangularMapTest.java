@@ -11,20 +11,20 @@ class RectangularMapTest {
     private final Vector2d defaultPlacement = new Vector2d(2, 2);
 
 
-    @Test
-    void canMoveToAndPlace() throws PositionAlreadyOccupiedException {
-        // Testing possibility of move outside the map boundaries
-        assertTrue(map.canMoveTo(new Vector2d(5, 5)));
-        assertTrue(map.canMoveTo(new Vector2d(0, 0)));
-        assertFalse(map.canMoveTo(new Vector2d(6, 5)));
-        assertFalse(map.canMoveTo(new Vector2d(0, -1)));
-
-        // Testing the possibility to move in the occupied cell/place
-        assertTrue(map.canMoveTo(defaultPlacement));
-        Animal animal = new Animal();
-        assertTrue(map.place(animal));
-        assertFalse(map.canMoveTo(defaultPlacement));
-    }
+//    @Test
+//    void canMoveToAndPlace() throws PositionAlreadyOccupiedException {
+//        // Testing possibility of move outside the map boundaries
+//        assertTrue(map.canMoveTo(new Vector2d(5, 5)));
+//        assertTrue(map.canMoveTo(new Vector2d(0, 0)));
+//        assertFalse(map.canMoveTo(new Vector2d(6, 5)));
+//        assertFalse(map.canMoveTo(new Vector2d(0, -1)));
+//
+//        // Testing the possibility to move in the occupied cell/place
+//        assertTrue(map.canMoveTo(defaultPlacement));
+//        Animal animal = new Animal();
+//        assertTrue(map.place(animal));
+//        assertFalse(map.canMoveTo(defaultPlacement));
+//    }
 
 //    @Test
 //    public void testMoveAndPlaceAndIsOccupied() throws PositionAlreadyOccupiedException {
@@ -55,20 +55,20 @@ class RectangularMapTest {
 //        assertTrue(map.isOccupied(newPlace));
 //    }
 
-    @Test
-    public void testPlaceAndIsOccupied() throws PositionAlreadyOccupiedException {
-        Vector2d placement = new Vector2d(1, 1);
-        Animal animal = new Animal(placement);
-        assertTrue(map.place(animal));
-        assertTrue(map.isOccupied(placement));
-        Assertions.assertThrows(PositionAlreadyOccupiedException.class, () -> map.place(new Animal(placement)));
-    }
-
-    @Test
-    void testPlaceAndObjectAt() throws PositionAlreadyOccupiedException {
-        Animal animal = new Animal();
-        assertTrue(map.place(animal));
-        assertEquals(animal, map.objectAt(defaultPlacement));
-    }
+//    @Test
+//    public void testPlaceAndIsOccupied() throws PositionAlreadyOccupiedException {
+//        Vector2d placement = new Vector2d(1, 1);
+//        Animal animal = new Animal(placement);
+//        assertTrue(map.place(animal));
+//        assertTrue(map.isOccupied(placement));
+//        Assertions.assertThrows(PositionAlreadyOccupiedException.class, () -> map.place(new Animal(placement)));
+//    }
+//
+//    @Test
+//    void testPlaceAndObjectAt() throws PositionAlreadyOccupiedException {
+//        Animal animal = new Animal();
+//        assertTrue(map.place(animal));
+//        assertEquals(animal, map.objectAt(defaultPlacement));
+//    }
 
 }

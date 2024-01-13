@@ -12,7 +12,6 @@ public class GrassField extends AbstractWorldMap {
 
 
     public GrassField(int n) {
-        super(4, 4);
         this.grassClumps = new HashMap<>();
         int maxGrassRange = (int) Math.sqrt(n * 10);
 

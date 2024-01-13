@@ -7,45 +7,18 @@ import java.util.*;
 public abstract class AbstractWorldMap implements WorldMap {
 
     protected Map<Vector2d, Animal> animals;
-
     private List<MapChangeListener> listeners;
     private UUID uuid;
 
-    protected final int width;
-    protected final int height;
-
-    public AbstractWorldMap(int width, int height) {
+    public AbstractWorldMap() {
         this.animals = new HashMap<>();
         this.listeners = new ArrayList<>();
         this.uuid = UUID.randomUUID();
-        this.width = width;
-        this.height = height;
-
-    }
-
-
-    private boolean isWithinMap(Vector2d position) {
-        return position.precedes(new Vector2d(this.width, this.height)) && position.follows(new Vector2d(0, 0));
-    }
-
-
-    public boolean canMoveTo(Vector2d position) {
-        return isWithinMap(position);
-    }
-
-    public boolean isTopOrBottomMapEdge(Vector2d position){
-        return position.getY() == this.height + 1 || position.getY() == - 1;
-    }
-
-    public boolean isLeftOrRightMapEdge(Vector2d position){
-        return position.getX() == this.width + 1 || position.getX() == -1;
     }
 
     @Override
-    public Boundary getCurrentBounds() {
-        Vector2d bottomLeft = new Vector2d(0, 0);
-        Vector2d topRight = new Vector2d(this.width, this.height);
-        return new Boundary(bottomLeft, topRight);
+    public boolean canMoveTo(Vector2d position) {
+        return !animals.containsKey(position);
     }
 
     @Override
@@ -100,7 +73,7 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     //    different name
-    private void notifyListeners(String message) {
+    void notifyListeners(String message) {
         if (this.listeners != null) {
             for (MapChangeListener listener : listeners) {
                 listener.onMapChange(this, message);

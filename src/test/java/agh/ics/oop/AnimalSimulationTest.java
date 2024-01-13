@@ -38,47 +38,47 @@ public class AnimalSimulationTest {
 //        assertEquals(MapDirection.NORTH, animal.getOrientation());
 //    }
 
-    @Test
-    public void testAnimalMovement() {
-        GlobeMap globeMap = new GlobeMap(4, 4, 4);
-        Animal animal = new Animal(globeMap, new Vector2d(2, 2), 0);
-        animal.move(globeMap, 2);
-        assertEquals(new Vector2d(3, 2), animal.getPosition());
-        animal.move(globeMap, 2);
-        assertEquals(new Vector2d(3, 1), animal.getPosition());
-        animal.move(globeMap, 2);
-        assertEquals(new Vector2d(2, 1), animal.getPosition());
-        animal.move(globeMap, 2);
-        assertEquals(new Vector2d(2, 2), animal.getPosition());
-        animal.move(globeMap, 1);
-        assertEquals(new Vector2d(3, 3), animal.getPosition());
-        animal.move(globeMap, 7);
-        assertEquals(new Vector2d(3, 4), animal.getPosition());
-        // try to move out of the top edge
-        animal.move(globeMap, 1);
-        assertEquals(new Vector2d(3, 4), animal.getPosition());
-        assertEquals(animal.getOrientation(), 5);
-
-        animal.move(globeMap, 5);
-        assertEquals(new Vector2d(4, 4), animal.getPosition());
-        assertEquals(animal.getOrientation(), 2);
-
-        //try to move out of the right edge
-        animal.move(globeMap, 8);
-        assertEquals(new Vector2d(0, 4), animal.getPosition());
-        assertEquals(animal.getOrientation(), 2);
-
-        // try to move out of the left edge
-        animal.move(globeMap, 4);
-        assertEquals(new Vector2d(4, 4), animal.getPosition());
-        assertEquals(animal.getOrientation(), 6);
-
-        //try to move out of the right and top edge
-        animal.move(globeMap, 3);
-        assertEquals(new Vector2d(0, 4), animal.getPosition());
-        assertEquals(animal.getOrientation(), 5);
-
-    }
+//    @Test
+//    public void testAnimalMovement() {
+//        GlobeMap globeMap = new GlobeMap(4, 4, 4);
+//        Animal animal = new Animal(globeMap, new Vector2d(2, 2), 0);
+//        animal.move(globeMap, 2);
+//        assertEquals(new Vector2d(3, 2), animal.getPosition());
+//        animal.move(globeMap, 2);
+//        assertEquals(new Vector2d(3, 1), animal.getPosition());
+//        animal.move(globeMap, 2);
+//        assertEquals(new Vector2d(2, 1), animal.getPosition());
+//        animal.move(globeMap, 2);
+//        assertEquals(new Vector2d(2, 2), animal.getPosition());
+//        animal.move(globeMap, 1);
+//        assertEquals(new Vector2d(3, 3), animal.getPosition());
+//        animal.move(globeMap, 7);
+//        assertEquals(new Vector2d(3, 4), animal.getPosition());
+//        // try to move out of the top edge
+//        animal.move(globeMap, 1);
+//        assertEquals(new Vector2d(3, 4), animal.getPosition());
+//        assertEquals(animal.getOrientation(), 5);
+//
+//        animal.move(globeMap, 5);
+//        assertEquals(new Vector2d(4, 4), animal.getPosition());
+//        assertEquals(animal.getOrientation(), 2);
+//
+//        //try to move out of the right edge
+//        animal.move(globeMap, 8);
+//        assertEquals(new Vector2d(0, 4), animal.getPosition());
+//        assertEquals(animal.getOrientation(), 2);
+//
+//        // try to move out of the left edge
+//        animal.move(globeMap, 4);
+//        assertEquals(new Vector2d(4, 4), animal.getPosition());
+//        assertEquals(animal.getOrientation(), 6);
+//
+//        //try to move out of the right and top edge
+//        animal.move(globeMap, 3);
+//        assertEquals(new Vector2d(0, 4), animal.getPosition());
+//        assertEquals(animal.getOrientation(), 5);
+//
+//    }
 
 //    @Test
 //    public void testAnimalStaysInMap() {

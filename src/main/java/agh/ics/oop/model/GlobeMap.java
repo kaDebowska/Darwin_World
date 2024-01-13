@@ -5,14 +5,20 @@ import agh.ics.oop.model.util.RandomPositionGenerator;
 
 import java.util.*;
 
+import static java.lang.Math.abs;
+
 public class GlobeMap extends AbstractWorldMap{
+
+    private final int width;
+    private final int height;
     private final Map<Vector2d, Grass> grassClumps;
 
     private final int plantsNum;
 
     private Boundary equatorBounds;
     public GlobeMap(int width, int height, int plantsNum){
-        super(width, height);
+        this.width = width;
+        this.height = height;
         this.grassClumps = new HashMap<>();
         this.plantsNum = plantsNum;
         this.equatorBounds = calculateEquator();
@@ -20,14 +26,50 @@ public class GlobeMap extends AbstractWorldMap{
     }
 
     public void putPlants(){
-        RandomPositionGenerator randomPositionGenerator = new RandomPositionGenerator(super.width, super.height, this.plantsNum);
+        RandomPositionGenerator randomPositionGenerator = new RandomPositionGenerator(this.width, this.height, this.plantsNum);
         for (Vector2d grassPosition : randomPositionGenerator) {
             grassClumps.put(grassPosition, new Grass(grassPosition));
         }
     }
 
+
+    public boolean isTopOrBottomMapEdge(Vector2d position){
+        return position.getY() == this.height + 1 || position.getY() == - 1;
+    }
+
+    public boolean isLeftOrRightMapEdge(Vector2d position){
+        return position.getX() == this.width + 1 || position.getX() == -1;
+    }
+
+
+    @Override
+    public void move(Animal animal) {
+        Vector2d oldPosition = animal.getPosition();
+        int direction = animal.getNextGene();
+        animal.move(this, direction);
+        Vector2d newPosition = animal.getPosition();
+
+        if (this.isTopOrBottomMapEdge(newPosition) & this.isLeftOrRightMapEdge(newPosition)){
+            newPosition = new Vector2d((abs(newPosition.getX() - this.getCurrentBounds().topRight().getX()) - 1), (abs(newPosition.getY()) - 1));
+            animal.setOrientation((direction + 4) % 8);
+        }
+        else if (this.isLeftOrRightMapEdge(newPosition)){
+            newPosition = new Vector2d((abs(newPosition.getX() - this.getCurrentBounds().topRight().getX()) - 1), newPosition.getY());
+        }
+        else if (this.isTopOrBottomMapEdge(newPosition)){
+            animal.setOrientation((direction + 4) % 8);
+        }
+        if (!oldPosition.equals(newPosition)) {
+            animals.remove(oldPosition);
+            animals.put(newPosition, animal);
+        }
+        String message = String.format("An animal has been moved from %s to %s.", oldPosition, newPosition);
+        this.notifyListeners(message);
+    }
+
+
     public Boundary calculateEquator(){
-        int globeSurface = super.width * super.height;
+        int globeSurface = this.width * this.height;
         int equatorSurface = (int) (0.2 * globeSurface);
         int equatorHeight =  (equatorSurface/width);
         equatorHeight = equatorHeight > height ? 1 : equatorHeight;
@@ -48,6 +90,13 @@ public class GlobeMap extends AbstractWorldMap{
         Vector2d upperRight = new Vector2d(upperRightX, upperRightY);
         return new Boundary(bottomLeft, upperRight);
 
+    }
+
+    @Override
+    public Boundary getCurrentBounds() {
+        Vector2d bottomLeft = new Vector2d(0, 0);
+        Vector2d topRight = new Vector2d(this.width, this.height);
+        return new Boundary(bottomLeft, topRight);
     }
 }
 
