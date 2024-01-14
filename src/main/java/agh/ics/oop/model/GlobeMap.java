@@ -12,10 +12,9 @@ public class GlobeMap extends AbstractWorldMap{
     private final int width;
     private final int height;
     private final Map<Vector2d, Grass> grassClumps;
-
     private final int plantsNum;
-
     private Boundary equatorBounds;
+
     public GlobeMap(int width, int height, int plantsNum){
         this.width = width;
         this.height = height;
@@ -32,7 +31,6 @@ public class GlobeMap extends AbstractWorldMap{
         }
     }
 
-
     public boolean isTopOrBottomMapEdge(Vector2d position){
         return position.getY() == this.height + 1 || position.getY() == - 1;
     }
@@ -42,17 +40,7 @@ public class GlobeMap extends AbstractWorldMap{
     }
 
     public int reflect(int orientation) {
-        switch (orientation) {
-            case 0: return 4;
-            case 1: return 3;
-            case 2: return 2;
-            case 3: return 1;
-            case 4: return 0;
-            case 5: return 7;
-            case 6: return 6;
-            case 7: return 5;
-            default: throw new IllegalArgumentException("Invalid orientation");
-        }
+        return (12 - orientation) % 8;
     }
 
 
