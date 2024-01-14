@@ -31,6 +31,11 @@ public class GlobeMap extends AbstractWorldMap{
         }
     }
 
+    @Override
+    public WorldElement objectAt(Vector2d position) {
+        return super.isOccupied(position) ? super.objectAt(position) : grassClumps.get(position);
+    }
+
     public boolean isTopOrBottomMapEdge(Vector2d position){
         return position.getY() == this.height + 1 || position.getY() == - 1;
     }
