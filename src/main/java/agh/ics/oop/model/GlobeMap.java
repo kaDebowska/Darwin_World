@@ -52,17 +52,18 @@ public class GlobeMap extends AbstractWorldMap{
         Vector2d newPosition = animal.getPosition();
 
         if (this.isTopOrBottomMapEdge(newPosition) & this.isLeftOrRightMapEdge(newPosition)){
-            newPosition = new Vector2d((abs(newPosition.getX() - this.width) - 1), (abs(newPosition.getY()) - 1));
-            animal.setOrientation(reflect(animal.getOrientation()));
+            newPosition = new Vector2d(abs(newPosition.getX() - this.width) - 1, abs(newPosition.getY() - 1));
             animal.setPosition(newPosition);
+            animal.setOrientation(reflect(animal.getOrientation()));
         }
         else if (this.isLeftOrRightMapEdge(newPosition)){
             newPosition = new Vector2d((abs(newPosition.getX() - this.width) - 1), newPosition.getY());
             animal.setPosition(newPosition);
         }
         else if (this.isTopOrBottomMapEdge(newPosition)){
+            newPosition = new Vector2d(newPosition.getX(), abs(newPosition.getY()) - 1);
+            animal.setPosition(newPosition);
             animal.setOrientation(reflect(animal.getOrientation()));
-//            animal.move(this, 0);
         }
 
         if (!oldPosition.equals(newPosition)) {
