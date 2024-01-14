@@ -3,10 +3,11 @@ package agh.ics.oop.model;
 import agh.ics.oop.model.util.MapVisualizer;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class AbstractWorldMap implements WorldMap {
 
-    protected Map<Vector2d, Animal> animals;
+    protected Map<Animal, Vector2d> animals;
     private List<MapChangeListener> listeners;
     private UUID uuid;
 
@@ -16,21 +17,21 @@ public abstract class AbstractWorldMap implements WorldMap {
         this.uuid = UUID.randomUUID();
     }
 
-    @Override
-    public boolean canMoveTo(Vector2d position) {
-        return !animals.containsKey(position);
+    public List<Animal> getAnimalsAt(Vector2d position) {
+        return animals.entrySet().stream()
+                .filter(entry -> entry.getValue().equals(position))
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
     }
 
+
     @Override
-    public boolean place(Animal animal) throws PositionAlreadyOccupiedException {
+    public boolean place(Animal animal) {
         Vector2d position = animal.getPosition();
-        if (canMoveTo(position)) {
-            animals.put(position, animal);
-            String message = String.format("An animal has been placed at %s.", animal.getPosition());
-            this.notifyListeners(message);
-            return true;
-        }
-        throw new PositionAlreadyOccupiedException(animal.getPosition());
+        animals.put(animal, position);
+        String message = String.format("An animal has been placed at %s.", position);
+        this.notifyListeners(message);
+        return true;
     }
 
     @Override
@@ -40,8 +41,7 @@ public abstract class AbstractWorldMap implements WorldMap {
         animal.move(this, direction);
         Vector2d newPosition = animal.getPosition();
         if (!oldPosition.equals(newPosition)) {
-            animals.remove(oldPosition);
-            animals.put(newPosition, animal);
+            animals.put(animal, newPosition);
         }
         String message = String.format("An animal has been moved from %s to %s.", oldPosition, newPosition);
         this.notifyListeners(message);
@@ -49,13 +49,28 @@ public abstract class AbstractWorldMap implements WorldMap {
 
     @Override
     public boolean isOccupied(Vector2d position) {
-        return animals.containsKey(position);
+        return animals.containsValue(position);
     }
+
 
     @Override
     public WorldElement objectAt(Vector2d position) {
-        return animals.get(position);
+        List<Animal> animalsAtPosition = animals.entrySet().stream()
+                .filter(entry -> entry.getValue().equals(position))
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+        if (!animalsAtPosition.isEmpty()) {
+            if (animalsAtPosition.size() == 1) {
+                return animalsAtPosition.get(0);
+            } else {
+                return new AnimalGroup(animalsAtPosition);
+            }
+        } else {
+            return null;
+        }
     }
+
+
 
     @Override
     public String toString() {
@@ -79,6 +94,15 @@ public abstract class AbstractWorldMap implements WorldMap {
                 listener.onMapChange(this, message);
             }
         }
+    }
+
+    @Override
+    public List<Animal> getOrderedAnimals(List<Animal> animalList) {
+        return animalList.stream()
+                .sorted(Comparator.comparing(Animal::getHealth)
+                        .thenComparing(Animal::getAge)
+                        .thenComparing(Animal::getKidsNumber))
+                .collect(Collectors.toList());
     }
 
     @Override

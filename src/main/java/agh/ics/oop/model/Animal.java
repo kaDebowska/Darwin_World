@@ -1,9 +1,6 @@
 package agh.ics.oop.model;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Animal implements WorldElement {
 
@@ -11,8 +8,11 @@ public class Animal implements WorldElement {
     private Vector2d position;
     private List<Integer> genome;
     private Iterator<Integer> genomeIterator;
-
     private int health;
+    private int age;
+    private int plantsEaten;
+    private Set<UUID> kids;
+    private UUID uuid;
 
 
 
@@ -30,6 +30,7 @@ public class Animal implements WorldElement {
             this.genome.add(rand.nextInt(8));
         }
         this.genomeIterator = genome.iterator();
+        this.uuid = UUID.randomUUID();
     }
 
     public void setOrientation(int orientation) {
@@ -65,6 +66,19 @@ public class Animal implements WorldElement {
 
     public void dailyFatigue() {
         this.health--;
+        this.age++;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public int getKidsNumber() {
+        return kids.size();
     }
 
     @Override
@@ -99,9 +113,24 @@ public class Animal implements WorldElement {
         Vector2d newPosition;
         this.setOrientation((this.orientation + direction) % 8);
         newPosition = this.position.add(this.toUnitVector(this.orientation));
-        if (moveValidator.canMoveTo(newPosition))
-            this.setPosition(newPosition);
+        this.setPosition(newPosition);
     }
 
 
+    public UUID getId() {
+        return  this.uuid;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Animal animal = (Animal) o;
+        return Objects.equals(uuid, animal.uuid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid);
+    }
 }
