@@ -31,10 +31,6 @@ public class GlobeMap extends AbstractWorldMap{
         }
     }
 
-    @Override
-    public WorldElement objectAt(Vector2d position) {
-        return super.isOccupied(position) ? super.objectAt(position) : grassClumps.get(position);
-    }
 
     public boolean isTopOrBottomMapEdge(Vector2d position){
         return position.getY() == this.height + 1 || position.getY() == - 1;
@@ -105,6 +101,16 @@ public class GlobeMap extends AbstractWorldMap{
         Vector2d upperRight = new Vector2d(upperRightX, upperRightY);
         return new Boundary(bottomLeft, upperRight);
 
+    }
+
+    @Override
+    public boolean isOccupied(Vector2d position) {
+        return super.isOccupied(position) || grassClumps.containsKey(position);
+    }
+
+    @Override
+    public WorldElement objectAt(Vector2d position) {
+        return super.isOccupied(position) ? super.objectAt(position) : grassClumps.get(position);
     }
 
     @Override

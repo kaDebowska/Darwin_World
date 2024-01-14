@@ -14,7 +14,7 @@ public class Simulation implements Runnable {
     public Simulation(List<Vector2d> positions, WorldMap map) {
         this.listOfAnimals = new ArrayList<>();
         for (Vector2d position : positions) {
-            this.listOfAnimals.add(new Animal(position));
+            this.listOfAnimals.add(new Animal(position, 50, 10));
         }
         this.map = map;
     }

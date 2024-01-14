@@ -30,28 +30,16 @@ public class SimulationPresenter implements MapChangeListener {
     private GridPane mapGrid;
 
 
-//    @FXML
-//    private TextField movesField;
-
     @FXML
     private Label movesLabel;
 
-//    private SimulationApp application;
-
     private String moves;
 
-//    public void setApplication(SimulationApp application) {
-//        this.application = application;
-//    }
 
     public void setMoves(String moves) {
         this.moves = moves;
     }
 
-
-//    public TextField getMovesField() {
-//        return movesField;
-//    }
 
     public void setWorldMap(WorldMap map) {
         this.worldMap = map;
