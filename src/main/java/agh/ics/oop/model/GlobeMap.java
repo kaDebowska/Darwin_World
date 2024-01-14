@@ -1,6 +1,6 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.model.util.MapVisualizer;
+//import agh.ics.oop.model.util.MapVisualizer;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
 import java.util.*;
@@ -41,6 +41,20 @@ public class GlobeMap extends AbstractWorldMap{
         return position.getX() == this.width + 1 || position.getX() == -1;
     }
 
+    public int reflect(int orientation) {
+        switch (orientation) {
+            case 0: return 4;
+            case 1: return 3;
+            case 2: return 2;
+            case 3: return 1;
+            case 4: return 0;
+            case 5: return 7;
+            case 6: return 6;
+            case 7: return 5;
+            default: throw new IllegalArgumentException("Invalid orientation");
+        }
+    }
+
 
     @Override
     public void move(Animal animal) {
@@ -50,22 +64,29 @@ public class GlobeMap extends AbstractWorldMap{
         Vector2d newPosition = animal.getPosition();
 
         if (this.isTopOrBottomMapEdge(newPosition) & this.isLeftOrRightMapEdge(newPosition)){
-            newPosition = new Vector2d((abs(newPosition.getX() - this.getCurrentBounds().topRight().getX()) - 1), (abs(newPosition.getY()) - 1));
-            animal.setOrientation((direction + 4) % 8);
+            newPosition = new Vector2d((abs(newPosition.getX() - this.width) - 1), (abs(newPosition.getY()) - 1));
+            animal.setOrientation(reflect(animal.getOrientation()));
+            animal.setPosition(newPosition);
         }
         else if (this.isLeftOrRightMapEdge(newPosition)){
-            newPosition = new Vector2d((abs(newPosition.getX() - this.getCurrentBounds().topRight().getX()) - 1), newPosition.getY());
+            newPosition = new Vector2d((abs(newPosition.getX() - this.width) - 1), newPosition.getY());
+            animal.setPosition(newPosition);
         }
         else if (this.isTopOrBottomMapEdge(newPosition)){
-            animal.setOrientation((direction + 4) % 8);
+            animal.setOrientation(reflect(animal.getOrientation()));
+//            animal.move(this, 0);
         }
+
         if (!oldPosition.equals(newPosition)) {
             animals.remove(oldPosition);
             animals.put(newPosition, animal);
         }
+
         String message = String.format("An animal has been moved from %s to %s.", oldPosition, newPosition);
         this.notifyListeners(message);
     }
+
+
 
 
     public Boundary calculateEquator(){
@@ -90,6 +111,11 @@ public class GlobeMap extends AbstractWorldMap{
         Vector2d upperRight = new Vector2d(upperRightX, upperRightY);
         return new Boundary(bottomLeft, upperRight);
 
+    }
+
+    @Override
+    public boolean canMoveTo(Vector2d position) {
+        return true;
     }
 
     @Override

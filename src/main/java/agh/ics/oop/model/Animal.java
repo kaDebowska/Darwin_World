@@ -19,7 +19,7 @@ public class Animal implements WorldElement {
     public Animal(Vector2d position) {
         this.orientation = new Random().nextInt(8);
         this.position = position;
-        this.genome = List.of(6,6,6,2,1,3,7);
+        this.genome = List.of(0);
         this.genomeIterator = genome.iterator();
     }
 
@@ -27,7 +27,11 @@ public class Animal implements WorldElement {
         this.orientation = orientation;
     }
 
-    private void setPosition(Vector2d position) {
+    public int getOrientation() {
+        return this.orientation;
+    }
+
+    void setPosition(Vector2d position) {
         this.position = position;
     }
 
