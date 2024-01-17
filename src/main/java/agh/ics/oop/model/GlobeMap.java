@@ -185,7 +185,13 @@ public class GlobeMap extends AbstractWorldMap{
 
         if (!oldPosition.equals(newPosition)) {
             animals.remove(oldPosition);
-            animals.put(animal, newPosition);
+            if (animals.containsKey(newPosition)) {
+                animals.get(newPosition).add(animal);
+            } else {
+                List<Animal> newList = new ArrayList<>();
+                newList.add(animal);
+                animals.put(newPosition, newList);
+            }
             if(grassClumps.containsKey(newPosition)) {
                 grassClumps.remove(newPosition);
             }
