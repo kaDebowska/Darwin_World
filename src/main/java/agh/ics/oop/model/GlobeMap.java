@@ -185,7 +185,7 @@ public class GlobeMap extends AbstractWorldMap{
 
         if (!oldPosition.equals(newPosition)) {
             animals.remove(oldPosition);
-            animals.put(newPosition, animal);
+            animals.put(animal, newPosition);
             if(grassClumps.containsKey(newPosition)) {
                 grassClumps.remove(newPosition);
             }
@@ -224,15 +224,15 @@ public class GlobeMap extends AbstractWorldMap{
 
     }
 
-    @Override
-    public boolean isOccupied(Vector2d position) {
-        return super.isOccupied(position) || grassClumps.containsKey(position);
-    }
+//    @Override
+//    public boolean isOccupied(Vector2d position) {
+//        return super.isOccupied(position) || grassClumps.containsKey(position);
+//    }
 
-    @Override
-    public WorldElement objectAt(Vector2d position) {
-        return super.isOccupied(position) ? super.objectAt(position) : grassClumps.get(position);
-    }
+//    @Override
+//    public WorldElement objectAt(Vector2d position) {
+//        return super.isOccupied(position) ? super.objectAt(position) : grassClumps.get(position);
+//    }
 
     @Override
     public boolean canMoveTo(Vector2d position) {

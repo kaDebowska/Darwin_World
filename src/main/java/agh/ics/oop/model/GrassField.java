@@ -21,10 +21,9 @@ public class GrassField {
         }
     }
 
-    @Override
-    public void putPlants() {
-
-    }
+//    @Override
+//    public void putPlants() {
+//    }
 
 //    @Override
 //    public boolean isOccupied(Vector2d position) {
