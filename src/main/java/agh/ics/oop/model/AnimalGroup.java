@@ -1,13 +1,29 @@
 package agh.ics.oop.model;
 
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AnimalGroup implements WorldElement {
     private List<Animal> animals;
 
     public AnimalGroup(List<Animal> animals) {
         this.animals = animals;
+    }
+
+    public AnimalGroup(Animal animal) {
+        this.animals = new ArrayList<>();
+        animals.add(animal);
+    }
+
+    public void addAnimal(Animal animal) {
+        this.animals.add(animal);
+    }
+
+    public void removeAnimal(Animal animal) {
+        this.animals.remove(animal);
     }
 
     @Override
@@ -28,6 +44,14 @@ public class AnimalGroup implements WorldElement {
     @Override
     public String toString() {
         return animals.get(0).toString();
+    }
+
+    public List<Animal> getOrderedAnimals(AnimalGroup animalList) {
+        return animalList.animals.stream()
+                .sorted(Comparator.comparing(Animal::getHealth)
+                        .thenComparing(Animal::getAge)
+                        .thenComparing(Animal::getKidsNumber))
+                .collect(Collectors.toList());
     }
 
     public List<Animal> getAnimals() {

@@ -4,7 +4,6 @@ package agh.ics.oop.model;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 import static java.lang.Math.abs;
 
@@ -24,7 +23,7 @@ public class GlobeMap extends AbstractWorldMap{
 
     private RandomPositionGenerator positionsOutsideEquator;
 
-    private final int platsEnergy;
+    private final int plantsEnergy;
     private Boundary equatorBounds;
 
     public GlobeMap(int width, int height, int plantsNum){
@@ -33,7 +32,7 @@ public class GlobeMap extends AbstractWorldMap{
         this.height = height;
         this.grassClumps = new HashMap<>();
         this.plantsNum = plantsNum;
-        this.platsEnergy = 100;
+        this.plantsEnergy = 100;
         this.equatorBounds = calculateEquator();
         putPlants();
     }
@@ -43,7 +42,7 @@ public class GlobeMap extends AbstractWorldMap{
         this.height = height;
         this.grassClumps = new HashMap<>();
         this.plantsNum = plantsNum;
-        this.platsEnergy = platsEnergy;
+        this.plantsEnergy = platsEnergy;
 //        this.plantsOnEquator = (int) (0.8 * plantsNum);
 //        this.plantsOutsideEquator = plantsNum - plantsOnEquator;
         this.equatorBounds = calculateEquator();
@@ -165,7 +164,7 @@ public class GlobeMap extends AbstractWorldMap{
     public void move(Animal animal) {
         Vector2d oldPosition = animal.getPosition();
         int direction = animal.getNextGene();
-        animal.move(this, direction);
+        animal.move(direction);
         Vector2d newPosition = animal.getPosition();
 
         if (this.isTopOrBottomMapEdge(newPosition) & this.isLeftOrRightMapEdge(newPosition)){
@@ -186,10 +185,9 @@ public class GlobeMap extends AbstractWorldMap{
         if (!oldPosition.equals(newPosition)) {
             animals.remove(oldPosition);
             if (animals.containsKey(newPosition)) {
-                animals.get(newPosition).add(animal);
+                animals.get(newPosition).addAnimal(animal);
             } else {
-                List<Animal> newList = new ArrayList<>();
-                newList.add(animal);
+                AnimalGroup newList = new AnimalGroup(animal);
                 animals.put(newPosition, newList);
             }
             if(grassClumps.containsKey(newPosition)) {
@@ -228,21 +226,6 @@ public class GlobeMap extends AbstractWorldMap{
         Vector2d upperRight = new Vector2d(upperRightX, upperRightY);
         return new Boundary(bottomLeft, upperRight);
 
-    }
-
-//    @Override
-//    public boolean isOccupied(Vector2d position) {
-//        return super.isOccupied(position) || grassClumps.containsKey(position);
-//    }
-
-//    @Override
-//    public WorldElement objectAt(Vector2d position) {
-//        return super.isOccupied(position) ? super.objectAt(position) : grassClumps.get(position);
-//    }
-
-    @Override
-    public boolean canMoveTo(Vector2d position) {
-        return true;
     }
 
 
@@ -304,23 +287,6 @@ public class GlobeMap extends AbstractWorldMap{
 //                this.reproduce(animalsToReproduce.get(0), animalsToReproduce.get(1));
 //            }
 //        }
-//    }
-
-
-//    public List<Animal> getAnimalsAtSamePosition(Animal animal) {
-//        Vector2d position = animal.getPosition();
-//        List<Animal> animalsAtSamePosition = new ArrayList<>();
-//
-//        for (Animal otherAnimal : animals.values()) {
-//            if (otherAnimal.getPosition().equals(position) && !otherAnimal.equals(animal)) {
-//                animalsAtSamePosition.add(otherAnimal);
-//            }
-//        }
-//        return animalsAtSamePosition;
-//    }
-
-//    public Stream<WorldElement> getElements() {
-//        return Stream.concat(animals.values().stream(), grassClumps.values().stream());
 //    }
 
 

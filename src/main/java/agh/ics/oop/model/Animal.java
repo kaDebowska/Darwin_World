@@ -109,7 +109,7 @@ public class Animal implements WorldElement {
     }
 
 
-    public void move(MoveValidator moveValidator, int direction) {
+    public void move(int direction) {
         Vector2d newPosition;
         this.setOrientation((this.orientation + direction) % 8);
         newPosition = this.position.add(this.toUnitVector(this.orientation));

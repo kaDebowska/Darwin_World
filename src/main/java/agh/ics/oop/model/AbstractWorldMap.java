@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 public abstract class AbstractWorldMap implements WorldMap {
 
-    protected Map<Vector2d, List<Animal>> animals;
+    protected Map<Vector2d, AnimalGroup> animals;
     private List<MapChangeListener> listeners;
     private UUID uuid;
 
@@ -18,7 +18,7 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     public List<Animal> getAnimalsAt(Vector2d position) {
-        return animals.get(position);
+        return animals.get(position).getAnimals();
     }
 
 
@@ -26,10 +26,9 @@ public abstract class AbstractWorldMap implements WorldMap {
     public boolean place(Animal animal) {
         Vector2d position = animal.getPosition();
         if (animals.containsKey(position)) {
-            animals.get(position).add(animal);
+            animals.get(position).addAnimal(animal);
         } else {
-            List<Animal> newList = new ArrayList<>();
-            newList.add(animal);
+            AnimalGroup newList = new AnimalGroup(animal);
             animals.put(position, newList);
         }
         String message = String.format("An animal has been placed at %s.", position);
@@ -42,18 +41,17 @@ public abstract class AbstractWorldMap implements WorldMap {
     public void move(Animal animal) {
         Vector2d oldPosition = animal.getPosition();
         int direction = animal.getNextGene();
-        animal.move(this, direction);
+        animal.move(direction);
         Vector2d newPosition = animal.getPosition();
         if (!oldPosition.equals(newPosition)) {
-            animals.get(oldPosition).remove(animal);
-            if (animals.get(oldPosition).isEmpty()) {
+            animals.get(oldPosition).removeAnimal(animal);
+            if (animals.get(oldPosition).getAnimals().isEmpty()) {
                 animals.remove(oldPosition);
             }
             if (animals.containsKey(newPosition)) {
-                animals.get(newPosition).add(animal);
+                animals.get(newPosition).addAnimal(animal);
             } else {
-                List<Animal> newList = new ArrayList<>();
-                newList.add(animal);
+                AnimalGroup newList = new AnimalGroup(animal);
                 animals.put(newPosition, newList);
             }
         }
@@ -70,7 +68,7 @@ public abstract class AbstractWorldMap implements WorldMap {
 
     @Override
     public WorldElement objectAt(Vector2d position) {
-        List<Animal> animalsAtPosition = animals.get(position);
+        List<Animal> animalsAtPosition = animals.get(position).getAnimals();
         if (animalsAtPosition != null && !animalsAtPosition.isEmpty()) {
             if (animalsAtPosition.size() == 1) {
                 return animalsAtPosition.get(0);
@@ -81,7 +79,6 @@ public abstract class AbstractWorldMap implements WorldMap {
             return null;
         }
     }
-
 
 
 
@@ -107,15 +104,6 @@ public abstract class AbstractWorldMap implements WorldMap {
                 listener.onMapChange(this, message);
             }
         }
-    }
-
-    @Override
-    public List<Animal> getOrderedAnimals(List<Animal> animalList) {
-        return animalList.stream()
-                .sorted(Comparator.comparing(Animal::getHealth)
-                        .thenComparing(Animal::getAge)
-                        .thenComparing(Animal::getKidsNumber))
-                .collect(Collectors.toList());
     }
 
     @Override

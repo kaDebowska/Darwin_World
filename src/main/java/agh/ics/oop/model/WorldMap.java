@@ -9,7 +9,7 @@ import java.util.UUID;
  *
  * @author apohllo, idzik
  */
-public interface WorldMap extends MoveValidator {
+public interface WorldMap {
 
     /**
      * Place an animal on the map.
@@ -60,6 +60,5 @@ public interface WorldMap extends MoveValidator {
 
     UUID getId();
 
-    List<Animal> getOrderedAnimals(List<Animal> animalList);
 
 }
