@@ -1,11 +1,7 @@
 package agh.ics.oop.model;
-
-//import agh.ics.oop.model.util.MapVisualizer;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
 import java.util.*;
-
-import static java.lang.Math.abs;
 
 public class GlobeMap extends AbstractWorldMap{
     private int plantsOnEquator;
@@ -15,18 +11,17 @@ public class GlobeMap extends AbstractWorldMap{
     private Boundary equatorBounds;
 
     public GlobeMap(int width, int height, int plantsNum){
-        super(width, height, plantsNum, 100, 10);
+        super(width, height, plantsNum, 100, 30, 15);
         this.grassClumps = new HashMap<>();
         this.equatorBounds = calculateEquator();
         putPlants();
     }
 
-    public GlobeMap(int width, int height, int plantsNum, int platsEnergy, int healtToReproduce){
-        super(width, height, plantsNum, platsEnergy, healtToReproduce);
+    public GlobeMap(int width, int height, int plantsNum, int platsEnergy, int healtToReproduce, int reproductionCost){
+        super(width, height, plantsNum, platsEnergy, healtToReproduce, reproductionCost);
         this.grassClumps = new HashMap<>();
         this.equatorBounds = calculateEquator();
     }
-
 
 
     public RandomPositionGenerator generateEquatorPositions(){

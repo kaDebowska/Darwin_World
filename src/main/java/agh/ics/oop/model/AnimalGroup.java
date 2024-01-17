@@ -30,7 +30,6 @@ public class AnimalGroup implements WorldElement {
         return this.animals.size() > 2;
     }
 
-
     @Override
     public Vector2d getPosition() {
         return animals.get(0).getPosition();

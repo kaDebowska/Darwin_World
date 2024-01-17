@@ -85,6 +85,10 @@ public class Animal implements WorldElement {
         return health;
     }
 
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
     public int getAge() {
         return age;
     }

@@ -11,6 +11,7 @@ public abstract class AbstractWorldMap implements WorldMap {
     protected Map<Vector2d, AnimalGroup> animals;
 
     private final int healthToReproduce;
+    private final int reproductionCost;
     protected Map<Vector2d, Grass> grassClumps;
     private final int plantsEnergy;
     protected final int width;
@@ -19,12 +20,13 @@ public abstract class AbstractWorldMap implements WorldMap {
     private List<MapChangeListener> listeners;
     private UUID uuid;
 
-    public AbstractWorldMap(int width, int height, int plantsNum, int plantsEnergy, int healthToReproduce) {
+    public AbstractWorldMap(int width, int height, int plantsNum, int plantsEnergy, int healthToReproduce, int reproductionCost) {
         this.width = width;
         this.height = height;
         this.plantsNum = plantsNum;
         this.plantsEnergy = plantsEnergy;
         this.healthToReproduce = healthToReproduce;
+        this.reproductionCost = reproductionCost;
         this.animals = new HashMap<>();
         this.listeners = new ArrayList<>();
         this.uuid = UUID.randomUUID();
@@ -155,10 +157,17 @@ public abstract class AbstractWorldMap implements WorldMap {
                 Animal animalAlpha = sortedAnimals.get(0);
                 Animal animalBeta = sortedAnimals.get(1);
                 if (animalAlpha.getHealth() >= this.healthToReproduce && animalBeta.getHealth() >= this.healthToReproduce) {
-//                    this.reproduce(animalAlpha,animalBeta);
+                    this.reproduce(animalAlpha,animalBeta);
                 }
             }
         }
+    }
+
+    private void reproduce(Animal animalAlpha, Animal animalBeta) {
+        animalAlpha.setHealth(animalAlpha.getHealth()-this.reproductionCost);
+        animalBeta.setHealth(animalBeta.getHealth()-this.reproductionCost);
+        Animal babyAnimal = new Animal(this.reproductionCost*2, )
+//        place()
     }
 
 //    public void stepCounters() {
