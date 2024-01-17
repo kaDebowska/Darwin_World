@@ -60,5 +60,7 @@ public interface WorldMap {
 
     UUID getId();
 
+    public void handleEating();
+
 
 }

@@ -26,6 +26,18 @@ public class Animal implements WorldElement {
             this.genome.add(rand.nextInt(8));
         }
         this.genomeIterator = genome.iterator();
+        Collections.rotate(this.genome, rand.nextInt(this.genome.size()));
+        this.uuid = UUID.randomUUID();
+    }
+
+    public Animal(Vector2d position, int health, List<Integer> genome) {
+        Random rand = new Random();
+        this.orientation = rand.nextInt(8);
+        this.position = position;
+        this.health = health;
+        this.genome = new ArrayList<>(genome);
+        this.genomeIterator = this.genome.iterator();
+        Collections.rotate(this.genome, rand.nextInt(this.genome.size()));
         this.uuid = UUID.randomUUID();
     }
 
@@ -83,7 +95,7 @@ public class Animal implements WorldElement {
 
     @Override
     public String toString() {
-        return String.valueOf(this.orientation);
+        return String.valueOf(this.health);
     }
 
     public boolean isAt(Vector2d position) {

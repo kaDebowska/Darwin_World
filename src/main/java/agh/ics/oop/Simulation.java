@@ -37,10 +37,15 @@ public class Simulation implements Runnable {
             }
         }
         while (running) {
+            map.putPlants();
             for (Animal animal : this.listOfAnimals) {
                 this.map.move(animal);
             }
-            map.putPlants();
+            map.handleEating();
+            for (Animal animal : this.listOfAnimals) {
+                animal.dailyFatigue();
+            }
+
             try {
                 Thread.sleep(500);
 //                Thread.sleep(10000);

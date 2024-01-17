@@ -5,6 +5,8 @@ import agh.ics.oop.model.util.MapVisualizer;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.lang.Math.abs;
+
 public abstract class AbstractWorldMap implements WorldMap {
     protected Map<Vector2d, AnimalGroup> animals;
 
@@ -29,11 +31,6 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
 
-    public List<Animal> getAnimalsAt(Vector2d position) {
-        return animals.get(position).getAnimals();
-    }
-
-
     @Override
     public boolean place(Animal animal) {
         Vector2d position = animal.getPosition();
@@ -48,6 +45,17 @@ public abstract class AbstractWorldMap implements WorldMap {
         return true;
     }
 
+    public boolean isTopOrBottomMapEdge(Vector2d position){
+        return position.getY() == this.height + 1 || position.getY() == - 1;
+    }
+
+    public boolean isLeftOrRightMapEdge(Vector2d position){
+        return position.getX() == this.width + 1 || position.getX() == -1;
+    }
+
+    public int reflect(int orientation) {
+        return (12 - orientation) % 8;
+    }
 
     @Override
     public void move(Animal animal) {
@@ -55,11 +63,24 @@ public abstract class AbstractWorldMap implements WorldMap {
         int direction = animal.getNextGene();
         animal.move(direction);
         Vector2d newPosition = animal.getPosition();
+
+        if (this.isTopOrBottomMapEdge(newPosition) & this.isLeftOrRightMapEdge(newPosition)){
+            newPosition = new Vector2d(abs(newPosition.getX() - this.width) - 1, abs(newPosition.getY() - 1));
+            animal.setPosition(newPosition);
+            animal.setOrientation(reflect(animal.getOrientation()));
+        }
+        else if (this.isLeftOrRightMapEdge(newPosition)){
+            newPosition = new Vector2d((abs(newPosition.getX() - this.width) - 1), newPosition.getY());
+            animal.setPosition(newPosition);
+        }
+        else if (this.isTopOrBottomMapEdge(newPosition)){
+            newPosition = new Vector2d(newPosition.getX(), abs(newPosition.getY()) - 1);
+            animal.setPosition(newPosition);
+            animal.setOrientation(reflect(animal.getOrientation()));
+        }
+
         if (!oldPosition.equals(newPosition)) {
-            animals.get(oldPosition).removeAnimal(animal);
-            if (animals.get(oldPosition).getAnimals().isEmpty()) {
-                animals.remove(oldPosition);
-            }
+            animals.remove(oldPosition);
             if (animals.containsKey(newPosition)) {
                 animals.get(newPosition).addAnimal(animal);
             } else {
@@ -67,37 +88,32 @@ public abstract class AbstractWorldMap implements WorldMap {
                 animals.put(newPosition, newList);
             }
         }
+
         String message = String.format("An animal has been moved from %s to %s.", oldPosition, newPosition);
         this.notifyListeners(message);
     }
 
-
-    @Override
-    public boolean isOccupied(Vector2d position) {
-        return animals.containsKey(position);
-    }
-
-
-    @Override
-    public WorldElement objectAt(Vector2d position) {
-        List<Animal> animalsAtPosition = animals.get(position).getAnimals();
-        if (animalsAtPosition != null && !animalsAtPosition.isEmpty()) {
-            if (animalsAtPosition.size() == 1) {
-                return animalsAtPosition.get(0);
-            } else {
-                return new AnimalGroup(animalsAtPosition);
-            }
-        } else {
-            return null;
-        }
-    }
-
-
+    //to remove when removing map visualizer
     @Override
     public String toString() {
         Boundary boundary = this.getCurrentBounds();
         MapVisualizer mapVisualizer = new MapVisualizer(this);
         return mapVisualizer.draw(boundary.bottomLeft(), boundary.topRight());
+    }
+
+    //to remove when removing map visualizer
+    @Override
+    public boolean isOccupied(Vector2d position) {
+        return animals.containsKey(position);
+    }
+
+    @Override
+    public WorldElement objectAt(Vector2d position) {
+        AnimalGroup animalGroupAtPosition = animals.get(position);
+        if (animalGroupAtPosition != null) {
+            return animalGroupAtPosition;
+        }
+        return grassClumps.get(position);
     }
 
     public void subscribe(MapChangeListener listener) {
@@ -144,6 +160,14 @@ public abstract class AbstractWorldMap implements WorldMap {
             }
         }
     }
+
+//    public void stepCounters() {
+//        for (AnimalGroup animalGroup : this.animals.values()) {
+//            for (Animal animal : animalGroup.getAnimals()) {
+//                animal.dailyFatigue();
+//            }
+//        }
+//    }
 
     @Override
     public UUID getId() {

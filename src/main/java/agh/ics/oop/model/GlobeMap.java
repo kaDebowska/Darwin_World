@@ -15,18 +15,17 @@ public class GlobeMap extends AbstractWorldMap{
     private Boundary equatorBounds;
 
     public GlobeMap(int width, int height, int plantsNum){
-        super(width, height, plantsNum, 100);
+        super(width, height, plantsNum, 100, 10);
         this.grassClumps = new HashMap<>();
         this.equatorBounds = calculateEquator();
         putPlants();
     }
 
-    public GlobeMap(int width, int height, int plantsNum, int platsEnergy){
-        super(width, height, plantsNum, platsEnergy);
+    public GlobeMap(int width, int height, int plantsNum, int platsEnergy, int healtToReproduce){
+        super(width, height, plantsNum, platsEnergy, healtToReproduce);
         this.grassClumps = new HashMap<>();
         this.equatorBounds = calculateEquator();
     }
-
 
 
 
@@ -94,6 +93,7 @@ public class GlobeMap extends AbstractWorldMap{
 
     }
 
+
     @Override
     public void putPlants(){
         this.plantsOnEquator = (int) (0.8 * plantsNum);
@@ -119,56 +119,6 @@ public class GlobeMap extends AbstractWorldMap{
         }
         positionsOutsideEquator.setCounter(this.plantsOutsideEquator);
 
-    }
-
-
-
-    public boolean isTopOrBottomMapEdge(Vector2d position){
-        return position.getY() == this.height + 1 || position.getY() == - 1;
-    }
-
-    public boolean isLeftOrRightMapEdge(Vector2d position){
-        return position.getX() == this.width + 1 || position.getX() == -1;
-    }
-
-    public int reflect(int orientation) {
-        return (12 - orientation) % 8;
-    }
-
-    @Override
-    public void move(Animal animal) {
-        Vector2d oldPosition = animal.getPosition();
-        int direction = animal.getNextGene();
-        animal.move(direction);
-        Vector2d newPosition = animal.getPosition();
-
-        if (this.isTopOrBottomMapEdge(newPosition) & this.isLeftOrRightMapEdge(newPosition)){
-            newPosition = new Vector2d(abs(newPosition.getX() - this.width) - 1, abs(newPosition.getY() - 1));
-            animal.setPosition(newPosition);
-            animal.setOrientation(reflect(animal.getOrientation()));
-        }
-        else if (this.isLeftOrRightMapEdge(newPosition)){
-            newPosition = new Vector2d((abs(newPosition.getX() - this.width) - 1), newPosition.getY());
-            animal.setPosition(newPosition);
-        }
-        else if (this.isTopOrBottomMapEdge(newPosition)){
-            newPosition = new Vector2d(newPosition.getX(), abs(newPosition.getY()) - 1);
-            animal.setPosition(newPosition);
-            animal.setOrientation(reflect(animal.getOrientation()));
-        }
-
-        if (!oldPosition.equals(newPosition)) {
-            animals.remove(oldPosition);
-            if (animals.containsKey(newPosition)) {
-                animals.get(newPosition).addAnimal(animal);
-            } else {
-                AnimalGroup newList = new AnimalGroup(animal);
-                animals.put(newPosition, newList);
-            }
-        }
-
-        String message = String.format("An animal has been moved from %s to %s.", oldPosition, newPosition);
-        this.notifyListeners(message);
     }
 
 
@@ -199,26 +149,6 @@ public class GlobeMap extends AbstractWorldMap{
         return new Boundary(bottomLeft, upperRight);
 
     }
-
-
-    @Override
-    public WorldElement objectAt(Vector2d position) {
-        return super.isOccupied(position) ? super.objectAt(position) : grassClumps.get(position);
-    }
-
-
-    @Override
-    public boolean isOccupied(Vector2d position) {
-        return super.isOccupied(position) || grassClumps.containsKey(position);
-    }
-
-
-
-
-
-
-
-
 
 
 }
