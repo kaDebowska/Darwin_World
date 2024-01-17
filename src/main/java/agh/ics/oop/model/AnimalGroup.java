@@ -26,6 +26,11 @@ public class AnimalGroup implements WorldElement {
         this.animals.remove(animal);
     }
 
+    public boolean isProlific() {
+        return this.animals.size() > 2;
+    }
+
+
     @Override
     public Vector2d getPosition() {
         return animals.get(0).getPosition();
@@ -46,8 +51,8 @@ public class AnimalGroup implements WorldElement {
         return animals.get(0).toString();
     }
 
-    public List<Animal> getOrderedAnimals(AnimalGroup animalList) {
-        return animalList.animals.stream()
+    public List<Animal> getOrderedAnimals() {
+        return this.animals.stream()
                 .sorted(Comparator.comparing(Animal::getHealth)
                         .thenComparing(Animal::getAge)
                         .thenComparing(Animal::getKidsNumber))

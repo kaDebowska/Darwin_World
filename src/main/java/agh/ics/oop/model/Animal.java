@@ -10,15 +10,11 @@ public class Animal implements WorldElement {
     private Iterator<Integer> genomeIterator;
     private int health;
     private int age;
-    private int plantsEaten;
+    private int plantsEaten = 0;
     private Set<UUID> kids;
     private UUID uuid;
 
 
-
-    public Animal() {
-        this(new Vector2d(2, 2), 50, 10);
-    }
 
     public Animal(Vector2d position, int health, int genomeLength) {
         Random rand = new Random();
@@ -31,6 +27,10 @@ public class Animal implements WorldElement {
         }
         this.genomeIterator = genome.iterator();
         this.uuid = UUID.randomUUID();
+    }
+
+    public void countEaten() {
+        this.plantsEaten += 1;
     }
 
     public void setOrientation(int orientation) {

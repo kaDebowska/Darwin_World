@@ -8,50 +8,25 @@ import java.util.*;
 import static java.lang.Math.abs;
 
 public class GlobeMap extends AbstractWorldMap{
-
-    private final int width;
-    private final int height;
-    private Map<Vector2d, Grass> grassClumps;
-    private final int plantsNum;
-
-
     private int plantsOnEquator;
-
     private int plantsOutsideEquator;
-
     private RandomPositionGenerator positionsOnEquator;
-
     private RandomPositionGenerator positionsOutsideEquator;
-
-    private final int plantsEnergy;
     private Boundary equatorBounds;
 
     public GlobeMap(int width, int height, int plantsNum){
-        //temporary constructor to make the class compatible with its tests
-        this.width = width;
-        this.height = height;
+        super(width, height, plantsNum, 100);
         this.grassClumps = new HashMap<>();
-        this.plantsNum = plantsNum;
-        this.plantsEnergy = 100;
         this.equatorBounds = calculateEquator();
         putPlants();
     }
 
     public GlobeMap(int width, int height, int plantsNum, int platsEnergy){
-        this.width = width;
-        this.height = height;
+        super(width, height, plantsNum, platsEnergy);
         this.grassClumps = new HashMap<>();
-        this.plantsNum = plantsNum;
-        this.plantsEnergy = platsEnergy;
-//        this.plantsOnEquator = (int) (0.8 * plantsNum);
-//        this.plantsOutsideEquator = plantsNum - plantsOnEquator;
         this.equatorBounds = calculateEquator();
-//        this.positionsOnEquator = generateEquatorPositions();
-//        this.positionsOutsideEquator = generatePositionsOutsideEquator();
-//        putPlantsOnEquator();
-//        putPlantsOutsideEquator();
-//        this.putPlants();
     }
+
 
 
 
@@ -64,8 +39,8 @@ public class GlobeMap extends AbstractWorldMap{
             height = 0;
         }
         else{
-            width = this.width;
-            height = this.equatorBounds.topRight().getX() == this.width ?
+            width = super.width;
+            height = this.equatorBounds.topRight().getX() == super.width ?
                     this.equatorBounds.topRight().getY() - this.equatorBounds.bottomLeft().getY():
                     this.equatorBounds.topRight().getY() - this.equatorBounds.bottomLeft().getY() - 1;
         }
@@ -190,9 +165,6 @@ public class GlobeMap extends AbstractWorldMap{
                 AnimalGroup newList = new AnimalGroup(animal);
                 animals.put(newPosition, newList);
             }
-            if(grassClumps.containsKey(newPosition)) {
-                grassClumps.remove(newPosition);
-            }
         }
 
         String message = String.format("An animal has been moved from %s to %s.", oldPosition, newPosition);
@@ -240,61 +212,14 @@ public class GlobeMap extends AbstractWorldMap{
         return super.isOccupied(position) || grassClumps.containsKey(position);
     }
 
-//    public void handleEating() {
-//        for (Animal animal : animals.values()) {
-//            Vector2d position = animal.getPosition();
-//
-//            if (grassClumps.containsKey(position)) {
-//                List<Animal> animalsAtPosition = getAnimalsAtSamePosition(animal);
-//                Animal animalToEat = determinePriority(animalsAtPosition).get(0);
-//                if (animalToEat != null) {
-//                    animalToEat.eat(grassClumps.get(position));
-//                }
-//            }
-//        }
-//    }
-//
-//    public void handleReproduction() {
-//        for (Animal animal : animals.values()) {
-//            Vector2d position = animal.getPosition();
-//            List<Animal> otherAnimals = getAnimalsAtSamePosition(animal);
-//            if (!otherAnimals.isEmpty()) {
-//                List<Animal> animalsToReproduce = determinePriority(animal, otherAnimals);
-//                if (animalsToReproduce.size() == 2) {
-//                    this.reproduce(animalsToReproduce.get(0), animalsToReproduce.get(1));
-//                }
-//            }
-//        }
-//    }
 
 
-//    public void handleInteractions() {
-//        Set<Vector2d> positions = new HashSet<>(animals.keySet());
-//        positions.retainAll(grassClumps.keySet());
-//
-//        for (Vector2d position : positions) {
-//            List<Animal> animalsAtPosition = getAnimalsAtSamePosition(animals.get(position));
-//
-//            if (grassClumps.containsKey(position)) {
-//                Animal animalToEat = getOrderedAnimals(animalsAtPosition).get(0);
-//                if (animalToEat != null) {
-//                    this.eat(animalToEat, grassClumps.get(position));
-//                }
-//            }
-//
-//            if (animalsAtPosition.size() > 1) {
-//                List<Animal> animalsToReproduce = getOrderedAnimals(animalsAtPosition);
-//                this.reproduce(animalsToReproduce.get(0), animalsToReproduce.get(1));
-//            }
-//        }
-//    }
 
 
-    @Override
-    public Boundary getCurrentBounds() {
-        Vector2d bottomLeft = new Vector2d(0, 0);
-        Vector2d topRight = new Vector2d(this.width, this.height);
-        return new Boundary(bottomLeft, topRight);
-    }
+
+
+
+
+
 }
 

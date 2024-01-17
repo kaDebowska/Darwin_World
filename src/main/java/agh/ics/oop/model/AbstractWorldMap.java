@@ -6,16 +6,28 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public abstract class AbstractWorldMap implements WorldMap {
-
     protected Map<Vector2d, AnimalGroup> animals;
+
+    private final int healthToReproduce;
+    protected Map<Vector2d, Grass> grassClumps;
+    private final int plantsEnergy;
+    protected final int width;
+    protected final int height;
+    protected final int plantsNum;
     private List<MapChangeListener> listeners;
     private UUID uuid;
 
-    public AbstractWorldMap() {
+    public AbstractWorldMap(int width, int height, int plantsNum, int plantsEnergy, int healthToReproduce) {
+        this.width = width;
+        this.height = height;
+        this.plantsNum = plantsNum;
+        this.plantsEnergy = plantsEnergy;
+        this.healthToReproduce = healthToReproduce;
         this.animals = new HashMap<>();
         this.listeners = new ArrayList<>();
         this.uuid = UUID.randomUUID();
     }
+
 
     public List<Animal> getAnimalsAt(Vector2d position) {
         return animals.get(position).getAnimals();
@@ -81,7 +93,6 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
 
-
     @Override
     public String toString() {
         Boundary boundary = this.getCurrentBounds();
@@ -106,8 +117,44 @@ public abstract class AbstractWorldMap implements WorldMap {
         }
     }
 
+    public void handleEating() {
+        for (Vector2d position : animals.keySet()) {
+            if (grassClumps.containsKey(position)) {
+                Animal animalToEat = animals.get(position).getOrderedAnimals().get(0);
+                this.eat(animalToEat, animalToEat.getPosition());
+            }
+        }
+    }
+
+    private void eat(Animal animal, Vector2d position) {
+        animal.restoreHealth(this.plantsEnergy);
+        animal.countEaten();
+        grassClumps.remove(position);
+    }
+
+    public void handleReproducing() {
+        for (Vector2d position : animals.keySet()) {
+            if (animals.get(position).isProlific()) {
+                List<Animal> sortedAnimals = animals.get(position).getOrderedAnimals();
+                Animal animalAlpha = sortedAnimals.get(0);
+                Animal animalBeta = sortedAnimals.get(1);
+                if (animalAlpha.getHealth() >= this.healthToReproduce && animalBeta.getHealth() >= this.healthToReproduce) {
+//                    this.reproduce(animalAlpha,animalBeta);
+                }
+            }
+        }
+    }
+
     @Override
     public UUID getId() {
         return  this.uuid;
     }
+
+    @Override
+    public Boundary getCurrentBounds() {
+        Vector2d bottomLeft = new Vector2d(0, 0);
+        Vector2d topRight = new Vector2d(this.width, this.height);
+        return new Boundary(bottomLeft, topRight);
+    }
+
 }
