@@ -27,7 +27,10 @@ public class GlobeMap extends AbstractWorldMap{
     }
 
     public Boundary calculateEquator(){
-        int globeSurface = super.width * super.height;
+        int width = this.width + 1;
+        int height = this.height + 1;
+
+        int globeSurface = width * height;
         int equatorSurface = (int) (0.2 * globeSurface);
         int equatorHeight =  (equatorSurface/width);
         equatorHeight = equatorHeight > height ? 1 : equatorHeight;
@@ -36,12 +39,13 @@ public class GlobeMap extends AbstractWorldMap{
         if(equatorHeight < 2){
             bottomLeftY = height % 2 == 1 ? height/2 - equatorHeight/2: height/2 - equatorHeight/2 - 1;
         }
-//        int bottomLeftY = height % 2 == 1 ? height/2 - equatorHeight/2: height/2 - equatorHeight/2 - 1;
-        int upperRightY = additionalArea == 0 ? bottomLeftY + equatorHeight : bottomLeftY + equatorHeight + 1;
-        int upperRightX = additionalArea == 0 ? width : additionalArea;
+
+        int upperRightY = additionalArea == 0 ? bottomLeftY + equatorHeight - 1 : bottomLeftY + equatorHeight;
+        int upperRightX = additionalArea == 0 ? width - 1 : additionalArea - 1;
+//      equator doesn't fit whole row
         if(equatorSurface < width){
             upperRightX = equatorSurface;
-            upperRightY = bottomLeftY + 1;
+            upperRightY = bottomLeftY;
         }
 
         Vector2d bottomLeft = new Vector2d(0, bottomLeftY);
