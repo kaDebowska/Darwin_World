@@ -8,22 +8,51 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class RandomPositionGenerator implements Iterable<Vector2d> {
-    private final List<Vector2d> positions;
+    private  List<Vector2d> positions;
     private int counter;
+
+    //    deep copy
+    public RandomPositionGenerator(RandomPositionGenerator original) {
+        this.positions = new ArrayList<>(original.positions);
+        this.counter = original.getCounter();
+    }
 
     public RandomPositionGenerator(int width, int height, int counter) {
 
+        this(width, height, counter, 0, 0);
+    }
+
+
+    public RandomPositionGenerator(int width, int height, int counter, int startX, int startY){
         this.positions = new ArrayList<>();
         this.counter = counter;
 
         // Populate the list with all possible variations of position
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
+        for (int x = startX; x <= width; x++) {
+            for (int y = startY; y <= height; y++) {
                 positions.add(new Vector2d(x, y));
             }
         }
+        if(this.counter > positions.size()){
+            this.counter = positions.size();
+        }
     }
 
+    public void setCounter(int counter) {
+        this.counter = counter;
+    }
+
+    public int getCounter() {
+        return counter;
+    }
+
+    public List<Vector2d> getPositions() {
+        return positions;
+    }
+
+    public void addPosition(Vector2d position) {
+        this.positions.add(position);
+    }
 
     @Override
     public Iterator<Vector2d> iterator() {

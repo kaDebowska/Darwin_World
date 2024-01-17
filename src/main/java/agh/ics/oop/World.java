@@ -22,15 +22,21 @@ public class World {
         ConsoleMapDisplay consoleDisplay = new ConsoleMapDisplay();
         List<Simulation> simulations = new ArrayList<>();
 
+//        AbstractWorldMap globeMap = new GlobeMap(5, 5, 4);
+
         for (int i = 0; i < 500; i++) {
 //            AbstractWorldMap grassFieldMap = new GrassField(10);
 //            grassFieldMap.subscribe(consoleDisplay);
 //            Simulation grassFieldSimulation = new Simulation(positions, grassFieldMap);
 //            simulations.add(grassFieldSimulation);
-            AbstractWorldMap rectangularMap = new RectangularMap(5, 5);
-            rectangularMap.subscribe(consoleDisplay);
-            Simulation rectangularMapSimulation = new Simulation(positions, rectangularMap);
-            simulations.add(rectangularMapSimulation);
+//            AbstractWorldMap rectangularMap = new RectangularMap(5, 5);
+            AbstractWorldMap globeMap = new GlobeMap(5, 5, 4);
+            globeMap.subscribe(consoleDisplay);
+//            rectangularMap.subscribe(consoleDisplay);
+//            Simulation rectangularMapSimulation = new Simulation(positions, rectangularMap);
+            Simulation globeMapSimulation = new Simulation(positions, globeMap);
+//            simulations.add(rectangularMapSimulation);
+            simulations.add(globeMapSimulation);
         }
 
         SimulationEngine simulationEngine = new SimulationEngine(simulations);

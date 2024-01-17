@@ -39,4 +39,17 @@ class GlobeMapTest {
         Boundary equatorArea8 = globeMap8.calculateEquator();
         assertEquals(new Boundary(new Vector2d(0, 7), new Vector2d(1, 11)), equatorArea8);
     }
+
+    @Test
+    public void testPuttingPlants(){
+
+//        GlobeMap globeMap1 = new GlobeMap(3, 17, 4);
+//
+//        System.out.println(globeMap1.equatorBounds);
+//        System.out.println(globeMap1.positionsOnEquator.getPositions());
+//        System.out.println(globeMap1.positionsOutsideEquator.getPositions());
+//        System.out.println(globeMap1.grassClumps);
+//        System.out.println(globeMap1);
+  }
+
 }
