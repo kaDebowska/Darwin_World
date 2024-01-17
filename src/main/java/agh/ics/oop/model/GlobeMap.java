@@ -30,15 +30,16 @@ public class GlobeMap extends AbstractWorldMap{
         this.height = height;
         this.grassClumps = new HashMap<>();
         this.plantsNum = plantsNum;
-        this.plantsOnEquator = (int) (0.8 * plantsNum);
-        this.plantsOutsideEquator = plantsNum - plantsOnEquator;
+//        this.plantsOnEquator = (int) (0.8 * plantsNum);
+//        this.plantsOutsideEquator = plantsNum - plantsOnEquator;
         this.equatorBounds = calculateEquator();
-        this.positionsOnEquator = generateEquatorPositions();
-        this.positionsOutsideEquator = generatePositionsOutsideEquator();
-        putPlantsOnEquator();
-        putPlantsOutsideEquator();
-
+//        this.positionsOnEquator = generateEquatorPositions();
+//        this.positionsOutsideEquator = generatePositionsOutsideEquator();
+//        putPlantsOnEquator();
+//        putPlantsOutsideEquator();
+//        this.putPlants();
     }
+
 
 
     public RandomPositionGenerator generateEquatorPositions(){
@@ -103,6 +104,18 @@ public class GlobeMap extends AbstractWorldMap{
         positionsOutsideEquator.setCounter(this.plantsOutsideEquator);
         return positionsOutsideEquator;
 
+    }
+
+    @Override
+    public void putPlants(){
+        this.plantsOnEquator = (int) (0.8 * plantsNum);
+        this.plantsOutsideEquator = plantsNum - plantsOnEquator;
+
+        this.positionsOnEquator = generateEquatorPositions();
+        this.positionsOutsideEquator = generatePositionsOutsideEquator();
+
+        putPlantsOnEquator();
+        putPlantsOutsideEquator();
     }
 
     public void putPlantsOnEquator(){

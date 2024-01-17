@@ -26,4 +26,8 @@ public class RectangularMap extends AbstractWorldMap {
         return new Boundary(bottomLeft, topRight);
     }
 
+    @Override
+    public void putPlants() {
+
+    }
 }

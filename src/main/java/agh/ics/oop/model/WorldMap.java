@@ -34,6 +34,7 @@ public interface WorldMap extends MoveValidator {
      * @param position Position to check.
      * @return True if the position is occupied.
      */
+
     boolean isOccupied(Vector2d position);
 
     /**
@@ -51,6 +52,9 @@ public interface WorldMap extends MoveValidator {
      *
      * @return a Boundary object that stores bottomLeft and topRight corner of a map.
      */
+
+    void putPlants();
+
     Boundary getCurrentBounds();
 
     UUID getId();

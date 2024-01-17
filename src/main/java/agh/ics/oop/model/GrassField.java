@@ -21,6 +21,10 @@ public class GrassField extends AbstractWorldMap {
         }
     }
 
+    @Override
+    public void putPlants() {
+
+    }
 
     @Override
     public boolean isOccupied(Vector2d position) {
