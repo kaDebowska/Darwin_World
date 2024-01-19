@@ -34,18 +34,17 @@ public class Simulation implements Runnable {
         }
         while (running) {
             try {
-            map.putPlants();
-            for (Animal animal : map.getAnimals()) {
-                this.map.move(animal);
-            }
-            map.handleEating();
-            map.handleReproduction();
-//            map.addNewAnimal();
-            for (Animal animal : map.getAnimals()) {
-                animal.dailyFatigue();
-            }
-            map.notifyListeners(String.valueOf(map.getAnimals().size()));
-
+                map.removeDeadAnimals();
+                for (Animal animal : map.getAnimals()) {
+                    this.map.move(animal);
+                }
+                map.handleEating();
+                map.handleReproduction();
+                map.putPlants();
+                for (Animal animal : map.getAnimals()) {
+                    animal.dailyFatigue();
+                }
+                map.notifyListeners(String.valueOf(map.getAnimals().size()));
 
                 Thread.sleep(100);
 //                Thread.sleep(10000);

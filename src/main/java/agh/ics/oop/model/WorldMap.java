@@ -36,7 +36,7 @@ public interface WorldMap {
      * @return True if the position is occupied.
      */
 
-    boolean isOccupied(Vector2d position);
+//    boolean isOccupied(Vector2d position);
 
     /**
      * Return an animal at a given position.
@@ -58,7 +58,6 @@ public interface WorldMap {
 
     Boundary getCurrentBounds();
 
-    UUID getId();
 
     void handleEating();
 
@@ -69,4 +68,6 @@ public interface WorldMap {
     void addNewAnimal();
 
     void notifyListeners(String step);
+
+    void removeDeadAnimals();
 }

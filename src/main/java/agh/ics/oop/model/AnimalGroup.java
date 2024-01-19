@@ -62,4 +62,7 @@ public class AnimalGroup implements WorldElement {
         return animals;
     }
 
+    public boolean isEmpty() {
+        return animals.isEmpty();
+    }
 }

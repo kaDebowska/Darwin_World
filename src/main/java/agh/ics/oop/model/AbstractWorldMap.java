@@ -1,8 +1,7 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.model.util.MapVisualizer;
-
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.lang.Math.abs;
 
@@ -81,7 +80,7 @@ public abstract class AbstractWorldMap implements WorldMap {
         if (!oldPosition.equals(newPosition)) {
             AnimalGroup oldGroup = animals.get(oldPosition);
             oldGroup.removeAnimal(animal);
-            if (oldGroup.getAnimals().isEmpty()) {
+            if (oldGroup.isEmpty()) {
                 animals.remove(oldPosition);
             }
             AnimalGroup newGroup = animals.get(newPosition);
@@ -92,24 +91,9 @@ public abstract class AbstractWorldMap implements WorldMap {
                 newGroup.addAnimal(animal);
             }
         }
-
-//        String message = String.format("An animal has been moved from %s to %s.", oldPosition, newPosition);
-//        this.notifyListeners(message);
     }
 
-    //to remove when removing map visualizer
-    @Override
-    public String toString() {
-        Boundary boundary = this.getCurrentBounds();
-        MapVisualizer mapVisualizer = new MapVisualizer(this);
-        return mapVisualizer.draw(boundary.bottomLeft(), boundary.topRight());
-    }
 
-    //to remove when removing map visualizer
-    @Override
-    public boolean isOccupied(Vector2d position) {
-        return animals.containsKey(position);
-    }
 
     @Override
     public WorldElement objectAt(Vector2d position) {
@@ -179,13 +163,39 @@ public abstract class AbstractWorldMap implements WorldMap {
         this.place(babyAnimal);
     }
 
-    public void stepCounters() {
-        for (AnimalGroup animalGroup : this.animals.values()) {
-            for (Animal animal : animalGroup.getAnimals()) {
-                animal.dailyFatigue();
+//    public void stepCounters() {
+//        for (AnimalGroup animalGroup : this.animals.values()) {
+//            for (Animal animal : animalGroup.getAnimals()) {
+//                animal.dailyFatigue();
+//            }
+//        }
+//    }
+
+    public void removeDeadAnimals() {
+        List<Vector2d> emptyPositions = new ArrayList<>();
+
+        for (Map.Entry<Vector2d, AnimalGroup> entry : animals.entrySet()) {
+            Vector2d position = entry.getKey();
+            AnimalGroup group = entry.getValue();
+
+            List<Animal> deadAnimals = group.getAnimals().stream()
+                    .filter(animal -> animal.getHealth() <= 0)
+                    .collect(Collectors.toList());
+
+            for (Animal deadAnimal : deadAnimals) {
+                group.removeAnimal(deadAnimal);
+            }
+
+            if (group.isEmpty()) {
+                emptyPositions.add(position);
             }
         }
+
+        for (Vector2d emptyPosition : emptyPositions) {
+            animals.remove(emptyPosition);
+        }
     }
+
 
     public List<Animal> getAnimals() {
         List<Animal> animalList = new ArrayList<>();
@@ -195,10 +205,6 @@ public abstract class AbstractWorldMap implements WorldMap {
         return animalList;
     }
 
-    @Override
-    public UUID getId() {
-        return  this.uuid;
-    }
 
     @Override
     public Boundary getCurrentBounds() {
