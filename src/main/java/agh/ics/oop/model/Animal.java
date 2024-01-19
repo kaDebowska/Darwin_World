@@ -6,13 +6,14 @@ public class Animal implements WorldElement {
 
     private int orientation;
     private Vector2d position;
-    private List<Integer> genome;
-    private Iterator<Integer> genomeIterator;
+    protected List<Integer> genome;
+    protected Iterator<Integer> genomeIterator;
     private int health;
     private int age;
     private int plantsEaten = 0;
     private Set<UUID> kids = new HashSet<>();
     private UUID uuid;
+    protected static final Random RAND = new Random();
 
 
 
@@ -26,7 +27,7 @@ public class Animal implements WorldElement {
             this.genome.add(rand.nextInt(8));
         }
         this.genomeIterator = genome.iterator();
-        Collections.rotate(this.genome, rand.nextInt(this.genome.size()));
+        this.skipToRandomGene();
         this.uuid = UUID.randomUUID();
     }
 
@@ -37,7 +38,7 @@ public class Animal implements WorldElement {
         this.health = health;
         this.genome = new ArrayList<>(genome);
         this.genomeIterator = this.genome.iterator();
-        Collections.rotate(this.genome, rand.nextInt(this.genome.size()));
+        this.skipToRandomGene();
         this.uuid = UUID.randomUUID();
     }
 
@@ -70,6 +71,16 @@ public class Animal implements WorldElement {
             genomeIterator = genome.iterator();
         }
         return genomeIterator.next();
+    }
+
+    protected void skipToRandomGene() {
+        int jumps = RAND.nextInt(genome.size());
+        for (int i = 0; i < jumps; i++) {
+            if (!genomeIterator.hasNext()) {
+                genomeIterator = genome.iterator();
+            }
+            genomeIterator.next();
+        }
     }
 
     public void restoreHealth(int energy) {
