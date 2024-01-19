@@ -10,12 +10,6 @@ import static java.lang.Math.abs;
 
 public class GlobeMap extends AbstractWorldMap{
 
-    private final int width;
-    private final int height;
-    private Map<Vector2d, Grass> grassClumps;
-    private final int plantsNum;
-
-
     private int plantsOnEquator;
 
     private int plantsOutsideEquator;
@@ -24,7 +18,6 @@ public class GlobeMap extends AbstractWorldMap{
 
     private RandomPositionGenerator positionsOutsideEquator;
 
-    private final int platsEnergy;
     private Boundary equatorBounds;
 
     public GlobeMap(int width, int height, int plantsNum){
@@ -44,14 +37,8 @@ public class GlobeMap extends AbstractWorldMap{
         this.grassClumps = new HashMap<>();
         this.plantsNum = plantsNum;
         this.platsEnergy = platsEnergy;
-//        this.plantsOnEquator = (int) (0.8 * plantsNum);
-//        this.plantsOutsideEquator = plantsNum - plantsOnEquator;
         this.equatorBounds = calculateEquator();
-//        this.positionsOnEquator = generateEquatorPositions();
-//        this.positionsOutsideEquator = generatePositionsOutsideEquator();
-//        putPlantsOnEquator();
-//        putPlantsOutsideEquator();
-//        this.putPlants();
+
     }
 
 
@@ -277,8 +264,8 @@ public class GlobeMap extends AbstractWorldMap{
 //            }
 //        }
 //    }
-
-
+//
+//
 //    public void handleInteractions() {
 //        Set<Vector2d> positions = new HashSet<>(animals.keySet());
 //        positions.retainAll(grassClumps.keySet());
@@ -301,21 +288,21 @@ public class GlobeMap extends AbstractWorldMap{
 //    }
 
 
-//    public List<Animal> getAnimalsAtSamePosition(Animal animal) {
-//        Vector2d position = animal.getPosition();
-//        List<Animal> animalsAtSamePosition = new ArrayList<>();
-//
-//        for (Animal otherAnimal : animals.values()) {
-//            if (otherAnimal.getPosition().equals(position) && !otherAnimal.equals(animal)) {
-//                animalsAtSamePosition.add(otherAnimal);
-//            }
-//        }
-//        return animalsAtSamePosition;
-//    }
+    public List<Animal> getAnimalsAtSamePosition(Animal animal) {
+        Vector2d position = animal.getPosition();
+        List<Animal> animalsAtSamePosition = new ArrayList<>();
 
-//    public Stream<WorldElement> getElements() {
-//        return Stream.concat(animals.values().stream(), grassClumps.values().stream());
-//    }
+        for (Animal otherAnimal : animals.values()) {
+            if (otherAnimal.getPosition().equals(position) && !otherAnimal.equals(animal)) {
+                animalsAtSamePosition.add(otherAnimal);
+            }
+        }
+        return animalsAtSamePosition;
+    }
+
+    public Stream<WorldElement> getElements() {
+        return Stream.concat(animals.values().stream(), grassClumps.values().stream());
+    }
 
 
     @Override

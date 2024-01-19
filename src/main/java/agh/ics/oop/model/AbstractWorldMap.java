@@ -11,10 +11,23 @@ public abstract class AbstractWorldMap implements WorldMap {
     private List<MapChangeListener> listeners;
     private UUID uuid;
 
-    public AbstractWorldMap() {
+    protected final int width;
+    protected final int height;
+
+    private Map<Vector2d, Grass> grassClumps;
+    private final int startPlantsNum;
+
+    private final int plantsGrowingEveryDayNum;
+
+    public AbstractWorldMap(int width, int height, int startPlantsNum, int plantsGrowingEveryDayNum) {
         this.animals = new HashMap<>();
         this.listeners = new ArrayList<>();
         this.uuid = UUID.randomUUID();
+        this.width = width;
+        this.height = height;
+        this.startPlantsNum = startPlantsNum;
+        this.plantsGrowingEveryDayNum = plantsGrowingEveryDayNum;
+
     }
 
     public List<Animal> getAnimalsAt(Vector2d position) {
