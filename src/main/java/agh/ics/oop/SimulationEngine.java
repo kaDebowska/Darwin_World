@@ -17,6 +17,10 @@ public class SimulationEngine {
         this.executorService = Executors.newFixedThreadPool(4);
     }
 
+    public List<Simulation> getSimulationList() {
+        return this.simulationList;
+    }
+
     public void runSync() {
         simulationList.forEach(Simulation::run);
     }

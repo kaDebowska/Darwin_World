@@ -3,7 +3,6 @@ package agh.ics.oop.model;
 import agh.ics.oop.model.util.MapVisualizer;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.lang.Math.abs;
 
@@ -42,8 +41,6 @@ public abstract class AbstractWorldMap implements WorldMap {
             AnimalGroup newList = new AnimalGroup(animal);
             animals.put(position, newList);
         }
-        String message = String.format("An animal has been placed at %s.", position);
-        this.notifyListeners(message);
         return true;
     }
 
@@ -91,8 +88,8 @@ public abstract class AbstractWorldMap implements WorldMap {
             }
         }
 
-        String message = String.format("An animal has been moved from %s to %s.", oldPosition, newPosition);
-        this.notifyListeners(message);
+//        String message = String.format("An animal has been moved from %s to %s.", oldPosition, newPosition);
+//        this.notifyListeners(message);
     }
 
     //to remove when removing map visualizer
@@ -127,7 +124,7 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     //    different name
-    void notifyListeners(String message) {
+    public void notifyListeners(String message) {
         if (this.listeners != null) {
             for (MapChangeListener listener : listeners) {
                 listener.onMapChange(this, message);
@@ -150,13 +147,13 @@ public abstract class AbstractWorldMap implements WorldMap {
         grassClumps.remove(position);
     }
 
-    public void handleReproducing() {
+    public void handleReproduction() {
         for (Vector2d position : animals.keySet()) {
             if (animals.get(position).isProlific()) {
                 List<Animal> sortedAnimals = animals.get(position).getOrderedAnimals();
                 Animal animalAlpha = sortedAnimals.get(0);
                 Animal animalBeta = sortedAnimals.get(1);
-                if (animalAlpha.getHealth() >= this.healthToReproduce && animalBeta.getHealth() >= this.healthToReproduce) {
+                if (animalAlpha.getHealth() >= healthToReproduce && animalBeta.getHealth() >= healthToReproduce) {
                     this.reproduce(animalAlpha,animalBeta);
                 }
             }
@@ -166,17 +163,32 @@ public abstract class AbstractWorldMap implements WorldMap {
     private void reproduce(Animal animalAlpha, Animal animalBeta) {
         animalAlpha.setHealth(animalAlpha.getHealth()-this.reproductionCost);
         animalBeta.setHealth(animalBeta.getHealth()-this.reproductionCost);
-        Animal babyAnimal = new Animal(this.reproductionCost*2, )
-//        place()
+        Animal babyAnimal = new Animal(animalAlpha.getPosition(),this.reproductionCost*2, List.of(0));
+        animalAlpha.addChildren(babyAnimal);
+        animalBeta.addChildren(babyAnimal);
+        this.place(babyAnimal);
     }
 
-//    public void stepCounters() {
-//        for (AnimalGroup animalGroup : this.animals.values()) {
-//            for (Animal animal : animalGroup.getAnimals()) {
-//                animal.dailyFatigue();
-//            }
-//        }
-//    }
+    public void addNewAnimal() {
+        Animal babyAnimal = new Animal(new Vector2d(0,0),this.reproductionCost*2, List.of(0));
+        this.place(babyAnimal);
+    }
+
+    public void stepCounters() {
+        for (AnimalGroup animalGroup : this.animals.values()) {
+            for (Animal animal : animalGroup.getAnimals()) {
+                animal.dailyFatigue();
+            }
+        }
+    }
+
+    public List<Animal> getAnimals() {
+        List<Animal> animalList = new ArrayList<>();
+        for (AnimalGroup animalGroup : this.animals.values()) {
+            animalList.addAll(animalGroup.getAnimals());
+        }
+        return animalList;
+    }
 
     @Override
     public UUID getId() {

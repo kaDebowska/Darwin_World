@@ -27,7 +27,7 @@ public class AnimalGroup implements WorldElement {
     }
 
     public boolean isProlific() {
-        return this.animals.size() > 2;
+        return this.animals.size() >= 2;
     }
 
     @Override

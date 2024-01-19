@@ -17,7 +17,7 @@ public interface WorldMap {
      * @param animal The animal to place on the map.
      * @return True if the animal was placed. The animal cannot be placed if the move is not valid.
      */
-    boolean place(Animal animal) throws PositionAlreadyOccupiedException;
+    boolean place(Animal animal);
 
     /**
      * Moves an animal (if it is present on the map) according to specified direction.
@@ -60,7 +60,13 @@ public interface WorldMap {
 
     UUID getId();
 
-    public void handleEating();
+    void handleEating();
 
+    List<Animal> getAnimals();
 
+    void handleReproduction();
+
+    void addNewAnimal();
+
+    void notifyListeners(String step);
 }

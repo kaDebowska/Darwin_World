@@ -97,6 +97,10 @@ public class Animal implements WorldElement {
         return kids.size();
     }
 
+    public void addChildren(Animal other) {
+        this.kids.add(other.getId());
+    }
+
     @Override
     public String toString() {
         return String.valueOf(this.health);
