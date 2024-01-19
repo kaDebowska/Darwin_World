@@ -35,7 +35,7 @@ public class SimulationApp extends Application {
         });
     }
 
-    public void startNewSimulation() throws IOException {
+    public void startNewSimulation(int startAnimalsField) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
         BorderPane viewRoot = loader.load();
@@ -47,8 +47,9 @@ public class SimulationApp extends Application {
         Stage stage = new Stage();
         configureStage(stage, viewRoot);
         stage.show();
+        Simulation newSimulation = new Simulation(startAnimalsField, globeMap);
 
-        presenter.onSimulationStartClicked();
+        presenter.onSimulationStartClicked(newSimulation);
     }
 
 

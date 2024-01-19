@@ -4,6 +4,8 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.layout.HBox?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             minHeight="200.0" minWidth="550.0"
@@ -14,9 +16,15 @@
     </top>
     <center>
 
+        <HBox spacing="10" alignment="CENTER">
+            <Label text="Animals at the start:" textAlignment="LEFT"/>
+            <Spinner fx:id="startAnimalsField" initialValue="10" editable="true"/>
+        </HBox>
+
+    </center>
+    <bottom>
         <VBox>
-<!--            <TextField fx:id="movesField"/>-->
             <Button text="Start" onAction="#onSimulationStartClicked"/>
         </VBox>
-    </center>
+    </bottom>
 </BorderPane>

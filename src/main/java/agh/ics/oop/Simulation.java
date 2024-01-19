@@ -22,7 +22,7 @@ public class Simulation implements Runnable {
         int height = boundary.topRight().getY() - boundary.bottomLeft().getY();
         RandomPositionGenerator randomPositionGenerator = new RandomPositionGenerator(width, height, animalStartNumber);
         for (Vector2d animalPosition : randomPositionGenerator) {
-            map.place(new Animal(animalPosition, 50, 10));
+            map.place(new CrazyAnimal(animalPosition, 50, 10));
         }
     }
 
