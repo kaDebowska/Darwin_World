@@ -104,8 +104,8 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     public void onSimulationStartClicked() {
 
-        List<Vector2d> positions = List.of(new Vector2d(0, 0), new Vector2d(2, 2));
-        Simulation grassFieldSimulation = new Simulation(positions, this.worldMap);
+        int animalAtStart = 10;
+        Simulation grassFieldSimulation = new Simulation(animalAtStart, this.worldMap);
         List<Simulation> simulations = new ArrayList<>();
         simulations.add(grassFieldSimulation);
 

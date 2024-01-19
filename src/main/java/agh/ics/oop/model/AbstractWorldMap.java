@@ -1,5 +1,7 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.model.util.RandomPositionGenerator;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -7,6 +9,7 @@ import static java.lang.Math.abs;
 
 public abstract class AbstractWorldMap implements WorldMap {
     protected Map<Vector2d, AnimalGroup> animals;
+    private final int animalStartNumber;
     private final int healthToReproduce;
     private final int reproductionCost;
     protected Map<Vector2d, Grass> grassClumps;
@@ -19,9 +22,10 @@ public abstract class AbstractWorldMap implements WorldMap {
     private int minMutations;
     private int maxMutations;
 
-    public AbstractWorldMap(int width, int height, int plantsNum, int plantsEnergy, int healthToReproduce, int reproductionCost, int minMutations, int maxMutations) {
+    public AbstractWorldMap(int width, int height, int animalStartNumber, int plantsNum, int plantsEnergy, int healthToReproduce, int reproductionCost, int minMutations, int maxMutations) {
         this.width = width;
         this.height = height;
+        this.animalStartNumber = animalStartNumber;
         this.plantsNum = plantsNum;
         this.plantsEnergy = plantsEnergy;
         this.healthToReproduce = healthToReproduce;
@@ -34,7 +38,7 @@ public abstract class AbstractWorldMap implements WorldMap {
 
 
     @Override
-    public boolean place(Animal animal) {
+    public void place(Animal animal) {
         Vector2d position = animal.getPosition();
         if (animals.containsKey(position)) {
             animals.get(position).addAnimal(animal);
@@ -42,8 +46,8 @@ public abstract class AbstractWorldMap implements WorldMap {
             AnimalGroup newList = new AnimalGroup(animal);
             animals.put(position, newList);
         }
-        return true;
     }
+
 
     public boolean isTopOrBottomMapEdge(Vector2d position){
         return position.getY() == this.height + 1 || position.getY() == - 1;

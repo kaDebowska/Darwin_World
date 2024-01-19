@@ -1,8 +1,6 @@
 package agh.ics.oop.model;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 public class CrazyAnimal extends Animal{
     public CrazyAnimal(Vector2d position, int health, int genomeLength) {
