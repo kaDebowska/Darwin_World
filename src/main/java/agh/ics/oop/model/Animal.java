@@ -10,15 +10,11 @@ public class Animal implements WorldElement {
     private Iterator<Integer> genomeIterator;
     private int health;
     private int age;
-    private int plantsEaten;
-    private Set<UUID> kids;
+    private int plantsEaten = 0;
+    private Set<UUID> kids = new HashSet<>();
     private UUID uuid;
 
 
-
-    public Animal() {
-        this(new Vector2d(2, 2), 50, 10);
-    }
 
     public Animal(Vector2d position, int health, int genomeLength) {
         Random rand = new Random();
@@ -30,7 +26,23 @@ public class Animal implements WorldElement {
             this.genome.add(rand.nextInt(8));
         }
         this.genomeIterator = genome.iterator();
+        Collections.rotate(this.genome, rand.nextInt(this.genome.size()));
         this.uuid = UUID.randomUUID();
+    }
+
+    public Animal(Vector2d position, int health, List<Integer> genome) {
+        Random rand = new Random();
+        this.orientation = rand.nextInt(8);
+        this.position = position;
+        this.health = health;
+        this.genome = new ArrayList<>(genome);
+        this.genomeIterator = this.genome.iterator();
+        Collections.rotate(this.genome, rand.nextInt(this.genome.size()));
+        this.uuid = UUID.randomUUID();
+    }
+
+    public void countEaten() {
+        this.plantsEaten += 1;
     }
 
     public void setOrientation(int orientation) {
@@ -73,6 +85,10 @@ public class Animal implements WorldElement {
         return health;
     }
 
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
     public int getAge() {
         return age;
     }
@@ -81,9 +97,13 @@ public class Animal implements WorldElement {
         return kids.size();
     }
 
+    public void addChildren(Animal other) {
+        this.kids.add(other.getId());
+    }
+
     @Override
     public String toString() {
-        return String.valueOf(this.orientation);
+        return String.valueOf(this.health);
     }
 
     public boolean isAt(Vector2d position) {
@@ -109,7 +129,7 @@ public class Animal implements WorldElement {
     }
 
 
-    public void move(MoveValidator moveValidator, int direction) {
+    public void move(int direction) {
         Vector2d newPosition;
         this.setOrientation((this.orientation + direction) % 8);
         newPosition = this.position.add(this.toUnitVector(this.orientation));

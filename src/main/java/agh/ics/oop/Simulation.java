@@ -30,19 +30,23 @@ public class Simulation implements Runnable {
     @Override
     public void run() {
         for (Animal animal : this.listOfAnimals) {
-            try {
                 map.place(animal);
-            } catch (PositionAlreadyOccupiedException ex) {
-                ex.printStackTrace();
-            }
         }
         while (running) {
-            for (Animal animal : this.listOfAnimals) {
-                this.map.move(animal);
-            }
-            map.putPlants();
             try {
-                Thread.sleep(500);
+                map.removeDeadAnimals();
+                for (Animal animal : map.getAnimals()) {
+                    this.map.move(animal);
+                }
+                map.handleEating();
+                map.handleReproduction();
+                map.putPlants();
+                for (Animal animal : map.getAnimals()) {
+                    animal.dailyFatigue();
+                }
+                map.notifyListeners(String.valueOf(map.getAnimals().size()));
+
+                Thread.sleep(100);
 //                Thread.sleep(10000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);

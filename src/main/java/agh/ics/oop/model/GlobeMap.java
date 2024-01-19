@@ -1,46 +1,27 @@
 package agh.ics.oop.model;
-
-//import agh.ics.oop.model.util.MapVisualizer;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 
 import java.util.*;
-import java.util.stream.Stream;
-
-import static java.lang.Math.abs;
 
 public class GlobeMap extends AbstractWorldMap{
-
     private int plantsOnEquator;
-
     private int plantsOutsideEquator;
-
     private RandomPositionGenerator positionsOnEquator;
-
     private RandomPositionGenerator positionsOutsideEquator;
-
     private Boundary equatorBounds;
 
     public GlobeMap(int width, int height, int plantsNum){
-        //temporary constructor to make the class compatible with its tests
-        this.width = width;
-        this.height = height;
+        super(width, height, plantsNum, 100, 30, 15, 0, 10);
         this.grassClumps = new HashMap<>();
-        this.plantsNum = plantsNum;
-        this.platsEnergy = 100;
         this.equatorBounds = calculateEquator();
         putPlants();
     }
 
-    public GlobeMap(int width, int height, int plantsNum, int platsEnergy){
-        this.width = width;
-        this.height = height;
+    public GlobeMap(int width, int height, int plantsNum, int platsEnergy, int healtToReproduce, int reproductionCost, int minMutations, int maxMutations){
+        super(width, height, plantsNum, platsEnergy, healtToReproduce, reproductionCost, minMutations, maxMutations);
         this.grassClumps = new HashMap<>();
-        this.plantsNum = plantsNum;
-        this.platsEnergy = platsEnergy;
         this.equatorBounds = calculateEquator();
-
     }
-
 
 
     public RandomPositionGenerator generateEquatorPositions(){
@@ -52,8 +33,8 @@ public class GlobeMap extends AbstractWorldMap{
             height = 0;
         }
         else{
-            width = this.width;
-            height = this.equatorBounds.topRight().getX() == this.width ?
+            width = super.width;
+            height = this.equatorBounds.topRight().getX() == super.width ?
                     this.equatorBounds.topRight().getY() - this.equatorBounds.bottomLeft().getY():
                     this.equatorBounds.topRight().getY() - this.equatorBounds.bottomLeft().getY() - 1;
         }
@@ -107,6 +88,7 @@ public class GlobeMap extends AbstractWorldMap{
 
     }
 
+
     @Override
     public void putPlants(){
         this.plantsOnEquator = (int) (0.8 * plantsNum);
@@ -132,54 +114,6 @@ public class GlobeMap extends AbstractWorldMap{
         }
         positionsOutsideEquator.setCounter(this.plantsOutsideEquator);
 
-    }
-
-
-
-    public boolean isTopOrBottomMapEdge(Vector2d position){
-        return position.getY() == this.height + 1 || position.getY() == - 1;
-    }
-
-    public boolean isLeftOrRightMapEdge(Vector2d position){
-        return position.getX() == this.width + 1 || position.getX() == -1;
-    }
-
-    public int reflect(int orientation) {
-        return (12 - orientation) % 8;
-    }
-
-    @Override
-    public void move(Animal animal) {
-        Vector2d oldPosition = animal.getPosition();
-        int direction = animal.getNextGene();
-        animal.move(this, direction);
-        Vector2d newPosition = animal.getPosition();
-
-        if (this.isTopOrBottomMapEdge(newPosition) & this.isLeftOrRightMapEdge(newPosition)){
-            newPosition = new Vector2d(abs(newPosition.getX() - this.width) - 1, abs(newPosition.getY() - 1));
-            animal.setPosition(newPosition);
-            animal.setOrientation(reflect(animal.getOrientation()));
-        }
-        else if (this.isLeftOrRightMapEdge(newPosition)){
-            newPosition = new Vector2d((abs(newPosition.getX() - this.width) - 1), newPosition.getY());
-            animal.setPosition(newPosition);
-        }
-        else if (this.isTopOrBottomMapEdge(newPosition)){
-            newPosition = new Vector2d(newPosition.getX(), abs(newPosition.getY()) - 1);
-            animal.setPosition(newPosition);
-            animal.setOrientation(reflect(animal.getOrientation()));
-        }
-
-        if (!oldPosition.equals(newPosition)) {
-            animals.remove(oldPosition);
-            animals.put(animal, newPosition);
-            if(grassClumps.containsKey(newPosition)) {
-                grassClumps.remove(newPosition);
-            }
-        }
-
-        String message = String.format("An animal has been moved from %s to %s.", oldPosition, newPosition);
-        this.notifyListeners(message);
     }
 
 
@@ -211,105 +145,6 @@ public class GlobeMap extends AbstractWorldMap{
 
     }
 
-//    @Override
-//    public boolean isOccupied(Vector2d position) {
-//        return super.isOccupied(position) || grassClumps.containsKey(position);
-//    }
 
-//    @Override
-//    public WorldElement objectAt(Vector2d position) {
-//        return super.isOccupied(position) ? super.objectAt(position) : grassClumps.get(position);
-//    }
-
-    @Override
-    public boolean canMoveTo(Vector2d position) {
-        return true;
-    }
-
-
-    @Override
-    public WorldElement objectAt(Vector2d position) {
-        return super.isOccupied(position) ? super.objectAt(position) : grassClumps.get(position);
-    }
-
-
-    @Override
-    public boolean isOccupied(Vector2d position) {
-        return super.isOccupied(position) || grassClumps.containsKey(position);
-    }
-
-//    public void handleEating() {
-//        for (Animal animal : animals.values()) {
-//            Vector2d position = animal.getPosition();
-//
-//            if (grassClumps.containsKey(position)) {
-//                List<Animal> animalsAtPosition = getAnimalsAtSamePosition(animal);
-//                Animal animalToEat = determinePriority(animalsAtPosition).get(0);
-//                if (animalToEat != null) {
-//                    animalToEat.eat(grassClumps.get(position));
-//                }
-//            }
-//        }
-//    }
-//
-//    public void handleReproduction() {
-//        for (Animal animal : animals.values()) {
-//            Vector2d position = animal.getPosition();
-//            List<Animal> otherAnimals = getAnimalsAtSamePosition(animal);
-//            if (!otherAnimals.isEmpty()) {
-//                List<Animal> animalsToReproduce = determinePriority(animal, otherAnimals);
-//                if (animalsToReproduce.size() == 2) {
-//                    this.reproduce(animalsToReproduce.get(0), animalsToReproduce.get(1));
-//                }
-//            }
-//        }
-//    }
-//
-//
-//    public void handleInteractions() {
-//        Set<Vector2d> positions = new HashSet<>(animals.keySet());
-//        positions.retainAll(grassClumps.keySet());
-//
-//        for (Vector2d position : positions) {
-//            List<Animal> animalsAtPosition = getAnimalsAtSamePosition(animals.get(position));
-//
-//            if (grassClumps.containsKey(position)) {
-//                Animal animalToEat = getOrderedAnimals(animalsAtPosition).get(0);
-//                if (animalToEat != null) {
-//                    this.eat(animalToEat, grassClumps.get(position));
-//                }
-//            }
-//
-//            if (animalsAtPosition.size() > 1) {
-//                List<Animal> animalsToReproduce = getOrderedAnimals(animalsAtPosition);
-//                this.reproduce(animalsToReproduce.get(0), animalsToReproduce.get(1));
-//            }
-//        }
-//    }
-
-
-    public List<Animal> getAnimalsAtSamePosition(Animal animal) {
-        Vector2d position = animal.getPosition();
-        List<Animal> animalsAtSamePosition = new ArrayList<>();
-
-        for (Animal otherAnimal : animals.values()) {
-            if (otherAnimal.getPosition().equals(position) && !otherAnimal.equals(animal)) {
-                animalsAtSamePosition.add(otherAnimal);
-            }
-        }
-        return animalsAtSamePosition;
-    }
-
-    public Stream<WorldElement> getElements() {
-        return Stream.concat(animals.values().stream(), grassClumps.values().stream());
-    }
-
-
-    @Override
-    public Boundary getCurrentBounds() {
-        Vector2d bottomLeft = new Vector2d(0, 0);
-        Vector2d topRight = new Vector2d(this.width, this.height);
-        return new Boundary(bottomLeft, topRight);
-    }
 }
 
