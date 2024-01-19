@@ -79,12 +79,17 @@ public abstract class AbstractWorldMap implements WorldMap {
         }
 
         if (!oldPosition.equals(newPosition)) {
-            animals.remove(oldPosition);
-            if (animals.containsKey(newPosition)) {
-                animals.get(newPosition).addAnimal(animal);
+            AnimalGroup oldGroup = animals.get(oldPosition);
+            oldGroup.removeAnimal(animal);
+            if (oldGroup.getAnimals().isEmpty()) {
+                animals.remove(oldPosition);
+            }
+            AnimalGroup newGroup = animals.get(newPosition);
+            if (newGroup == null) {
+                newGroup = new AnimalGroup(animal);
+                animals.put(newPosition, newGroup);
             } else {
-                AnimalGroup newList = new AnimalGroup(animal);
-                animals.put(newPosition, newList);
+                newGroup.addAnimal(animal);
             }
         }
 

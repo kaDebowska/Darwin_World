@@ -11,7 +11,7 @@ public class Animal implements WorldElement {
     private int health;
     private int age;
     private int plantsEaten = 0;
-    private Set<UUID> kids;
+    private Set<UUID> kids = new HashSet<>();
     private UUID uuid;
 
 
