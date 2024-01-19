@@ -65,9 +65,11 @@ public interface WorldMap {
 
     void handleReproduction();
 
-    void addNewAnimal();
-
     void notifyListeners(String step);
 
     void removeDeadAnimals();
+
+    void stepCounters();
+
+    void moveAnimals();
 }

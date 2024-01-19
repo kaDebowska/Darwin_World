@@ -7,7 +7,6 @@ import static java.lang.Math.abs;
 
 public abstract class AbstractWorldMap implements WorldMap {
     protected Map<Vector2d, AnimalGroup> animals;
-
     private final int healthToReproduce;
     private final int reproductionCost;
     protected Map<Vector2d, Grass> grassClumps;
@@ -96,6 +95,11 @@ public abstract class AbstractWorldMap implements WorldMap {
         }
     }
 
+    public void moveAnimals() {
+        for (Animal animal : getAnimals()) {
+            move(animal);
+        }
+    }
 
 
     @Override
@@ -190,17 +194,9 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
 
-
-    public void addNewAnimal() {
-        Animal babyAnimal = new Animal(new Vector2d(0,0),this.reproductionCost*2, List.of(0));
-        this.place(babyAnimal);
-    }
-
     public void stepCounters() {
-        for (AnimalGroup animalGroup : this.animals.values()) {
-            for (Animal animal : animalGroup.getAnimals()) {
-                animal.dailyFatigue();
-            }
+        for (Animal animal : getAnimals()) {
+            animal.dailyFatigue();
         }
         this.day++;
     }

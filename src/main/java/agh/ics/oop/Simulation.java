@@ -35,19 +35,14 @@ public class Simulation implements Runnable {
         while (running) {
             try {
                 map.removeDeadAnimals();
-                for (Animal animal : map.getAnimals()) {
-                    this.map.move(animal);
-                }
+                map.moveAnimals();
                 map.handleEating();
                 map.handleReproduction();
                 map.putPlants();
-                for (Animal animal : map.getAnimals()) {
-                    animal.dailyFatigue();
-                }
+                map.stepCounters();
                 map.notifyListeners(String.valueOf(map.getAnimals().size()));
 
-                Thread.sleep(100);
-//                Thread.sleep(10000);
+                Thread.sleep(50);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
