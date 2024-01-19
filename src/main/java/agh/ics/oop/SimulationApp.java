@@ -41,7 +41,7 @@ public class SimulationApp extends Application {
         BorderPane viewRoot = loader.load();
 
         SimulationPresenter presenter = loader.getController();
-        AbstractWorldMap globeMap = new GlobeMap(10, 10, 10, 5, 20, 10);
+        AbstractWorldMap globeMap = new GlobeMap(10, 10, 10, 4, 20, 10, 0, 10);
         presenter.setWorldMap(globeMap);
 
         Stage stage = new Stage();

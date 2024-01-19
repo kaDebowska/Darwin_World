@@ -16,18 +16,21 @@ public abstract class AbstractWorldMap implements WorldMap {
     protected final int height;
     protected final int plantsNum;
     private List<MapChangeListener> listeners;
-    private UUID uuid;
+    private int day = 0;
+    private int minMutations;
+    private int maxMutations;
 
-    public AbstractWorldMap(int width, int height, int plantsNum, int plantsEnergy, int healthToReproduce, int reproductionCost) {
+    public AbstractWorldMap(int width, int height, int plantsNum, int plantsEnergy, int healthToReproduce, int reproductionCost, int minMutations, int maxMutations) {
         this.width = width;
         this.height = height;
         this.plantsNum = plantsNum;
         this.plantsEnergy = plantsEnergy;
         this.healthToReproduce = healthToReproduce;
         this.reproductionCost = reproductionCost;
+        this.minMutations = minMutations;
+        this.maxMutations = maxMutations;
         this.animals = new HashMap<>();
         this.listeners = new ArrayList<>();
-        this.uuid = UUID.randomUUID();
     }
 
 
@@ -152,24 +155,55 @@ public abstract class AbstractWorldMap implements WorldMap {
     private void reproduce(Animal animalAlpha, Animal animalBeta) {
         animalAlpha.setHealth(animalAlpha.getHealth()-this.reproductionCost);
         animalBeta.setHealth(animalBeta.getHealth()-this.reproductionCost);
-        Animal babyAnimal = new Animal(animalAlpha.getPosition(),this.reproductionCost*2, List.of(0));
+
+//        Caluclate the share of the alpha genome
+        int genomeLength = animalAlpha.getGenome().size();
+        int alphaShare = (int) Math.round((double) animalAlpha.getHealth() / (animalAlpha.getHealth() + animalBeta.getHealth()) * genomeLength);
+        int betaShare = genomeLength - alphaShare;
+
+        List<Integer> babyGenome = new ArrayList<>();
+
+//        Get right or left side of alpha parent
+        Random rand = new Random();
+        if (rand.nextBoolean()) {
+            babyGenome.addAll(animalAlpha.getGenome().subList(0, alphaShare));
+            babyGenome.addAll(animalBeta.getGenome().subList(genomeLength - betaShare, genomeLength));
+        } else {
+            babyGenome.addAll(animalAlpha.getGenome().subList(genomeLength - alphaShare, genomeLength));
+            babyGenome.addAll(animalBeta.getGenome().subList(0, betaShare));
+        }
+
+//        Mutate genome
+        int numMutations = rand.nextInt((Math.min(maxMutations, babyGenome.size()) - minMutations) + 1) + minMutations;
+
+        for (int i = 0; i < numMutations; i++) {
+            int mutationIndex = rand.nextInt(babyGenome.size());
+            int newGene = rand.nextInt(8);
+            babyGenome.set(mutationIndex, newGene);
+        }
+
+
+        Animal babyAnimal = new Animal(animalAlpha.getPosition(), this.reproductionCost*2, babyGenome);
         animalAlpha.addChildren(babyAnimal);
         animalBeta.addChildren(babyAnimal);
         this.place(babyAnimal);
     }
+
+
 
     public void addNewAnimal() {
         Animal babyAnimal = new Animal(new Vector2d(0,0),this.reproductionCost*2, List.of(0));
         this.place(babyAnimal);
     }
 
-//    public void stepCounters() {
-//        for (AnimalGroup animalGroup : this.animals.values()) {
-//            for (Animal animal : animalGroup.getAnimals()) {
-//                animal.dailyFatigue();
-//            }
-//        }
-//    }
+    public void stepCounters() {
+        for (AnimalGroup animalGroup : this.animals.values()) {
+            for (Animal animal : animalGroup.getAnimals()) {
+                animal.dailyFatigue();
+            }
+        }
+        this.day++;
+    }
 
     public void removeDeadAnimals() {
         List<Vector2d> emptyPositions = new ArrayList<>();
@@ -177,15 +211,12 @@ public abstract class AbstractWorldMap implements WorldMap {
         for (Map.Entry<Vector2d, AnimalGroup> entry : animals.entrySet()) {
             Vector2d position = entry.getKey();
             AnimalGroup group = entry.getValue();
-
             List<Animal> deadAnimals = group.getAnimals().stream()
                     .filter(animal -> animal.getHealth() <= 0)
                     .collect(Collectors.toList());
-
             for (Animal deadAnimal : deadAnimals) {
                 group.removeAnimal(deadAnimal);
             }
-
             if (group.isEmpty()) {
                 emptyPositions.add(position);
             }

@@ -11,14 +11,14 @@ public class GlobeMap extends AbstractWorldMap{
     private Boundary equatorBounds;
 
     public GlobeMap(int width, int height, int plantsNum){
-        super(width, height, plantsNum, 100, 30, 15);
+        super(width, height, plantsNum, 100, 30, 15, 0, 10);
         this.grassClumps = new HashMap<>();
         this.equatorBounds = calculateEquator();
         putPlants();
     }
 
-    public GlobeMap(int width, int height, int plantsNum, int platsEnergy, int healtToReproduce, int reproductionCost){
-        super(width, height, plantsNum, platsEnergy, healtToReproduce, reproductionCost);
+    public GlobeMap(int width, int height, int plantsNum, int platsEnergy, int healtToReproduce, int reproductionCost, int minMutations, int maxMutations){
+        super(width, height, plantsNum, platsEnergy, healtToReproduce, reproductionCost, minMutations, maxMutations);
         this.grassClumps = new HashMap<>();
         this.equatorBounds = calculateEquator();
     }

@@ -111,7 +111,7 @@ public class SimulationPresenter implements MapChangeListener {
         simulations.add(grassFieldSimulation);
 
         SimulationEngine simulationEngine = new SimulationEngine(simulations);
-        simulationEngine.runAsyncInThreadPool();
+        simulationEngine.runAsync();
     }
 
 }
