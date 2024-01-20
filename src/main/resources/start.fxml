@@ -31,6 +31,10 @@
                 <Label text="Number of plants at the start:"/>
                 <Spinner fx:id="startPlantsField" initialValue="10" editable="true"/>
             </HBox>
+            <HBox>
+                <Button text="Save Configuration" onAction="#onSaveConfigurationClicked"/>
+                <Button text="Load Configuration" onAction="#onLoadConfigurationClicked"/>
+            </HBox>
         </VBox>
     </center>
     <bottom>
@@ -41,3 +45,4 @@
         </VBox>
     </bottom>
 </BorderPane>
+
