@@ -10,6 +10,10 @@ import java.io.IOException;
 
 public class StartPresenter {
     @FXML
+    private Spinner<Integer> mapWidth;
+    @FXML
+    public Spinner<Integer> mapHeight;
+    @FXML
     private Spinner<Integer> startAnimalsField;
     @FXML
     public Spinner<Integer> startPlantsField;
@@ -21,28 +25,31 @@ public class StartPresenter {
     }
 
     public void initialize() {
-        SpinnerValueFactory<Integer> animalValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 17);
-        SpinnerValueFactory<Integer> plantsValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 13);
-        startAnimalsField.setValueFactory(animalValueFactory);
-        startPlantsField.setValueFactory(plantsValueFactory);
-        startAnimalsField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+        initializeSpinner(mapWidth, 4, 1000, 10);
+        initializeSpinner(mapHeight, 4, 1000, 10);
+        initializeSpinner(startAnimalsField, 1, 100, 17);
+        initializeSpinner(startPlantsField, 1, 100, 13);
+    }
+
+    private void initializeSpinner(Spinner<Integer> spinner, int min, int max, int initialValue) {
+        SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(min, max, initialValue);
+        spinner.setValueFactory(valueFactory);
+        spinner.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
-                startAnimalsField.increment(0);
-            }
-        });
-        startPlantsField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) {
-                startPlantsField.increment(0);
+                spinner.increment(0);
             }
         });
     }
+
 
     @FXML
     private void onSimulationStartClicked() {
         int animalsAtStart = startAnimalsField.getValue();
         int plantsAtStart = startPlantsField.getValue();
+        int width = mapWidth.getValue();
+        int height = mapHeight.getValue();
         try {
-            application.startNewSimulation(animalsAtStart, plantsAtStart);
+            application.startNewSimulation(width, height, animalsAtStart, plantsAtStart);
         } catch (IOException e) {
             e.printStackTrace();
         }

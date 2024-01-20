@@ -16,6 +16,14 @@
     <center>
         <VBox>
             <HBox>
+                <Label text="Map width:"/>
+                <Spinner fx:id="mapWidth" max="1000" initialValue="10" editable="true"/>
+            </HBox>
+            <HBox>
+                <Label text="Map height:"/>
+                <Spinner fx:id="mapHeight" max="1000" initialValue="10" editable="true"/>
+            </HBox>
+            <HBox>
                 <Label text="Number of animals at the start:"/>
                 <Spinner fx:id="startAnimalsField" max="1000" initialValue="10" editable="true"/>
             </HBox>
