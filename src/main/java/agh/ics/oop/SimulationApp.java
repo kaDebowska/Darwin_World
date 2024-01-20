@@ -1,6 +1,7 @@
 package agh.ics.oop;
 
 import agh.ics.oop.model.*;
+import agh.ics.oop.presenter.BehaviourVariant;
 import agh.ics.oop.presenter.SimulationPresenter;
 import agh.ics.oop.presenter.StartPresenter;
 import javafx.application.Application;
@@ -35,19 +36,19 @@ public class SimulationApp extends Application {
         });
     }
 
-    public void startNewSimulation(int width, int height, int startAnimalsField, int startPlantsField) throws IOException {
+    public void startNewSimulation(BehaviourVariant behaviourVariant, int width, int height, int startAnimalsField, int startPlantsField) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
         BorderPane viewRoot = loader.load();
 
         SimulationPresenter presenter = loader.getController();
-        AbstractWorldMap globeMap = new GlobeMap(width, height, startAnimalsField, startPlantsField, 4, 20, 10, 0, 10);
-        presenter.setWorldMap(globeMap);
+        AbstractWorldMap map = new GlobeMap(behaviourVariant, width, height, startAnimalsField, 50, 10, startPlantsField, 4, 20, 10, 0, 10);
+        presenter.setWorldMap(map);
 
         Stage stage = new Stage();
         configureStage(stage, viewRoot);
         stage.show();
-        Simulation newSimulation = new Simulation(globeMap);
+        Simulation newSimulation = new Simulation(map);
 
         presenter.onSimulationStartClicked(newSimulation);
     }

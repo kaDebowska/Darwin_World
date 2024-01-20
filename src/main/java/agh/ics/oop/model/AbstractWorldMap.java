@@ -1,6 +1,7 @@
 package agh.ics.oop.model;
 
 import agh.ics.oop.model.util.RandomPositionGenerator;
+import agh.ics.oop.presenter.BehaviourVariant;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -22,10 +23,18 @@ public abstract class AbstractWorldMap implements WorldMap {
     private int minMutations;
     private int maxMutations;
 
-    public AbstractWorldMap(int width, int height, int animalStartNumber, int plantsNum, int plantsEnergy, int healthToReproduce, int reproductionCost, int minMutations, int maxMutations) {
+    private BehaviourVariant behaviourVariant;
+
+    private int animalStartHealth;
+    private int animalGenomeLength;
+
+    public AbstractWorldMap(BehaviourVariant behaviourVariant, int width, int height, int animalStartNumber, int animalStartHealth, int animalGenomeLength, int plantsNum, int plantsEnergy, int healthToReproduce, int reproductionCost, int minMutations, int maxMutations) {
+        this.behaviourVariant = behaviourVariant;
         this.width = width;
         this.height = height;
         this.animalStartNumber = animalStartNumber;
+        this.animalStartHealth = animalStartHealth;
+        this.animalGenomeLength = animalGenomeLength;
         this.plantsNum = plantsNum;
         this.plantsEnergy = plantsEnergy;
         this.healthToReproduce = healthToReproduce;
@@ -191,7 +200,9 @@ public abstract class AbstractWorldMap implements WorldMap {
         }
 
 
-        Animal babyAnimal = new Animal(animalAlpha.getPosition(), this.reproductionCost*2, babyGenome);
+        Animal babyAnimal = behaviourVariant == BehaviourVariant.NORMAL_ANIMAL
+                ? new Animal(animalAlpha.getPosition(), this.reproductionCost*2, babyGenome)
+                : new CrazyAnimal(animalAlpha.getPosition(), this.reproductionCost*2, babyGenome);
         animalAlpha.addChildren(babyAnimal);
         animalBeta.addChildren(babyAnimal);
         this.place(babyAnimal);
@@ -238,6 +249,18 @@ public abstract class AbstractWorldMap implements WorldMap {
 
     public int getAnimalStartNumber() {
         return animalStartNumber;
+    }
+
+    public BehaviourVariant getBehaviourVariant() {
+        return this.behaviourVariant;
+    }
+
+    public int getAnimalStartHealth() {
+        return animalStartHealth;
+    }
+
+    public int getAnimalGenomeLength() {
+        return animalGenomeLength;
     }
 
     @Override

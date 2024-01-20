@@ -2,16 +2,14 @@ package agh.ics.oop;
 
 import agh.ics.oop.model.*;
 import agh.ics.oop.model.util.RandomPositionGenerator;
-
-import java.util.ArrayList;
-import java.util.List;
+import agh.ics.oop.presenter.BehaviourVariant;
 
 public class Simulation implements Runnable {
 
-    private WorldMap map;
+    private AbstractWorldMap map;
     private volatile boolean running = true;
 
-    public Simulation(WorldMap map) {
+    public Simulation(AbstractWorldMap map) {
         this.map = map;
         populateMap();
     }
@@ -21,8 +19,14 @@ public class Simulation implements Runnable {
         int width = boundary.topRight().getX() - boundary.bottomLeft().getX();
         int height = boundary.topRight().getY() - boundary.bottomLeft().getY();
         RandomPositionGenerator randomPositionGenerator = new RandomPositionGenerator(width, height, map.getAnimalStartNumber());
+        BehaviourVariant behaviourVariant = map.getBehaviourVariant();
+        int initialHealth = map.getAnimalStartHealth();
+        int genomeLength = map.getAnimalGenomeLength();
         for (Vector2d animalPosition : randomPositionGenerator) {
-            map.place(new Animal(animalPosition, 50, 10));
+            Animal animal = behaviourVariant == BehaviourVariant.NORMAL_ANIMAL
+                    ? new Animal(animalPosition, initialHealth, genomeLength)
+                    : new CrazyAnimal(animalPosition, initialHealth, genomeLength);
+            map.place(animal);
         }
     }
 
@@ -47,7 +51,7 @@ public class Simulation implements Runnable {
                 map.handleReproduction();
                 map.putPlants();
                 map.stepCounters();
-                map.notifyListeners(String.valueOf(map.getAnimals().size()));
+                map.notifyListeners("Number of animals: " + String.valueOf(map.getAnimals().size()));
 
                 Thread.sleep(100);
             } catch (InterruptedException e) {

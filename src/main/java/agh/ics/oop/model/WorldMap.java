@@ -1,7 +1,8 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.presenter.BehaviourVariant;
+
 import java.util.List;
-import java.util.UUID;
 
 /**
  * The interface responsible for interacting with the map of the world.
@@ -58,7 +59,6 @@ public interface WorldMap {
 
     Boundary getCurrentBounds();
 
-
     void handleEating();
 
     List<Animal> getAnimals();
@@ -73,5 +73,4 @@ public interface WorldMap {
 
     void moveAnimals();
 
-    int getAnimalStartNumber();
 }

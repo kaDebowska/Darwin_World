@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.ComboBox?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             minHeight="200.0" minWidth="550.0"
@@ -32,9 +33,14 @@
                 <Spinner fx:id="startPlantsField" initialValue="10" editable="true"/>
             </HBox>
             <HBox>
+                <Label text="Behaviour variants:"/>
+                <ComboBox fx:id="animalTypeComboBox" />
+            </HBox>
+            <HBox>
                 <Button text="Save Configuration" onAction="#onSaveConfigurationClicked"/>
                 <Button text="Load Configuration" onAction="#onLoadConfigurationClicked"/>
             </HBox>
+
         </VBox>
     </center>
     <bottom>

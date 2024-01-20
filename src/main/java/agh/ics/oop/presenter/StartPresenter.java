@@ -2,9 +2,9 @@ package agh.ics.oop.presenter;
 
 import agh.ics.oop.SimulationApp;
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
-import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 
 import java.io.*;
@@ -19,6 +19,9 @@ public class StartPresenter {
     private Spinner<Integer> startAnimalsField;
     @FXML
     public Spinner<Integer> startPlantsField;
+    @FXML
+    private ComboBox<BehaviourVariant> animalTypeComboBox;
+
 
     private SimulationApp application;
 
@@ -32,6 +35,7 @@ public class StartPresenter {
         initializeSpinner(startAnimalsField, 0, 100, 17);
         initializeSpinner(startPlantsField, 0, mapWidth.getValue() * mapHeight.getValue(), 13);
 
+
         mapWidth.valueProperty().addListener((observable, oldValue, newValue) -> {
             updateMaxPlants();
         });
@@ -39,6 +43,9 @@ public class StartPresenter {
         mapHeight.valueProperty().addListener((observable, oldValue, newValue) -> {
             updateMaxPlants();
         });
+
+        animalTypeComboBox.getItems().addAll(BehaviourVariant.values());
+        animalTypeComboBox.setValue(BehaviourVariant.NORMAL_ANIMAL);
     }
 
     private void initializeSpinner(Spinner<Integer> spinner, int min, int max, int initialValue) {
@@ -113,8 +120,9 @@ public class StartPresenter {
         int plantsAtStart = startPlantsField.getValue();
         int width = mapWidth.getValue()  - 1;
         int height = mapHeight.getValue() - 1;
+        BehaviourVariant behaviourVariant = animalTypeComboBox.getValue();
         try {
-            application.startNewSimulation(width, height, animalsAtStart, plantsAtStart);
+            application.startNewSimulation(behaviourVariant, width, height, animalsAtStart, plantsAtStart);
         } catch (IOException e) {
             e.printStackTrace();
         }
