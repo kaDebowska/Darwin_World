@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -38,7 +39,8 @@ public class SimulationApp extends Application {
 
     public void startNewSimulation(BehaviourVariant behaviourVariant, int width, int height, int startAnimalsField,
                                    int startPlantsField, int plantsEnergy, int intialHealth, int genomeLength,
-                                   int healthToReproduce, int reproductionCost, int minMutations, int maxMutations) throws IOException {
+                                   int healthToReproduce, int reproductionCost, int minMutations, int maxMutations,
+                                   boolean loggingEnabled, File saveFolder) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
         BorderPane viewRoot = loader.load();
@@ -49,8 +51,16 @@ public class SimulationApp extends Application {
                 .setAnimalParameters(behaviourVariant, startAnimalsField, intialHealth, genomeLength)
                 .setReproductionParameters(healthToReproduce, reproductionCost, minMutations, maxMutations)
                 .build();
-//        AbstractWorldMap newMap = new GlobeMap(behaviourVariant, width, height, startAnimalsField, 50, 10, startPlantsField, 4, 20, 10, 0, 10);
         presenter.setWorldMap(map);
+
+        if (loggingEnabled) {
+            if (saveFolder != null) {
+                FileMapDisplay fileDisplay = new FileMapDisplay(map.getId(), saveFolder);
+                map.subscribe(fileDisplay);
+            } else {
+                System.err.println("Please select a directory to save the logs.");
+            }
+        }
 
         Stage stage = new Stage();
         configureStage(stage, viewRoot);
@@ -58,6 +68,11 @@ public class SimulationApp extends Application {
         Simulation newSimulation = new Simulation(map);
 
         presenter.onSimulationStartClicked(newSimulation);
+
+        stage.setOnCloseRequest(event -> {
+            newSimulation.pause();
+//            event.consume();
+        });
     }
 
 

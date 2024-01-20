@@ -31,11 +31,11 @@ public class Simulation implements Runnable {
     }
 
     public void pause() {
-        running = false;
+        this.running = false;
     }
 
     public void resume() {
-        running = true;
+        this.running = true;
     }
 
     @Override

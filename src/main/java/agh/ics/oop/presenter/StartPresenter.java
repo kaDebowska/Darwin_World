@@ -2,12 +2,12 @@ package agh.ics.oop.presenter;
 
 import agh.ics.oop.SimulationApp;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.*;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 public class StartPresenter {
@@ -18,7 +18,7 @@ public class StartPresenter {
     @FXML
     public Spinner<Integer> startPlantsField;
     @FXML
-    public Spinner<Integer>  plantsEnergyField;
+    public Spinner<Integer> plantsEnergyField;
     @FXML
     private Spinner<Integer> startAnimalsField;
     @FXML
@@ -35,6 +35,11 @@ public class StartPresenter {
     public Spinner<Integer> genomeLength;
     @FXML
     private ComboBox<BehaviourVariant> animalTypeComboBox;
+    @FXML
+    private CheckBox saveLogsCheckBox;
+    @FXML
+    private Button selectFolderButton;
+    private File saveFolder;
 
 
     private SimulationApp application;
@@ -76,6 +81,20 @@ public class StartPresenter {
 
         healthToReproduce.valueProperty().addListener((observable, oldValue, newValue) -> {
             updateMaxSpinnerValue(reproductionCost, healthToReproduce.getValue());
+        });
+
+        selectFolderButton.setOnAction(event -> {
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            URL url = getClass().getResource("/logs");
+            if (url != null) {
+                try {
+                    File logsDir = new File(url.toURI());
+                    directoryChooser.setInitialDirectory(logsDir);
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+            }
+            saveFolder = directoryChooser.showDialog(null);
         });
     }
 
@@ -158,12 +177,11 @@ public class StartPresenter {
     }
 
 
-
     @FXML
     private void onSimulationStartClicked() {
         int animalsAtStart = startAnimalsField.getValue();
         int plantsAtStart = startPlantsField.getValue();
-        int width = mapWidth.getValue()  - 1;
+        int width = mapWidth.getValue() - 1;
         int height = mapHeight.getValue() - 1;
         BehaviourVariant behaviourVariant = animalTypeComboBox.getValue();
         int plantsEnergy = plantsEnergyField.getValue();
@@ -173,9 +191,11 @@ public class StartPresenter {
         int reproductionPrice = reproductionCost.getValue();
         int minMutations = minMutationField.getValue();
         int maxMutations = maxMutationField.getValue();
+        boolean loggingEnabled = saveLogsCheckBox.isSelected();
         try {
             application.startNewSimulation(behaviourVariant, width, height, animalsAtStart, plantsAtStart, plantsEnergy,
-                    animalInitialHealth, animalGenomeLength, reproductionTreshold, reproductionPrice, minMutations, maxMutations);
+                    animalInitialHealth, animalGenomeLength, reproductionTreshold, reproductionPrice, minMutations, maxMutations,
+                    loggingEnabled, this.saveFolder);
         } catch (IOException e) {
             e.printStackTrace();
         }

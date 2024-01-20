@@ -22,11 +22,10 @@ public abstract class AbstractWorldMap implements WorldMap {
     private int day = 0;
     private int minMutations;
     private int maxMutations;
-
     private BehaviourVariant behaviourVariant;
-
     private int animalStartHealth;
     private int animalGenomeLength;
+    private UUID uuid;
 
     public AbstractWorldMap(BehaviourVariant behaviourVariant, int width, int height, int animalStartNumber, int animalStartHealth, int animalGenomeLength, int plantsNum, int plantsEnergy, int healthToReproduce, int reproductionCost, int minMutations, int maxMutations) {
         this.behaviourVariant = behaviourVariant;
@@ -43,6 +42,7 @@ public abstract class AbstractWorldMap implements WorldMap {
         this.maxMutations = maxMutations;
         this.animals = new HashMap<>();
         this.listeners = new ArrayList<>();
+        this.uuid = UUID.randomUUID();
     }
 
 
@@ -58,11 +58,11 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
 
-    public boolean isTopOrBottomMapEdge(Vector2d position){
-        return position.getY() == this.height + 1 || position.getY() == - 1;
+    public boolean isTopOrBottomMapEdge(Vector2d position) {
+        return position.getY() == this.height + 1 || position.getY() == -1;
     }
 
-    public boolean isLeftOrRightMapEdge(Vector2d position){
+    public boolean isLeftOrRightMapEdge(Vector2d position) {
         return position.getX() == this.width + 1 || position.getX() == -1;
     }
 
@@ -77,16 +77,14 @@ public abstract class AbstractWorldMap implements WorldMap {
         animal.move(direction);
         Vector2d newPosition = animal.getPosition();
 
-        if (this.isTopOrBottomMapEdge(newPosition) & this.isLeftOrRightMapEdge(newPosition)){
+        if (this.isTopOrBottomMapEdge(newPosition) & this.isLeftOrRightMapEdge(newPosition)) {
             newPosition = new Vector2d(abs(newPosition.getX() - this.width) - 1, abs(newPosition.getY() - 1));
             animal.setPosition(newPosition);
             animal.setOrientation(reflect(animal.getOrientation()));
-        }
-        else if (this.isLeftOrRightMapEdge(newPosition)){
+        } else if (this.isLeftOrRightMapEdge(newPosition)) {
             newPosition = new Vector2d((abs(newPosition.getX() - this.width) - 1), newPosition.getY());
             animal.setPosition(newPosition);
-        }
-        else if (this.isTopOrBottomMapEdge(newPosition)){
+        } else if (this.isTopOrBottomMapEdge(newPosition)) {
             newPosition = new Vector2d(newPosition.getX(), abs(newPosition.getY()) - 1);
             animal.setPosition(newPosition);
             animal.setOrientation(reflect(animal.getOrientation()));
@@ -163,15 +161,15 @@ public abstract class AbstractWorldMap implements WorldMap {
                 Animal animalAlpha = sortedAnimals.get(0);
                 Animal animalBeta = sortedAnimals.get(1);
                 if (animalAlpha.getHealth() >= healthToReproduce && animalBeta.getHealth() >= healthToReproduce) {
-                    this.reproduce(animalAlpha,animalBeta);
+                    this.reproduce(animalAlpha, animalBeta);
                 }
             }
         }
     }
 
     private void reproduce(Animal animalAlpha, Animal animalBeta) {
-        animalAlpha.setHealth(animalAlpha.getHealth()-this.reproductionCost);
-        animalBeta.setHealth(animalBeta.getHealth()-this.reproductionCost);
+        animalAlpha.setHealth(animalAlpha.getHealth() - this.reproductionCost);
+        animalBeta.setHealth(animalBeta.getHealth() - this.reproductionCost);
 
 //        Caluclate the share of the alpha genome
         int genomeLength = animalAlpha.getGenome().size();
@@ -201,8 +199,8 @@ public abstract class AbstractWorldMap implements WorldMap {
 
 
         Animal babyAnimal = behaviourVariant == BehaviourVariant.NORMAL_ANIMAL
-                ? new Animal(animalAlpha.getPosition(), this.reproductionCost*2, babyGenome)
-                : new CrazyAnimal(animalAlpha.getPosition(), this.reproductionCost*2, babyGenome);
+                ? new Animal(animalAlpha.getPosition(), this.reproductionCost * 2, babyGenome)
+                : new CrazyAnimal(animalAlpha.getPosition(), this.reproductionCost * 2, babyGenome);
         animalAlpha.addChildren(babyAnimal);
         animalBeta.addChildren(babyAnimal);
         this.place(babyAnimal);
@@ -261,6 +259,10 @@ public abstract class AbstractWorldMap implements WorldMap {
 
     public int getAnimalGenomeLength() {
         return animalGenomeLength;
+    }
+
+    public UUID getId() {
+        return this.uuid;
     }
 
     @Override
