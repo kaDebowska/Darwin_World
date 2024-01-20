@@ -166,8 +166,16 @@ public class StartPresenter {
         int width = mapWidth.getValue()  - 1;
         int height = mapHeight.getValue() - 1;
         BehaviourVariant behaviourVariant = animalTypeComboBox.getValue();
+        int plantsEnergy = plantsEnergyField.getValue();
+        int animalInitialHealth = initialHealth.getValue();
+        int animalGenomeLength = genomeLength.getValue();
+        int reproductionTreshold = healthToReproduce.getValue();
+        int reproductionPrice = reproductionCost.getValue();
+        int minMutations = minMutationField.getValue();
+        int maxMutations = maxMutationField.getValue();
         try {
-            application.startNewSimulation(behaviourVariant, width, height, animalsAtStart, plantsAtStart);
+            application.startNewSimulation(behaviourVariant, width, height, animalsAtStart, plantsAtStart, plantsEnergy,
+                    animalInitialHealth, animalGenomeLength, reproductionTreshold, reproductionPrice, minMutations, maxMutations);
         } catch (IOException e) {
             e.printStackTrace();
         }

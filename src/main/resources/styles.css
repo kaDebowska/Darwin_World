@@ -28,7 +28,6 @@ ScrollPane {
     -fx-fit-to-width: true;
 }
 
-
 HBox {
     -fx-spacing: 10px;
     -fx-alignment: center;

@@ -36,18 +36,20 @@ public class SimulationApp extends Application {
         });
     }
 
-    public void startNewSimulation(BehaviourVariant behaviourVariant, int width, int height, int startAnimalsField, int startPlantsField) throws IOException {
+    public void startNewSimulation(BehaviourVariant behaviourVariant, int width, int height, int startAnimalsField,
+                                   int startPlantsField, int plantsEnergy, int intialHealth, int genomeLength,
+                                   int healthToReproduce, int reproductionCost, int minMutations, int maxMutations) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
         BorderPane viewRoot = loader.load();
 
         SimulationPresenter presenter = loader.getController();
-//        AbstractWorldMap newMap = new WorldMapBuilder()
-//                .setGlobeParameters(plantsNum, plantsEnergy)
-//                .setAnimalParameters(behaviourVariant, animalStartHealth, animalGenomeLength)
-//                .setReproductionParameters(healthToReproduce, reproductionCost)
-//                .build();
-        AbstractWorldMap map = new GlobeMap(behaviourVariant, width, height, startAnimalsField, 50, 10, startPlantsField, 4, 20, 10, 0, 10);
+        AbstractWorldMap map = new WorldMapBuilder()
+                .setGlobeParameters(width, height, startPlantsField, plantsEnergy)
+                .setAnimalParameters(behaviourVariant, startAnimalsField, intialHealth, genomeLength)
+                .setReproductionParameters(healthToReproduce, reproductionCost, minMutations, maxMutations)
+                .build();
+//        AbstractWorldMap newMap = new GlobeMap(behaviourVariant, width, height, startAnimalsField, 50, 10, startPlantsField, 4, 20, 10, 0, 10);
         presenter.setWorldMap(map);
 
         Stage stage = new Stage();

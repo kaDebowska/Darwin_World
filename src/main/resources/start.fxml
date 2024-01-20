@@ -36,7 +36,7 @@
                 <Label text="Initial animals' health:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
                 <Spinner fx:id="initialHealth" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
 
-                <Label text="Reproduction threshold (min health to reproduce):" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+                <Label text="Minimum health to reproduce:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
                 <Spinner fx:id="healthToReproduce" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
 
                 <Label text="Reproduction cost:" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
