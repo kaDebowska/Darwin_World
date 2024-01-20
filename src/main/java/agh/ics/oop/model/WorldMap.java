@@ -72,4 +72,6 @@ public interface WorldMap {
     void stepCounters();
 
     void moveAnimals();
+
+    int getAnimalStartNumber();
 }

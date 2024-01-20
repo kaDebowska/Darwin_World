@@ -11,19 +11,24 @@
             minHeight="200.0" minWidth="550.0"
             fx:controller="agh.ics.oop.presenter.StartPresenter">
     <top>
-        <Label text="Click start to start the simulation."
-               textAlignment="CENTER"/>
+        <Label text="Darwin World D-3"/>
     </top>
     <center>
-
-        <HBox spacing="10" alignment="CENTER">
-            <Label text="Animals at the start:" textAlignment="LEFT"/>
-            <Spinner fx:id="startAnimalsField" initialValue="10" editable="true"/>
-        </HBox>
-
+        <VBox>
+            <HBox>
+                <Label text="Number of animals at the start:"/>
+                <Spinner fx:id="startAnimalsField" max="1000" initialValue="10" editable="true"/>
+            </HBox>
+            <HBox>
+                <Label text="Number of plants at the start:"/>
+                <Spinner fx:id="startPlantsField" initialValue="10" editable="true"/>
+            </HBox>
+        </VBox>
     </center>
     <bottom>
         <VBox>
+            <Label text="Click start to start the simulation."
+                   textAlignment="CENTER"/>
             <Button text="Start" onAction="#onSimulationStartClicked"/>
         </VBox>
     </bottom>

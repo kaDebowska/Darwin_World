@@ -236,6 +236,9 @@ public abstract class AbstractWorldMap implements WorldMap {
         return animalList;
     }
 
+    public int getAnimalStartNumber() {
+        return animalStartNumber;
+    }
 
     @Override
     public Boundary getCurrentBounds() {

@@ -11,16 +11,16 @@ public class Simulation implements Runnable {
     private WorldMap map;
     private volatile boolean running = true;
 
-    public Simulation(int animalStartNumber, WorldMap map) {
+    public Simulation(WorldMap map) {
         this.map = map;
-        populateMap(animalStartNumber);
+        populateMap();
     }
 
-    public void populateMap(int animalStartNumber) {
+    public void populateMap() {
         Boundary boundary = map.getCurrentBounds();
         int width = boundary.topRight().getX() - boundary.bottomLeft().getX();
         int height = boundary.topRight().getY() - boundary.bottomLeft().getY();
-        RandomPositionGenerator randomPositionGenerator = new RandomPositionGenerator(width, height, animalStartNumber);
+        RandomPositionGenerator randomPositionGenerator = new RandomPositionGenerator(width, height, map.getAnimalStartNumber());
         for (Vector2d animalPosition : randomPositionGenerator) {
             map.place(new CrazyAnimal(animalPosition, 50, 10));
         }

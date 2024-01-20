@@ -32,13 +32,6 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private Label movesLabel;
 
-    private String moves;
-
-
-    public void setMoves(String moves) {
-        this.moves = moves;
-    }
-
 
     public void setWorldMap(WorldMap map) {
         this.worldMap = map;

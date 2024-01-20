@@ -35,19 +35,19 @@ public class SimulationApp extends Application {
         });
     }
 
-    public void startNewSimulation(int startAnimalsField) throws IOException {
+    public void startNewSimulation(int startAnimalsField, int startPlantsField) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
         BorderPane viewRoot = loader.load();
 
         SimulationPresenter presenter = loader.getController();
-        AbstractWorldMap globeMap = new GlobeMap(10, 10, 2, 10, 4, 20, 10, 0, 10);
+        AbstractWorldMap globeMap = new GlobeMap(10, 10, startAnimalsField, startPlantsField, 4, 20, 10, 0, 10);
         presenter.setWorldMap(globeMap);
 
         Stage stage = new Stage();
         configureStage(stage, viewRoot);
         stage.show();
-        Simulation newSimulation = new Simulation(startAnimalsField, globeMap);
+        Simulation newSimulation = new Simulation(globeMap);
 
         presenter.onSimulationStartClicked(newSimulation);
     }
