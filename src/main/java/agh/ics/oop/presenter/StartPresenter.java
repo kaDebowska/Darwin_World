@@ -16,9 +16,23 @@ public class StartPresenter {
     @FXML
     public Spinner<Integer> mapHeight;
     @FXML
+    public Spinner<Integer> startPlantsField;
+    @FXML
+    public Spinner<Integer>  plantsEnergyField;
+    @FXML
     private Spinner<Integer> startAnimalsField;
     @FXML
-    public Spinner<Integer> startPlantsField;
+    public Spinner<Integer> initialHealth;
+    @FXML
+    public Spinner<Integer> healthToReproduce;
+    @FXML
+    public Spinner<Integer> reproductionCost;
+    @FXML
+    public Spinner<Integer> minMutationField;
+    @FXML
+    public Spinner<Integer> maxMutationField;
+    @FXML
+    public Spinner<Integer> genomeLength;
     @FXML
     private ComboBox<BehaviourVariant> animalTypeComboBox;
 
@@ -30,22 +44,39 @@ public class StartPresenter {
     }
 
     public void initialize() {
-        initializeSpinner(mapWidth, 1, 1000, 10);
-        initializeSpinner(mapHeight, 1, 1000, 10);
-        initializeSpinner(startAnimalsField, 0, 100, 17);
+        initializeSpinner(mapWidth, 1, 1000, 13);
+        initializeSpinner(mapHeight, 1, 1000, 11);
         initializeSpinner(startPlantsField, 0, mapWidth.getValue() * mapHeight.getValue(), 13);
-
+        initializeSpinner(plantsEnergyField, 1, 71, 3);
+        initializeSpinner(startAnimalsField, 0, 100, 17);
+        initializeSpinner(initialHealth, 1, 1000, 31);
+        initializeSpinner(healthToReproduce, 0, 100, 23);
+        initializeSpinner(reproductionCost, 0, healthToReproduce.getValue(), 19);
+        initializeSpinner(genomeLength, 0, 100, 23);
+        initializeSpinner(maxMutationField, 0, genomeLength.getValue(), 7);
+        initializeSpinner(minMutationField, 0, maxMutationField.getValue(), 2);
+        animalTypeComboBox.getItems().addAll(BehaviourVariant.values());
+        animalTypeComboBox.setValue(BehaviourVariant.NORMAL_ANIMAL);
 
         mapWidth.valueProperty().addListener((observable, oldValue, newValue) -> {
-            updateMaxPlants();
+            updateMaxSpinnerValue(startPlantsField, mapWidth.getValue() * mapHeight.getValue());
         });
 
         mapHeight.valueProperty().addListener((observable, oldValue, newValue) -> {
-            updateMaxPlants();
+            updateMaxSpinnerValue(startPlantsField, mapWidth.getValue() * mapHeight.getValue());
         });
 
-        animalTypeComboBox.getItems().addAll(BehaviourVariant.values());
-        animalTypeComboBox.setValue(BehaviourVariant.NORMAL_ANIMAL);
+        maxMutationField.valueProperty().addListener((observable, oldValue, newValue) -> {
+            updateMaxSpinnerValue(minMutationField, maxMutationField.getValue());
+        });
+
+        genomeLength.valueProperty().addListener((observable, oldValue, newValue) -> {
+            updateMaxSpinnerValue(maxMutationField, genomeLength.getValue());
+        });
+
+        healthToReproduce.valueProperty().addListener((observable, oldValue, newValue) -> {
+            updateMaxSpinnerValue(reproductionCost, healthToReproduce.getValue());
+        });
     }
 
     private void initializeSpinner(Spinner<Integer> spinner, int min, int max, int initialValue) {
@@ -58,13 +89,12 @@ public class StartPresenter {
         });
     }
 
-    private void updateMaxPlants() {
-        int maxPlants = mapWidth.getValue() * mapHeight.getValue();
-        int currentValue = startPlantsField.getValue();
-        if (currentValue > maxPlants) {
-            currentValue = maxPlants;
+    private void updateMaxSpinnerValue(Spinner<Integer> spinner, int max) {
+        int currentValue = spinner.getValue();
+        if (currentValue > max) {
+            currentValue = max;
         }
-        startPlantsField.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, maxPlants, currentValue));
+        spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, max, currentValue));
     }
 
     @FXML
@@ -79,9 +109,16 @@ public class StartPresenter {
             Configuration config = new Configuration();
             config.setMapWidth(mapWidth.getValue());
             config.setMapHeight(mapHeight.getValue());
-            config.setStartAnimals(startAnimalsField.getValue());
             config.setStartPlants(startPlantsField.getValue());
-
+            config.setPlantsEnergy(plantsEnergyField.getValue());
+            config.setStartAnimals(startAnimalsField.getValue());
+            config.setBehaviourVariant(animalTypeComboBox.getValue());
+            config.setInitialHealth(initialHealth.getValue());
+            config.setHealthToReproduce(healthToReproduce.getValue());
+            config.setReproductionCost(reproductionCost.getValue());
+            config.setGenomeLength(genomeLength.getValue());
+            config.setMaxMutationField(maxMutationField.getValue());
+            config.setMinMutationField(minMutationField.getValue());
             try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file))) {
                 out.writeObject(config);
             } catch (IOException e) {
@@ -104,8 +141,16 @@ public class StartPresenter {
                 Configuration config = (Configuration) in.readObject();
                 mapWidth.getValueFactory().setValue(config.getMapWidth());
                 mapHeight.getValueFactory().setValue(config.getMapHeight());
-                startAnimalsField.getValueFactory().setValue(config.getStartAnimals());
                 startPlantsField.getValueFactory().setValue(config.getStartPlants());
+                plantsEnergyField.getValueFactory().setValue(config.getPlantsEnergy());
+                startAnimalsField.getValueFactory().setValue(config.getStartAnimals());
+                animalTypeComboBox.setValue(config.getBehaviourVariant());
+                initialHealth.getValueFactory().setValue(config.getInitialHealth());
+                healthToReproduce.getValueFactory().setValue(config.getHealthToReproduce());
+                reproductionCost.getValueFactory().setValue(config.getReproductionCost());
+                genomeLength.getValueFactory().setValue(config.getGenomeLength());
+                maxMutationField.getValueFactory().setValue(config.getMaxMutationField());
+                minMutationField.getValueFactory().setValue(config.getMinMutationField());
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }

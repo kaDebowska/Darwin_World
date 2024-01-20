@@ -42,6 +42,11 @@ public class SimulationApp extends Application {
         BorderPane viewRoot = loader.load();
 
         SimulationPresenter presenter = loader.getController();
+//        AbstractWorldMap newMap = new WorldMapBuilder()
+//                .setGlobeParameters(plantsNum, plantsEnergy)
+//                .setAnimalParameters(behaviourVariant, animalStartHealth, animalGenomeLength)
+//                .setReproductionParameters(healthToReproduce, reproductionCost)
+//                .build();
         AbstractWorldMap map = new GlobeMap(behaviourVariant, width, height, startAnimalsField, 50, 10, startPlantsField, 4, 20, 10, 0, 10);
         presenter.setWorldMap(map);
 

@@ -7,6 +7,7 @@
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.layout.GridPane?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             minHeight="200.0" minWidth="550.0"
@@ -16,26 +17,47 @@
     </top>
     <center>
         <VBox>
-            <HBox>
-                <Label text="Map width:"/>
-                <Spinner fx:id="mapWidth" max="1000" initialValue="10" editable="true"/>
-            </HBox>
-            <HBox>
-                <Label text="Map height:"/>
-                <Spinner fx:id="mapHeight" max="1000" initialValue="10" editable="true"/>
-            </HBox>
-            <HBox>
-                <Label text="Number of animals at the start:"/>
-                <Spinner fx:id="startAnimalsField" max="1000" initialValue="10" editable="true"/>
-            </HBox>
-            <HBox>
-                <Label text="Number of plants at the start:"/>
-                <Spinner fx:id="startPlantsField" initialValue="10" editable="true"/>
-            </HBox>
-            <HBox>
-                <Label text="Behaviour variants:"/>
-                <ComboBox fx:id="animalTypeComboBox" />
-            </HBox>
+            <GridPane hgap="10" vgap="10" xmlns:fx="http://javafx.com/fxml">
+                <Label text="Map width:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <Spinner fx:id="mapWidth" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                <Label text="Map height:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <Spinner fx:id="mapHeight" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                <Label text="Number of plants at the start:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                <Spinner fx:id="startPlantsField" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                <Label text="Energy gained by eating a plant:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                <Spinner fx:id="plantsEnergyField" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+                <Label text="Number of animals at the start:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                <Spinner fx:id="startAnimalsField" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+                <Label text="Initial animals' health:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                <Spinner fx:id="initialHealth" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+
+                <Label text="Reproduction threshold (min health to reproduce):" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+                <Spinner fx:id="healthToReproduce" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+
+                <Label text="Reproduction cost:" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+                <Spinner fx:id="reproductionCost" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+
+                <Label text="Minimum mutation number:" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
+                <Spinner fx:id="minMutationField" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
+
+                <Label text="Maximum mutation number:" GridPane.columnIndex="0" GridPane.rowIndex="9"/>
+                <Spinner fx:id="maxMutationField" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="9"/>
+
+                <Label text="Genome Length:" GridPane.columnIndex="0" GridPane.rowIndex="10"/>
+                <Spinner fx:id="genomeLength" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="10"/>
+
+                <Label text="Behaviour variants:" GridPane.columnIndex="0" GridPane.rowIndex="11"/>
+                <ComboBox fx:id="animalTypeComboBox" GridPane.columnIndex="1" GridPane.rowIndex="11"/>
+            </GridPane>
+
+
+
+
             <HBox>
                 <Button text="Save Configuration" onAction="#onSaveConfigurationClicked"/>
                 <Button text="Load Configuration" onAction="#onLoadConfigurationClicked"/>
@@ -45,7 +67,7 @@
     </center>
     <bottom>
         <VBox>
-            <Label text="Click start to start the simulation."
+            <Label text="Click the button to start new simulation."
                    textAlignment="CENTER"/>
             <Button text="Start" onAction="#onSimulationStartClicked"/>
         </VBox>

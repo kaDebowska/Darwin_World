@@ -34,3 +34,8 @@ HBox {
     -fx-alignment: center;
     -fx-text-alignment: left;
 }
+
+Label {
+    -fx-alignment: top-right;
+    -fx-text-alignment: right;
+}
