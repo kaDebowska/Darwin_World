@@ -13,21 +13,43 @@ public class GlobeMap extends AbstractWorldMap{
     private RandomPositionGenerator positionsOutsideEquator;
     private Boundary equatorBounds;
 
-    public GlobeMap(int width, int height, int plantsNum){
-        super(NORMAL_ANIMAL, width, height, 2, 50, 10, plantsNum, 100, 30, 15, 0, 10);
+    public GlobeMap(int width, int height, int everDayPlantsNum){
+        super(NORMAL_ANIMAL, width, height, 2, 50, 10, 10, everDayPlantsNum, 30, 15, 20, 0, 10);
         this.grassClumps = new HashMap<>();
         this.equatorBounds = calculateEquator();
         putPlants();
     }
 
-    public GlobeMap(BehaviourVariant behaviourVariant, int width, int height, int animalStartNumber, int animalStartHealth, int animalGenomeLength, int plantsNum, int platsEnergy, int healthToReproduce, int reproductionCost, int minMutations, int maxMutations){
-        super(behaviourVariant, width, height, animalStartNumber, animalStartHealth, animalGenomeLength, plantsNum, platsEnergy, healthToReproduce, reproductionCost, minMutations, maxMutations);
+    public GlobeMap(
+            BehaviourVariant behaviourVariant,
+            int width,
+            int height,
+            int animalStartNumber,
+            int animalStartHealth,
+            int animalGenomeLength,
+            int startPlantsNum,
+            int everDayPlantsNum,
+            int platsEnergy,
+            int healthToReproduce,
+            int reproductionCost,
+            int minMutations,
+            int maxMutations){
+        super(behaviourVariant, width, height, animalStartNumber, animalStartHealth, animalGenomeLength, startPlantsNum, everDayPlantsNum, platsEnergy, healthToReproduce, reproductionCost, minMutations, maxMutations);
         this.grassClumps = new HashMap<>();
         this.equatorBounds = calculateEquator();
+
+        this.plantsOnEquator = (int) (0.8 * startPlantsNum);
+        this.plantsOutsideEquator = startPlantsNum - plantsOnEquator;
+
+        this.positionsOnEquator = generateEquatorPositions(startPlantsNum);
+        this.positionsOutsideEquator = generatePositionsOutsideEquator();
+
+        putPlantsOnEquator();
+        putPlantsOutsideEquator();
     }
 
 
-    public RandomPositionGenerator generateEquatorPositions(){
+    public RandomPositionGenerator generateEquatorPositions(int plantsNum){
         int width = 0;
         int height = 0;
         // equator that contains only part of one row
@@ -71,7 +93,7 @@ public class GlobeMap extends AbstractWorldMap{
 //        new plants division if equator is too little for 80% of all plants
         if (this.plantsOnEquator > numberOfEquatorPositions){
             this.plantsOnEquator = numberOfEquatorPositions;
-            this.plantsOutsideEquator = this.plantsNum - this.plantsOnEquator;
+            this.plantsOutsideEquator = plantsNum - this.plantsOnEquator;
         }
 
         return randomPositionGenerator;
@@ -94,10 +116,10 @@ public class GlobeMap extends AbstractWorldMap{
 
     @Override
     public void putPlants(){
-        this.plantsOnEquator = (int) (0.8 * plantsNum);
-        this.plantsOutsideEquator = plantsNum - plantsOnEquator;
+        this.plantsOnEquator = (int) (0.8 * everDayPlantsNum);
+        this.plantsOutsideEquator = everDayPlantsNum - plantsOnEquator;
 
-        this.positionsOnEquator = generateEquatorPositions();
+        this.positionsOnEquator = generateEquatorPositions(everDayPlantsNum);
         this.positionsOutsideEquator = generatePositionsOutsideEquator();
 
         putPlantsOnEquator();

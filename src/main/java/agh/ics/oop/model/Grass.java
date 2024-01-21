@@ -5,9 +5,11 @@ public class Grass implements WorldElement {
     private final Vector2d position;
     private final static String GRASS_SYMBOL = "*";
 
+
     public Grass(Vector2d position) {
         this.position = position;
     }
+
 
 
     public Vector2d getPosition() {

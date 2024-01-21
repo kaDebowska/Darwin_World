@@ -17,6 +17,9 @@ public class StartPresenter {
     public Spinner<Integer> mapHeight;
     @FXML
     public Spinner<Integer> startPlantsField;
+
+    @FXML
+    public Spinner<Integer> everyDayPlantsField;
     @FXML
     public Spinner<Integer> plantsEnergyField;
     @FXML
@@ -52,6 +55,7 @@ public class StartPresenter {
         initializeSpinner(mapWidth, 1, 1000, 13);
         initializeSpinner(mapHeight, 1, 1000, 19);
         initializeSpinner(startPlantsField, 0, mapWidth.getValue() * mapHeight.getValue(), 13);
+        initializeSpinner(everyDayPlantsField, 0, mapWidth.getValue() * mapHeight.getValue(), 13);
         initializeSpinner(plantsEnergyField, 1, 71, 3);
         initializeSpinner(startAnimalsField, 0, 100, 17);
         initializeSpinner(initialHealth, 1, 1000, 31);
@@ -129,6 +133,7 @@ public class StartPresenter {
             config.setMapWidth(mapWidth.getValue());
             config.setMapHeight(mapHeight.getValue());
             config.setStartPlants(startPlantsField.getValue());
+            config.setEveryDayPlants(everyDayPlantsField.getValue());
             config.setPlantsEnergy(plantsEnergyField.getValue());
             config.setStartAnimals(startAnimalsField.getValue());
             config.setBehaviourVariant(animalTypeComboBox.getValue());
@@ -161,6 +166,7 @@ public class StartPresenter {
                 mapWidth.getValueFactory().setValue(config.getMapWidth());
                 mapHeight.getValueFactory().setValue(config.getMapHeight());
                 startPlantsField.getValueFactory().setValue(config.getStartPlants());
+                everyDayPlantsField.getValueFactory().setValue(config.getEveryDayPlants());
                 plantsEnergyField.getValueFactory().setValue(config.getPlantsEnergy());
                 startAnimalsField.getValueFactory().setValue(config.getStartAnimals());
                 animalTypeComboBox.setValue(config.getBehaviourVariant());
@@ -181,6 +187,7 @@ public class StartPresenter {
     private void onSimulationStartClicked() {
         int animalsAtStart = startAnimalsField.getValue();
         int plantsAtStart = startPlantsField.getValue();
+        int everyDayPlants = everyDayPlantsField.getValue();
         int width = mapWidth.getValue() - 1;
         int height = mapHeight.getValue() - 1;
         BehaviourVariant behaviourVariant = animalTypeComboBox.getValue();
@@ -193,7 +200,7 @@ public class StartPresenter {
         int maxMutations = maxMutationField.getValue();
         boolean loggingEnabled = saveLogsCheckBox.isSelected();
         try {
-            application.startNewSimulation(behaviourVariant, width, height, animalsAtStart, plantsAtStart, plantsEnergy,
+            application.startNewSimulation(behaviourVariant, width, height, animalsAtStart, plantsAtStart, everyDayPlants, plantsEnergy,
                     animalInitialHealth, animalGenomeLength, reproductionTreshold, reproductionPrice, minMutations, maxMutations,
                     loggingEnabled, this.saveFolder);
         } catch (IOException e) {

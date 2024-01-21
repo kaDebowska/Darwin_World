@@ -66,7 +66,7 @@ public interface WorldMap {
 
     void notifyListeners(String step);
 
-    void removeDeadAnimals();
+    List<Vector2d> removeDeadAnimals();
 
     void stepCounters();
 

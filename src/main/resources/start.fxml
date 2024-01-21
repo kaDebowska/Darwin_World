@@ -29,32 +29,35 @@
                 <Label text="Number of plants at the start:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
                 <Spinner fx:id="startPlantsField" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 
-                <Label text="Energy gained by eating a plant:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-                <Spinner fx:id="plantsEnergyField" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                <Label text="Number of plants growing every day:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                <Spinner fx:id="everyDayPlantsField" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
 
-                <Label text="Number of animals at the start:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-                <Spinner fx:id="startAnimalsField" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                <Label text="Energy gained by eating a plant:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                <Spinner fx:id="plantsEnergyField" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
 
-                <Label text="Initial animals' health:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
-                <Spinner fx:id="initialHealth" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+                <Label text="Number of animals at the start:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                <Spinner fx:id="startAnimalsField" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
 
-                <Label text="Minimum health to reproduce:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
-                <Spinner fx:id="healthToReproduce" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+                <Label text="Initial animals' health:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+                <Spinner fx:id="initialHealth" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
 
-                <Label text="Reproduction cost:" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
-                <Spinner fx:id="reproductionCost" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+                <Label text="Minimum health to reproduce:" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+                <Spinner fx:id="healthToReproduce" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
 
-                <Label text="Minimum mutation number:" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
-                <Spinner fx:id="minMutationField" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
+                <Label text="Reproduction cost:" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
+                <Spinner fx:id="reproductionCost" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
 
-                <Label text="Maximum mutation number:" GridPane.columnIndex="0" GridPane.rowIndex="9"/>
-                <Spinner fx:id="maxMutationField" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="9"/>
+                <Label text="Minimum mutation number:" GridPane.columnIndex="0" GridPane.rowIndex="9"/>
+                <Spinner fx:id="minMutationField" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="9"/>
 
-                <Label text="Genome Length:" GridPane.columnIndex="0" GridPane.rowIndex="10"/>
-                <Spinner fx:id="genomeLength" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="10"/>
+                <Label text="Maximum mutation number:" GridPane.columnIndex="0" GridPane.rowIndex="10"/>
+                <Spinner fx:id="maxMutationField" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="10"/>
 
-                <Label text="Behaviour variants:" GridPane.columnIndex="0" GridPane.rowIndex="11"/>
-                <ComboBox fx:id="animalTypeComboBox" GridPane.columnIndex="1" GridPane.rowIndex="11"/>
+                <Label text="Genome Length:" GridPane.columnIndex="0" GridPane.rowIndex="11"/>
+                <Spinner fx:id="genomeLength" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="11"/>
+
+                <Label text="Behaviour variants:" GridPane.columnIndex="0" GridPane.rowIndex="12"/>
+                <ComboBox fx:id="animalTypeComboBox" GridPane.columnIndex="1" GridPane.rowIndex="12"/>
             </GridPane>
 
 
