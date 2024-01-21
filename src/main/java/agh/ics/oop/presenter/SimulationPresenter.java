@@ -13,6 +13,7 @@ import javafx.scene.layout.RowConstraints;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class SimulationPresenter implements MapChangeListener {
 
@@ -66,9 +67,15 @@ public class SimulationPresenter implements MapChangeListener {
         for (int x = 0; x <= width; x++) {
             for (int y = 0; y <= height; y++) {
                 Vector2d position = new Vector2d(x + boundary.bottomLeft().getX(), boundary.topRight().getY() - y);
-                WorldElement element = worldMap.objectAt(position);
-                String labelContent = (element == null) ? EMPTY_CELL : element.toString();
-                addLabel(labelContent, x + 1, y + 1);
+                Optional<WorldElement> element = worldMap.objectAt(position);
+                if (element.isPresent()) {
+                    String labelContent = element.map(WorldElement::toString).orElse(EMPTY_CELL);
+                    addLabel(labelContent, x + 1, y + 1);
+//                    WorldElementBox box = new WorldElementBox(element.get());
+//                    mapGrid.add(box, x + 1, y + 1);
+                } else {
+                    addLabel(EMPTY_CELL, x + 1, y + 1);
+                }
             }
         }
     }
@@ -94,15 +101,5 @@ public class SimulationPresenter implements MapChangeListener {
         });
     }
 
-    @FXML
-    public void onSimulationStartClicked(Simulation simulation) {
-
-
-        List<Simulation> simulations = new ArrayList<>();
-        simulations.add(simulation);
-
-        SimulationEngine simulationEngine = new SimulationEngine(simulations);
-        simulationEngine.runAsync();
-    }
 
 }

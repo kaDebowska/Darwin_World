@@ -13,9 +13,14 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class SimulationApp extends Application {
+
+    private List<Simulation> simulations = new ArrayList<>();
+    private SimulationEngine simulationEngine = new SimulationEngine(this.simulations);
 
     @Override
     public void start(Stage primaryStage) throws IOException {
@@ -67,7 +72,14 @@ public class SimulationApp extends Application {
         stage.show();
         Simulation newSimulation = new Simulation(map);
 
-        presenter.onSimulationStartClicked(newSimulation);
+//        simulations.add(newSimulation);
+//        simulationEngine.runAsync();
+
+        List<Simulation> simulations = new ArrayList<>();
+        simulations.add(newSimulation);
+
+        SimulationEngine simulationEngine = new SimulationEngine(simulations);
+        simulationEngine.runAsync();
 
         stage.setOnCloseRequest(event -> {
             newSimulation.pause();

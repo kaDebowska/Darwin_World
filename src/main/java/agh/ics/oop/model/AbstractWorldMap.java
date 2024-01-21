@@ -1,6 +1,5 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.model.util.RandomPositionGenerator;
 import agh.ics.oop.presenter.BehaviourVariant;
 
 import java.util.*;
@@ -92,7 +91,12 @@ public abstract class AbstractWorldMap implements WorldMap {
 
         if (!oldPosition.equals(newPosition)) {
             AnimalGroup oldGroup = animals.get(oldPosition);
-            oldGroup.removeAnimal(animal);
+            if (oldGroup != null) {
+                oldGroup.removeAnimal(animal);
+                if (oldGroup.isEmpty()) {
+                    animals.remove(oldPosition);
+                }
+            }
             if (oldGroup.isEmpty()) {
                 animals.remove(oldPosition);
             }
@@ -114,13 +118,14 @@ public abstract class AbstractWorldMap implements WorldMap {
 
 
     @Override
-    public WorldElement objectAt(Vector2d position) {
+    public Optional<WorldElement> objectAt(Vector2d position) {
         AnimalGroup animalGroupAtPosition = animals.get(position);
         if (animalGroupAtPosition != null) {
-            return animalGroupAtPosition;
+            return Optional.of(animalGroupAtPosition);
         }
-        return grassClumps.get(position);
+        return Optional.ofNullable(grassClumps.get(position));
     }
+
 
     public void subscribe(MapChangeListener listener) {
         listeners.add(listener);
@@ -139,8 +144,9 @@ public abstract class AbstractWorldMap implements WorldMap {
         }
     }
 
-    public void handleEating() {
-        for (Vector2d position : animals.keySet()) {
+    public synchronized void handleEating() {
+        List<Vector2d> positionsToHandle = new ArrayList<>(animals.keySet());
+        for (Vector2d position : positionsToHandle) {
             if (grassClumps.containsKey(position)) {
                 Animal animalToEat = animals.get(position).getOrderedAnimals().get(0);
                 this.eat(animalToEat, animalToEat.getPosition());
@@ -148,22 +154,27 @@ public abstract class AbstractWorldMap implements WorldMap {
         }
     }
 
+
     private void eat(Animal animal, Vector2d position) {
         animal.restoreHealth(this.plantsEnergy);
         animal.countEaten();
         grassClumps.remove(position);
     }
 
-    public void handleReproduction() {
+    public synchronized void handleReproduction() {
+        List<Animal[]> animalsToReproduce = new ArrayList<>();
         for (Vector2d position : animals.keySet()) {
             if (animals.get(position).isProlific()) {
                 List<Animal> sortedAnimals = animals.get(position).getOrderedAnimals();
                 Animal animalAlpha = sortedAnimals.get(0);
                 Animal animalBeta = sortedAnimals.get(1);
                 if (animalAlpha.getHealth() >= healthToReproduce && animalBeta.getHealth() >= healthToReproduce) {
-                    this.reproduce(animalAlpha, animalBeta);
+                    animalsToReproduce.add(new Animal[]{animalAlpha, animalBeta});
                 }
             }
+        }
+        for (Animal[] pair : animalsToReproduce) {
+            this.reproduce(pair[0], pair[1]);
         }
     }
 
@@ -214,10 +225,9 @@ public abstract class AbstractWorldMap implements WorldMap {
         this.day++;
     }
 
-    public void removeDeadAnimals() {
+    public synchronized void removeDeadAnimals() {
         List<Vector2d> emptyPositions = new ArrayList<>();
-
-        for (Map.Entry<Vector2d, AnimalGroup> entry : animals.entrySet()) {
+        for (Map.Entry<Vector2d, AnimalGroup> entry : new HashMap<>(animals).entrySet()) {
             Vector2d position = entry.getKey();
             AnimalGroup group = entry.getValue();
             List<Animal> deadAnimals = group.getAnimals().stream()
@@ -230,7 +240,6 @@ public abstract class AbstractWorldMap implements WorldMap {
                 emptyPositions.add(position);
             }
         }
-
         for (Vector2d emptyPosition : emptyPositions) {
             animals.remove(emptyPosition);
         }
@@ -238,9 +247,15 @@ public abstract class AbstractWorldMap implements WorldMap {
 
 
     public List<Animal> getAnimals() {
+        if (this.animals == null) {
+            return new ArrayList<>();
+        }
         List<Animal> animalList = new ArrayList<>();
         for (AnimalGroup animalGroup : this.animals.values()) {
-            animalList.addAll(animalGroup.getAnimals());
+            List<Animal> groupAnimals = animalGroup.getAnimals();
+            if (groupAnimals != null) {
+                animalList.addAll(groupAnimals);
+            }
         }
         return animalList;
     }
