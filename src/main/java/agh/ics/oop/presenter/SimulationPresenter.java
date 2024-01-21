@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class SimulationPresenter implements MapChangeListener {
-
     private Simulation simulation;
 
     @FXML
@@ -36,9 +35,10 @@ public class SimulationPresenter implements MapChangeListener {
 
     @FXML
     private GridPane mapGrid;
-
     @FXML
-    private Label dayNo;
+    public Label dayNo;
+    @FXML
+    private Label avHealth;
     @FXML
     private Label animalNo;
     @FXML
@@ -166,6 +166,7 @@ public class SimulationPresenter implements MapChangeListener {
             dayNo.setText(values[0]);
             animalNo.setText(values[1]);
             plantsNo.setText(values[2]);
+            avHealth.setText(values[7]);
             unoccupiedPositionsNo.setText(values[3]);
             mostCommonGenome.setText(values[4]);
             deadAverage.setText(values[5]);

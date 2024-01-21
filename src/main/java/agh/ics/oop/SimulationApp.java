@@ -76,7 +76,7 @@ public class SimulationApp extends Application {
 
 //        simulations.add(newSimulation);
 //        simulationEngine.runAsync();
-//        simulationEngine.runAsyncInThreadPool();
+////        simulationEngine.runAsyncInThreadPool();
 
         List<Simulation> simulations = new ArrayList<>();
         simulations.add(newSimulation);

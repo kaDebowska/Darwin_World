@@ -50,13 +50,13 @@ public class StartPresenter {
 
     public void initialize() {
         initializeSpinner(mapWidth, 1, 1000, 13);
-        initializeSpinner(mapHeight, 1, 1000, 11);
+        initializeSpinner(mapHeight, 1, 1000, 19);
         initializeSpinner(startPlantsField, 0, mapWidth.getValue() * mapHeight.getValue(), 13);
         initializeSpinner(plantsEnergyField, 1, 71, 3);
         initializeSpinner(startAnimalsField, 0, 100, 17);
         initializeSpinner(initialHealth, 1, 1000, 31);
         initializeSpinner(healthToReproduce, 0, 100, 23);
-        initializeSpinner(reproductionCost, 0, healthToReproduce.getValue(), 19);
+        initializeSpinner(reproductionCost, 0, healthToReproduce.getValue(), 11);
         initializeSpinner(genomeLength, 0, 100, 23);
         initializeSpinner(maxMutationField, 0, genomeLength.getValue(), 7);
         initializeSpinner(minMutationField, 0, maxMutationField.getValue(), 2);

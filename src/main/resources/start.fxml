@@ -13,11 +13,12 @@
             xmlns:fx="http://javafx.com/fxml"
             minHeight="200.0" minWidth="550.0"
             fx:controller="agh.ics.oop.presenter.StartPresenter">
-    <top>
-        <Label text="Darwin World D-3"/>
-    </top>
+    <!--    <top>-->
+    <!--        -->
+    <!--    </top>-->
     <center>
         <VBox>
+            <Label text="Click the start button below to start new simulation."/>
             <GridPane hgap="10" vgap="10" xmlns:fx="http://javafx.com/fxml">
                 <Label text="Map width:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
                 <Spinner fx:id="mapWidth" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
@@ -57,26 +58,26 @@
             </GridPane>
 
 
-
-
             <HBox>
                 <Button text="Save Configuration" onAction="#onSaveConfigurationClicked"/>
                 <Button text="Load Configuration" onAction="#onLoadConfigurationClicked"/>
             </HBox>
 
             <HBox>
-                <CheckBox fx:id="saveLogsCheckBox" text="Save logs to a CSV file" />
-                <Button fx:id="selectFolderButton" text="Select Folder" />
+                <CheckBox fx:id="saveLogsCheckBox" text="Save logs to a CSV file"/>
+                <Button fx:id="selectFolderButton" text="Select Folder"/>
             </HBox>
+            <VBox>
+                <!--                <Label text="Click the button below to start new simulation."/>-->
+                <Button text="Start" onAction="#onSimulationStartClicked" minWidth="200" minHeight="50"/>
+            </VBox>
 
         </VBox>
     </center>
     <bottom>
-        <VBox>
-            <Label text="Click the button to start new simulation."
-                   textAlignment="CENTER"/>
-            <Button text="Start" onAction="#onSimulationStartClicked"/>
-        </VBox>
+        <!--        <VBox>-->
+        <!--            <Button text="Start" onAction="#onSimulationStartClicked"/>-->
+        <!--        </VBox>-->
     </bottom>
 </BorderPane>
 

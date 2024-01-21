@@ -21,7 +21,7 @@ public class MapCVSLogger implements MapChangeListener {
         String filename = this.saveFolder.getAbsolutePath() + "/" + this.filename;
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
             if (new File(filename).length() == 0) {
-                writer.write("Day;Animals;Plants;Unoccupied Positions;Most Common Genome;Average Lifespan of Dead;Average Kids Number");
+                writer.write("Day;Animals;Plants;Unoccupied Positions;Most Common Genome;Average Lifespan of Dead;Average Kids Number, Average Health");
                 writer.newLine();
             }
             writer.write(message);

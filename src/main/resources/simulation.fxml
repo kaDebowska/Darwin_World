@@ -33,14 +33,17 @@
                     </yAxis>
                 </LineChart>
             </HBox>
-            <GridPane fx:id="infoGrid" hgap="75" vgap="10" minWidth="550.0">
-                <Label text="Day:" GridPane.columnIndex="0" GridPane.rowIndex="0" textAlignment="RIGHT"
-                       alignment="BASELINE_RIGHT"/>
+            <GridPane fx:id="infoGridDay" hgap="10" vgap="10">
+                <Label text="Day:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
                 <Label fx:id="dayNo" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-                <Label text="Animals:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                <Label fx:id="animalNo" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                <Label text="Plants:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                <Label fx:id="plantsNo" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            </GridPane>
+            <GridPane fx:id="infoGrid" hgap="55" vgap="10" minWidth="550.0">
+                <Label text="Animals:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <Label fx:id="animalNo" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                <Label text="Plants:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <Label fx:id="plantsNo" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                <Label text="Average Health:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                <Label fx:id="avHealth" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
                 <Label text="Unoccupied Positions:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
                 <Label fx:id="unoccupiedPositionsNo" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
                 <Label text="Average Lifespan of Dead:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
@@ -48,7 +51,7 @@
                 <Label text="Average Kids Number:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
                 <Label fx:id="kidsAverage" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
             </GridPane>
-            <GridPane fx:id="infoGridome" hgap="10" vgap="10">
+            <GridPane fx:id="infoGridGenome" hgap="10" vgap="10">
                 <Label text="Most Common Genome:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
                 <Label fx:id="mostCommonGenome" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
             </GridPane>
