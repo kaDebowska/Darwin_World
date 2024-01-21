@@ -34,7 +34,7 @@ public class SimulationPresenter implements MapChangeListener {
 
 
     @FXML
-    private Label movesLabel;
+    private Label mapInfoLabelLeft;
 
 
     public void setWorldMap(Simulation simulation) {
@@ -123,7 +123,7 @@ public class SimulationPresenter implements MapChangeListener {
     public void onMapChange(WorldMap worldMap, String message) {
         Platform.runLater(() -> {
             this.drawMap(worldMap);
-            this.movesLabel.setText(message);
+            this.mapInfoLabelLeft.setText(message);
         });
     }
 

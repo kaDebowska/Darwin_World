@@ -3,12 +3,11 @@ package agh.ics.oop.model;
 import agh.ics.oop.presenter.BehaviourVariant;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.lang.Math.abs;
 
 public abstract class AbstractWorldMap implements WorldMap {
-    protected Map<Vector2d, AnimalGroup> animals;
+    protected Map<Vector2d, AnimalGroup> animalGroups;
     private final int animalStartNumber;
     private final int healthToReproduce;
     private final int reproductionCost;
@@ -25,6 +24,9 @@ public abstract class AbstractWorldMap implements WorldMap {
     private int animalStartHealth;
     private int animalGenomeLength;
     private UUID uuid;
+    private List<Integer> tombsInfo;
+    private Statistics statistics;
+
 
     public AbstractWorldMap(BehaviourVariant behaviourVariant, int width, int height, int animalStartNumber, int animalStartHealth, int animalGenomeLength, int plantsNum, int plantsEnergy, int healthToReproduce, int reproductionCost, int minMutations, int maxMutations) {
         this.behaviourVariant = behaviourVariant;
@@ -39,20 +41,22 @@ public abstract class AbstractWorldMap implements WorldMap {
         this.reproductionCost = reproductionCost;
         this.minMutations = minMutations;
         this.maxMutations = maxMutations;
-        this.animals = new HashMap<>();
+        this.animalGroups = new HashMap<>();
         this.listeners = new ArrayList<>();
         this.uuid = UUID.randomUUID();
+        this.tombsInfo = new ArrayList<>();
+        this.statistics = new Statistics(this);
     }
 
 
     @Override
     public void place(Animal animal) {
         Vector2d position = animal.getPosition();
-        if (animals.containsKey(position)) {
-            animals.get(position).addAnimal(animal);
+        if (animalGroups.containsKey(position)) {
+            animalGroups.get(position).addAnimal(animal);
         } else {
             AnimalGroup newList = new AnimalGroup(animal);
-            animals.put(position, newList);
+            animalGroups.put(position, newList);
         }
     }
 
@@ -90,20 +94,20 @@ public abstract class AbstractWorldMap implements WorldMap {
         }
 
         if (!oldPosition.equals(newPosition)) {
-            AnimalGroup oldGroup = animals.get(oldPosition);
+            AnimalGroup oldGroup = animalGroups.get(oldPosition);
             if (oldGroup != null) {
                 oldGroup.removeAnimal(animal);
                 if (oldGroup.isEmpty()) {
-                    animals.remove(oldPosition);
+                    animalGroups.remove(oldPosition);
                 }
             }
             if (oldGroup.isEmpty()) {
-                animals.remove(oldPosition);
+                animalGroups.remove(oldPosition);
             }
-            AnimalGroup newGroup = animals.get(newPosition);
+            AnimalGroup newGroup = animalGroups.get(newPosition);
             if (newGroup == null) {
                 newGroup = new AnimalGroup(animal);
-                animals.put(newPosition, newGroup);
+                animalGroups.put(newPosition, newGroup);
             } else {
                 newGroup.addAnimal(animal);
             }
@@ -119,7 +123,7 @@ public abstract class AbstractWorldMap implements WorldMap {
 
     @Override
     public Optional<WorldElement> objectAt(Vector2d position) {
-        AnimalGroup animalGroupAtPosition = animals.get(position);
+        AnimalGroup animalGroupAtPosition = animalGroups.get(position);
         if (animalGroupAtPosition != null) {
             return Optional.of(animalGroupAtPosition);
         }
@@ -145,10 +149,10 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
     public synchronized void handleEating() {
-        List<Vector2d> positionsToHandle = new ArrayList<>(animals.keySet());
+        List<Vector2d> positionsToHandle = new ArrayList<>(animalGroups.keySet());
         for (Vector2d position : positionsToHandle) {
             if (grassClumps.containsKey(position)) {
-                Animal animalToEat = animals.get(position).getOrderedAnimals().get(0);
+                Animal animalToEat = animalGroups.get(position).getOrderedAnimals().get(0);
                 this.eat(animalToEat, animalToEat.getPosition());
             }
         }
@@ -163,9 +167,9 @@ public abstract class AbstractWorldMap implements WorldMap {
 
     public synchronized void handleReproduction() {
         List<Animal[]> animalsToReproduce = new ArrayList<>();
-        for (Vector2d position : animals.keySet()) {
-            if (animals.get(position).isProlific()) {
-                List<Animal> sortedAnimals = animals.get(position).getOrderedAnimals();
+        for (Vector2d position : animalGroups.keySet()) {
+            if (animalGroups.get(position).isProlific()) {
+                List<Animal> sortedAnimals = animalGroups.get(position).getOrderedAnimals();
                 Animal animalAlpha = sortedAnimals.get(0);
                 Animal animalBeta = sortedAnimals.get(1);
                 if (animalAlpha.getHealth() >= healthToReproduce && animalBeta.getHealth() >= healthToReproduce) {
@@ -217,17 +221,18 @@ public abstract class AbstractWorldMap implements WorldMap {
         this.place(babyAnimal);
     }
 
-
     public void stepCounters() {
         for (Animal animal : getAnimals()) {
             animal.dailyFatigue();
         }
         this.day++;
+
+
     }
 
     public synchronized void removeDeadAnimals() {
         List<Vector2d> emptyPositions = new ArrayList<>();
-        Iterator<Map.Entry<Vector2d, AnimalGroup>> iterator = animals.entrySet().iterator();
+        Iterator<Map.Entry<Vector2d, AnimalGroup>> iterator = animalGroups.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<Vector2d, AnimalGroup> entry = iterator.next();
             Vector2d position = entry.getKey();
@@ -239,6 +244,7 @@ public abstract class AbstractWorldMap implements WorldMap {
                 }
             }
             for (Animal deadAnimal : deadAnimals) {
+                this.tombsInfo.add(deadAnimal.getAge());
                 group.removeAnimal(deadAnimal);
             }
             if (group.isEmpty()) {
@@ -249,11 +255,11 @@ public abstract class AbstractWorldMap implements WorldMap {
 
 
     public List<Animal> getAnimals() {
-        if (this.animals == null) {
+        if (this.animalGroups == null) {
             return new ArrayList<>();
         }
         List<Animal> animalList = new ArrayList<>();
-        for (AnimalGroup animalGroup : this.animals.values()) {
+        for (AnimalGroup animalGroup : this.animalGroups.values()) {
             List<Animal> groupAnimals = animalGroup.getAnimals();
             if (groupAnimals != null) {
                 animalList.addAll(groupAnimals);
@@ -280,6 +286,34 @@ public abstract class AbstractWorldMap implements WorldMap {
 
     public UUID getId() {
         return this.uuid;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getDay() {
+        return day;
+    }
+
+    public List<Integer> getTombsInfo() {
+        return tombsInfo;
+    }
+
+    public Map<Vector2d, Grass> getGrassClumps() {
+        return grassClumps;
+    }
+
+    public Map<Vector2d, AnimalGroup> getAnimalGroups() {
+        return animalGroups;
+    }
+
+    public String getMapInformation() {
+        return statistics.getMapInformation();
     }
 
     @Override

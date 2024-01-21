@@ -6,12 +6,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.UUID;
 
-public class FileMapDisplay implements MapChangeListener {
+public class MapCVSLogger implements MapChangeListener {
 
     private final String filename;
     private final File saveFolder;
 
-    public FileMapDisplay(UUID mapId, File saveFolder) {
+    public MapCVSLogger(UUID mapId, File saveFolder) {
         this.filename = "map_" + mapId + ".csv";
         this.saveFolder = saveFolder;
     }

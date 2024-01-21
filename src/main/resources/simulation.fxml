@@ -17,14 +17,18 @@
         </ScrollPane>
     </center>
     <right>
-        <HBox>
-            <Button fx:id="pauseButton" text="Pause"/>
-            <Button fx:id="resumeButton" text="Resume" disable="true"/>
-        </HBox>
-    </right>
-    <bottom>
         <VBox>
-            <Label fx:id="movesLabel"/>
+            <HBox>
+                <Label fx:id="mapInfoLabelLeft"/>
+            </HBox>
+            <HBox>
+                <Button fx:id="pauseButton" text="Pause"/>
+                <Button fx:id="resumeButton" text="Resume" disable="true"/>
+            </HBox>
+
         </VBox>
-    </bottom>
+    </right>
+    <!--    <bottom>-->
+    <!--        -->
+    <!--    </bottom>-->
 </BorderPane>

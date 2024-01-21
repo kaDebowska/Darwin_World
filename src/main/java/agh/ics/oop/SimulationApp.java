@@ -43,7 +43,7 @@ public class SimulationApp extends Application {
     }
 
     public void startNewSimulation(BehaviourVariant behaviourVariant, int width, int height, int startAnimalsField,
-                                   int startPlantsField, int plantsEnergy, int intialHealth, int genomeLength,
+                                   int startPlantsField, int plantsEnergy, int initialHealth, int genomeLength,
                                    int healthToReproduce, int reproductionCost, int minMutations, int maxMutations,
                                    boolean loggingEnabled, File saveFolder) throws IOException {
         FXMLLoader loader = new FXMLLoader();
@@ -53,14 +53,14 @@ public class SimulationApp extends Application {
         SimulationPresenter presenter = loader.getController();
         AbstractWorldMap map = new WorldMapBuilder()
                 .setGlobeParameters(width, height, startPlantsField, plantsEnergy)
-                .setAnimalParameters(behaviourVariant, startAnimalsField, intialHealth, genomeLength)
+                .setAnimalParameters(behaviourVariant, startAnimalsField, initialHealth, genomeLength)
                 .setReproductionParameters(healthToReproduce, reproductionCost, minMutations, maxMutations)
                 .build();
 
 
         if (loggingEnabled) {
             if (saveFolder != null) {
-                FileMapDisplay fileDisplay = new FileMapDisplay(map.getId(), saveFolder);
+                MapCVSLogger fileDisplay = new MapCVSLogger(map.getId(), saveFolder);
                 map.subscribe(fileDisplay);
             } else {
                 System.err.println("Please select a directory to save the logs.");
@@ -95,7 +95,7 @@ public class SimulationApp extends Application {
         var scene = new Scene(viewRoot);
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getClassLoader().getResource("styles.css")).toExternalForm());
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Simulation app");
+        primaryStage.setTitle("Darwin World D-3");
         primaryStage.minWidthProperty().bind(viewRoot.minWidthProperty());
         primaryStage.minHeightProperty().bind(viewRoot.minHeightProperty());
     }

@@ -16,17 +16,16 @@ public class Animal implements WorldElement {
     protected static final Random RAND = new Random();
 
 
-
     public Animal(Vector2d position, int health, int genomeLength) {
         Random rand = new Random();
         this.orientation = rand.nextInt(8);
         this.position = position;
         this.health = health;
-        this.genome = new ArrayList<>();
+        this.genome = new LinkedList<>();
         for (int i = 0; i < genomeLength; i++) {
             this.genome.add(rand.nextInt(8));
         }
-        this.genomeIterator = genome.iterator();
+        this.genomeIterator = genome.listIterator();
         this.skipToRandomGene();
         this.uuid = UUID.randomUUID();
     }
@@ -36,8 +35,8 @@ public class Animal implements WorldElement {
         this.orientation = rand.nextInt(8);
         this.position = position;
         this.health = health;
-        this.genome = new ArrayList<>(genome);
-        this.genomeIterator = this.genome.iterator();
+        this.genome = new LinkedList<>(genome);
+        this.genomeIterator = this.genome.listIterator();
         this.skipToRandomGene();
         this.uuid = UUID.randomUUID();
     }
@@ -68,19 +67,14 @@ public class Animal implements WorldElement {
 
     public int getNextGene() {
         if (!genomeIterator.hasNext()) {
-            genomeIterator = genome.iterator();
+            genomeIterator = genome.listIterator();
         }
         return genomeIterator.next();
     }
 
     protected void skipToRandomGene() {
         int jumps = RAND.nextInt(genome.size());
-        for (int i = 0; i < jumps; i++) {
-            if (!genomeIterator.hasNext()) {
-                genomeIterator = genome.iterator();
-            }
-            genomeIterator.next();
-        }
+        genomeIterator = genome.listIterator(jumps);
     }
 
     public void restoreHealth(int energy) {
@@ -149,7 +143,7 @@ public class Animal implements WorldElement {
 
 
     public UUID getId() {
-        return  this.uuid;
+        return this.uuid;
     }
 
     @Override

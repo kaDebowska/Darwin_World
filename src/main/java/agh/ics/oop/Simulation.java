@@ -65,7 +65,7 @@ public class Simulation implements Runnable {
                 map.handleReproduction();
                 map.putPlants();
                 map.stepCounters();
-                map.notifyListeners("Number of animals: " + String.valueOf(map.getAnimals().size()));
+                map.notifyListeners(map.getMapInformation());
 
                 Thread.sleep(100);
             } catch (InterruptedException e) {
