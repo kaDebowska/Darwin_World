@@ -9,12 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class AnimalSimulationTest {
 
-    private MoveValidator validator;
 
-    @BeforeEach
-    public void setup() {
-        this.validator = new RectangularMap(4, 4);
-    }
 
 //    @Test
 //    public void testAnimalOrientation() {

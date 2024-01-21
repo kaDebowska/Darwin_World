@@ -17,14 +17,23 @@ public class GlobeMap extends AbstractWorldMap{
         putPlants();
     }
 
-    public GlobeMap(int width, int height, int plantsNum, int platsEnergy, int healtToReproduce, int reproductionCost, int minMutations, int maxMutations){
-        super(width, height, plantsNum, platsEnergy, healtToReproduce, reproductionCost, minMutations, maxMutations);
+    public GlobeMap(int width, int height, int plantsNum, int startPlantsNum, int plantsEnergy, int healthToReproduce, int reproductionCost, int minMutations, int maxMutations){
+        super(width, height, plantsNum, plantsEnergy, healthToReproduce, reproductionCost, minMutations, maxMutations);
         this.grassClumps = new HashMap<>();
         this.equatorBounds = calculateEquator();
+
+        this.plantsOnEquator = (int) (0.8 * startPlantsNum);
+        this.plantsOutsideEquator = startPlantsNum - plantsOnEquator;
+
+        this.positionsOnEquator = generateEquatorPositions(startPlantsNum);
+        this.positionsOutsideEquator = generatePositionsOutsideEquator();
+
+        putPlantsOnEquator();
+        putPlantsOutsideEquator();
     }
 
 
-    public RandomPositionGenerator generateEquatorPositions(){
+    public RandomPositionGenerator generateEquatorPositions(int plantsNum){
         int width = 0;
         int height = 0;
         // equator that contains only part of one row
@@ -68,7 +77,7 @@ public class GlobeMap extends AbstractWorldMap{
 //        new plants division if equator is too little for 80% of all plants
         if (this.plantsOnEquator > numberOfEquatorPositions){
             this.plantsOnEquator = numberOfEquatorPositions;
-            this.plantsOutsideEquator = this.plantsNum - this.plantsOnEquator;
+            this.plantsOutsideEquator = plantsNum - this.plantsOnEquator;
         }
 
         return randomPositionGenerator;
@@ -94,7 +103,7 @@ public class GlobeMap extends AbstractWorldMap{
         this.plantsOnEquator = (int) (0.8 * plantsNum);
         this.plantsOutsideEquator = plantsNum - plantsOnEquator;
 
-        this.positionsOnEquator = generateEquatorPositions();
+        this.positionsOnEquator = generateEquatorPositions(plantsNum);
         this.positionsOutsideEquator = generatePositionsOutsideEquator();
 
         putPlantsOnEquator();

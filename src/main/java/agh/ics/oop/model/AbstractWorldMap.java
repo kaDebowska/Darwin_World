@@ -1,7 +1,5 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.model.util.MapVisualizer;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -22,6 +20,8 @@ public abstract class AbstractWorldMap implements WorldMap {
     private int minMutations;
     private int maxMutations;
 
+    protected List<Vector2d> positionsOfDeadAnimals;
+
     public AbstractWorldMap(int width, int height, int plantsNum, int plantsEnergy, int healthToReproduce, int reproductionCost, int minMutations, int maxMutations) {
         this.width = width;
         this.height = height;
@@ -33,14 +33,7 @@ public abstract class AbstractWorldMap implements WorldMap {
         this.maxMutations = maxMutations;
         this.animals = new HashMap<>();
         this.listeners = new ArrayList<>();
-        this.uuid = UUID.randomUUID();
-    }
-
-    public List<Animal> getAnimalsAt(Vector2d position) {
-        return animals.entrySet().stream()
-                .filter(entry -> entry.getValue().equals(position))
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
+        this.grassClumps = new HashMap<>();
     }
 
 
@@ -55,6 +48,7 @@ public abstract class AbstractWorldMap implements WorldMap {
         }
         return true;
     }
+
 
     public boolean isTopOrBottomMapEdge(Vector2d position){
         return position.getY() == this.height + 1 || position.getY() == - 1;
@@ -215,7 +209,7 @@ public abstract class AbstractWorldMap implements WorldMap {
         this.day++;
     }
 
-    public void removeDeadAnimals() {
+    public List<Vector2d> removeDeadAnimals() {
         List<Vector2d> emptyPositions = new ArrayList<>();
 
         for (Map.Entry<Vector2d, AnimalGroup> entry : animals.entrySet()) {
@@ -235,6 +229,9 @@ public abstract class AbstractWorldMap implements WorldMap {
         for (Vector2d emptyPosition : emptyPositions) {
             animals.remove(emptyPosition);
         }
+        this.positionsOfDeadAnimals = emptyPositions;
+
+        return emptyPositions;
     }
 
 

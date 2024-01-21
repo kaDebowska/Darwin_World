@@ -17,6 +17,11 @@ public class RandomPositionGenerator implements Iterable<Vector2d> {
         this.counter = original.getCounter();
     }
 
+    public RandomPositionGenerator(List<Vector2d> list, int counter) {
+        this.positions = list;
+        this.counter = counter;
+    }
+
     public RandomPositionGenerator(int width, int height, int counter) {
 
         this(width, height, counter, 0, 0);

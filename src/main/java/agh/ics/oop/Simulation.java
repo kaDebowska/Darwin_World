@@ -30,7 +30,7 @@ public class Simulation implements Runnable {
     @Override
     public void run() {
         for (Animal animal : this.listOfAnimals) {
-                map.place(animal);
+            map.place(animal);
         }
         while (running) {
             try {
