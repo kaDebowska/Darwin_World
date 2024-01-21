@@ -8,6 +8,7 @@ public class Simulation implements Runnable {
 
     private AbstractWorldMap map;
     private volatile boolean running = true;
+    private volatile boolean paused = false;
 
     public Simulation(AbstractWorldMap map) {
         this.map = map;
@@ -30,20 +31,33 @@ public class Simulation implements Runnable {
         }
     }
 
+    public AbstractWorldMap getMap() {
+        return map;
+    }
+
     public void pause() {
-        this.running = false;
+        this.paused = true;
     }
 
     public void resume() {
-        this.running = true;
+        synchronized (this) {
+            this.paused = false;
+            this.notify();
+        }
     }
 
     @Override
     public void run() {
-//        for (Animal animal : this.listOfAnimals) {
-//                map.place(animal);
-//        }
         while (running) {
+            synchronized (this) {
+                while (paused) {
+                    try {
+                        this.wait();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
             try {
                 map.removeDeadAnimals();
                 map.moveAnimals();

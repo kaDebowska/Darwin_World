@@ -56,7 +56,7 @@ public class SimulationApp extends Application {
                 .setAnimalParameters(behaviourVariant, startAnimalsField, intialHealth, genomeLength)
                 .setReproductionParameters(healthToReproduce, reproductionCost, minMutations, maxMutations)
                 .build();
-        presenter.setWorldMap(map);
+
 
         if (loggingEnabled) {
             if (saveFolder != null) {
@@ -72,8 +72,11 @@ public class SimulationApp extends Application {
         stage.show();
         Simulation newSimulation = new Simulation(map);
 
+        presenter.setWorldMap(newSimulation);
+
 //        simulations.add(newSimulation);
 //        simulationEngine.runAsync();
+//        simulationEngine.runAsyncInThreadPool();
 
         List<Simulation> simulations = new ArrayList<>();
         simulations.add(newSimulation);

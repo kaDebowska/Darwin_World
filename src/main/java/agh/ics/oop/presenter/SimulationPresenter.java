@@ -6,6 +6,7 @@ import agh.ics.oop.model.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -17,10 +18,12 @@ import java.util.Optional;
 
 public class SimulationPresenter implements MapChangeListener {
 
-    private WorldMap worldMap;
+    private Simulation simulation;
 
-//    @FXML
-//    private Label infoLabel;
+    @FXML
+    private Button pauseButton;
+    @FXML
+    private Button resumeButton;
 
     private static final int CELL_WIDTH = 40;
     private static final int CELL_HEIGHT = 40;
@@ -34,9 +37,32 @@ public class SimulationPresenter implements MapChangeListener {
     private Label movesLabel;
 
 
-    public void setWorldMap(WorldMap map) {
-        this.worldMap = map;
-        this.worldMap.subscribe(this);
+    public void setWorldMap(Simulation simulation) {
+        this.simulation = simulation;
+        AbstractWorldMap worldMap = this.simulation.getMap();
+        worldMap.subscribe(this);
+    }
+
+    @FXML
+    public void initialize() {
+        pauseButton.setOnAction(e -> pauseSimulation());
+        resumeButton.setOnAction(e -> resumeSimulation());
+    }
+
+    public void pauseSimulation() {
+        if (simulation != null) {
+            simulation.pause();
+            pauseButton.setDisable(true);
+            resumeButton.setDisable(false);
+        }
+    }
+
+    public void resumeSimulation() {
+        if (simulation != null) {
+            Platform.runLater(simulation::resume);
+            pauseButton.setDisable(false);
+            resumeButton.setDisable(true);
+        }
     }
 
     public void drawMap(WorldMap worldMap) {

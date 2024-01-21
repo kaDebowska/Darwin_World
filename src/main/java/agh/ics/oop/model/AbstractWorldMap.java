@@ -227,21 +227,23 @@ public abstract class AbstractWorldMap implements WorldMap {
 
     public synchronized void removeDeadAnimals() {
         List<Vector2d> emptyPositions = new ArrayList<>();
-        for (Map.Entry<Vector2d, AnimalGroup> entry : new HashMap<>(animals).entrySet()) {
+        Iterator<Map.Entry<Vector2d, AnimalGroup>> iterator = animals.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<Vector2d, AnimalGroup> entry = iterator.next();
             Vector2d position = entry.getKey();
             AnimalGroup group = entry.getValue();
-            List<Animal> deadAnimals = group.getAnimals().stream()
-                    .filter(animal -> animal.getHealth() <= 0)
-                    .collect(Collectors.toList());
+            List<Animal> deadAnimals = new ArrayList<>();
+            for (Animal animal : group.getAnimals()) {
+                if (animal.getHealth() <= 0) {
+                    deadAnimals.add(animal);
+                }
+            }
             for (Animal deadAnimal : deadAnimals) {
                 group.removeAnimal(deadAnimal);
             }
             if (group.isEmpty()) {
-                emptyPositions.add(position);
+                iterator.remove();
             }
-        }
-        for (Vector2d emptyPosition : emptyPositions) {
-            animals.remove(emptyPosition);
         }
     }
 
