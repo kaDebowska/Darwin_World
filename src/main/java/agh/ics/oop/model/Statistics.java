@@ -78,7 +78,7 @@ public class Statistics {
         String kidsAverage = getAverageKidsNo();
 
         // Combine all the information into a single string
-        return String.format("Day: %s, Animals: %s, Plants: %s, Unoccupied Positions: %s, Most Common Genome: %s, Average Lifespan of Dead: %s, Average Kids Number: %s",
+        return String.format("%s;%s;%s;%s;%s;%s;%s",
                 dayNo, animalNo, plantsNo, unoccupiedPositionsNo, mostCommonGenome, deadAverage, kidsAverage);
     }
 }

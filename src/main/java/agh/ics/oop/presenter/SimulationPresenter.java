@@ -32,9 +32,20 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private GridPane mapGrid;
 
-
     @FXML
-    private Label mapInfoLabelLeft;
+    private Label dayNo;
+    @FXML
+    private Label animalNo;
+    @FXML
+    private Label plantsNo;
+    @FXML
+    private Label unoccupiedPositionsNo;
+    @FXML
+    private Label mostCommonGenome;
+    @FXML
+    private Label deadAverage;
+    @FXML
+    private Label kidsAverage;
 
 
     public void setWorldMap(Simulation simulation) {
@@ -123,7 +134,14 @@ public class SimulationPresenter implements MapChangeListener {
     public void onMapChange(WorldMap worldMap, String message) {
         Platform.runLater(() -> {
             this.drawMap(worldMap);
-            this.mapInfoLabelLeft.setText(message);
+            String[] values = message.split(";");
+            dayNo.setText(values[0]);
+            animalNo.setText(values[1]);
+            plantsNo.setText(values[2]);
+            unoccupiedPositionsNo.setText(values[3]);
+            mostCommonGenome.setText(values[4]);
+            deadAverage.setText(values[5]);
+            kidsAverage.setText(values[6]);
         });
     }
 

@@ -21,16 +21,13 @@ public class MapCVSLogger implements MapChangeListener {
         String filename = this.saveFolder.getAbsolutePath() + "/" + this.filename;
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true))) {
             if (new File(filename).length() == 0) {
-                writer.write("Timestamp,Message,MapState");
+                writer.write("Day;Animals;Plants;Unoccupied Positions;Most Common Genome;Average Lifespan of Dead;Average Kids Number");
                 writer.newLine();
             }
-            // Write the data
-            writer.write(System.currentTimeMillis() + "," + message + "," + map.toString());
+            writer.write(message);
             writer.newLine();
         } catch (IOException e) {
             System.err.println("An error occurred while writing to the log file: " + e.getMessage());
         }
     }
-
-
 }

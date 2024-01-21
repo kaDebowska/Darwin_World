@@ -35,6 +35,6 @@ HBox {
 }
 
 Label {
-    -fx-alignment: top-right;
+    -fx-alignment: baseline-right;
     -fx-text-alignment: right;
 }
