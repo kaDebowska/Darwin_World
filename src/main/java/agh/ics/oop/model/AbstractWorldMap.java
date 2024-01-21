@@ -15,7 +15,9 @@ public abstract class AbstractWorldMap implements WorldMap {
     private final int plantsEnergy;
     protected final int width;
     protected final int height;
-    protected final int plantsNum;
+    protected final int everDayPlantsNum;
+
+    protected final int startPlantsNum;
     private List<MapChangeListener> listeners;
     private int day = 0;
     private int minMutations;
@@ -29,16 +31,15 @@ public abstract class AbstractWorldMap implements WorldMap {
 
     protected List<Vector2d> positionsOfDeadAnimals;
 
-    public AbstractWorldMap(int width, int height, int plantsNum, int plantsEnergy, int healthToReproduce, int reproductionCost, int minMutations, int maxMutations) {
-
-    public AbstractWorldMap(BehaviourVariant behaviourVariant, int width, int height, int animalStartNumber, int animalStartHealth, int animalGenomeLength, int plantsNum, int plantsEnergy, int healthToReproduce, int reproductionCost, int minMutations, int maxMutations) {
+    public AbstractWorldMap(BehaviourVariant behaviourVariant, int width, int height, int animalStartNumber, int animalStartHealth, int animalGenomeLength, int startPlantsNum, int everDayPlantsNum, int plantsEnergy, int healthToReproduce, int reproductionCost, int minMutations, int maxMutations) {
         this.behaviourVariant = behaviourVariant;
         this.width = width;
         this.height = height;
         this.animalStartNumber = animalStartNumber;
         this.animalStartHealth = animalStartHealth;
         this.animalGenomeLength = animalGenomeLength;
-        this.plantsNum = plantsNum;
+        this.startPlantsNum = startPlantsNum;
+        this.everDayPlantsNum = everDayPlantsNum;
         this.plantsEnergy = plantsEnergy;
         this.healthToReproduce = healthToReproduce;
         this.reproductionCost = reproductionCost;
@@ -51,6 +52,7 @@ public abstract class AbstractWorldMap implements WorldMap {
         this.tombsInfo = new ArrayList<>();
         this.statistics = new Statistics(this);
     }
+
 
 
     @Override
@@ -335,3 +337,4 @@ public abstract class AbstractWorldMap implements WorldMap {
     }
 
 }
+

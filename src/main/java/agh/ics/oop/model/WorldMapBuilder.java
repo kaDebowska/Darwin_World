@@ -8,23 +8,25 @@ import java.util.Map;
 public class WorldMapBuilder {
     private int width;
     private int height;
-    private int plantsNum;
     private int plantsEnergy;
-    private int boostGrowth = 0;
+    private int boostGrowth = 10;
     private BehaviourVariant behaviourVariant;
     private int animalStartNumber;
     private int animalStartHealth;
     private int animalGenomeLength;
+    private int startPlantsNum;
+    private int everDayPlantsNum;
     private int healthToReproduce;
     private int reproductionCost;
     private int minMutations;
     private int maxMutations;
 
 
-    public WorldMapBuilder setGlobeParameters(int width, int height, int plantsNum, int plantsEnergy) {
+    public WorldMapBuilder setGlobeParameters(int width, int height, int startPlantsNum, int everDayPlantsNum, int plantsEnergy) {
         this.width = width;
         this.height = height;
-        this.plantsNum = plantsNum;
+        this.startPlantsNum = startPlantsNum;
+        this.everDayPlantsNum = everDayPlantsNum;
         this.plantsEnergy = plantsEnergy;
         return this;
     }
@@ -54,9 +56,9 @@ public class WorldMapBuilder {
 
     public AbstractWorldMap build() {
         if (boostGrowth > 0) {
-            return new GlobeMap(behaviourVariant, width, height, animalStartNumber, animalStartHealth, animalGenomeLength, plantsNum, plantsEnergy, healthToReproduce, reproductionCost, minMutations, maxMutations);
+            return new CarcassMap(behaviourVariant, width, height, animalStartNumber, animalStartHealth, animalGenomeLength, startPlantsNum, everDayPlantsNum, plantsEnergy, boostGrowth, healthToReproduce, reproductionCost, minMutations, maxMutations);
         } else {
-            return new GlobeMap(behaviourVariant, width, height, animalStartNumber, animalStartHealth, animalGenomeLength, plantsNum, plantsEnergy, healthToReproduce, reproductionCost, minMutations, maxMutations);
+            return new GlobeMap(behaviourVariant, width, height, animalStartNumber, animalStartHealth, animalGenomeLength, startPlantsNum, everDayPlantsNum, plantsEnergy, healthToReproduce, reproductionCost, minMutations, maxMutations);
         }
     }
 }

@@ -11,6 +11,7 @@ public class Configuration implements Serializable {
     private BehaviourVariant behaviourVariant;
     private int startAnimals;
     private int startPlants;
+    private int everyDayPlants;
     private int plantsEnergy;
     private int initialHealth;
     private int healthToReproduce;
@@ -36,6 +37,10 @@ public class Configuration implements Serializable {
         return startPlants;
     }
 
+    public int getEveryDayPlants() {
+        return everyDayPlants;
+    }
+
     public void setMapWidth(int mapWidth) {
         this.mapWidth = mapWidth;
     }
@@ -50,6 +55,10 @@ public class Configuration implements Serializable {
 
     public void setStartPlants(int startPlants) {
         this.startPlants = startPlants;
+    }
+
+    public void setEveryDayPlants(int everyDayPlants) {
+        this.everyDayPlants = everyDayPlants;
     }
 
     public BehaviourVariant getBehaviourVariant() {

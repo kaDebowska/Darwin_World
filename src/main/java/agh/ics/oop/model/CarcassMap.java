@@ -1,11 +1,14 @@
 package agh.ics.oop.model;
 
 import agh.ics.oop.model.util.RandomPositionGenerator;
+import agh.ics.oop.presenter.BehaviourVariant;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static agh.ics.oop.presenter.BehaviourVariant.NORMAL_ANIMAL;
 
 public class CarcassMap extends AbstractWorldMap{
     private Map<Vector2d, Integer> fertilePlaces;
@@ -18,8 +21,8 @@ public class CarcassMap extends AbstractWorldMap{
 
     private int plantsOutsideCarcass;
 
-    public CarcassMap(int width, int height, int plantsNum, int startPlantsNum, int fertilenessTime, int plantsEnergy, int healthToReproduce, int reproductionCost, int minMutations, int maxMutations){
-        super(width, height, plantsNum, plantsEnergy, healthToReproduce, reproductionCost, minMutations, maxMutations);
+    public CarcassMap(BehaviourVariant behaviourVariant, int width, int height, int animalStartNumber, int animalStartHealth, int animalGenomeLength, int startPlantsNum, int everDayPlantsNum, int plantsEnergy, int fertilenessTime, int healthToReproduce, int reproductionCost, int minMutations, int maxMutations){
+        super(behaviourVariant, width, height, animalStartNumber, animalStartHealth, animalGenomeLength, startPlantsNum, everDayPlantsNum, plantsEnergy, healthToReproduce, reproductionCost, minMutations, maxMutations);
         this.fertilePlaces = new HashMap<>();
         this.fertilenessTime = fertilenessTime;
 
@@ -31,8 +34,8 @@ public class CarcassMap extends AbstractWorldMap{
         putPlantsOutsideCarcass();
     }
 
-    public CarcassMap(int width, int height, int plantsNum, int fertilenessTime){
-        super(width, height, plantsNum, fertilenessTime, 100, 30, 15, 0);
+    public CarcassMap(int width, int height, int everDayPlantsNum, int fertilenessTime){
+        super(NORMAL_ANIMAL, width, height, 2, 50, 10, 10, everDayPlantsNum, 30, 15, 20, 0, 10);
         this.fertilePlaces = new HashMap<>();
         this.fertilenessTime = fertilenessTime;
     }
@@ -130,7 +133,7 @@ public class CarcassMap extends AbstractWorldMap{
 
 
 
-    public void putPlantsAroundCarcass(int plantsNum){
+    public void putPlantsAroundCarcass(){
 
         List<Vector2d> positionsList = new ArrayList<>(fertilePlaces.keySet());
         if (!positionsList.isEmpty()) {
@@ -164,13 +167,15 @@ public class CarcassMap extends AbstractWorldMap{
 
 
     public void putPlants(){
-        this.plantsAroundCarcass = (int) (0.8 * plantsNum);
-        this.plantsOutsideCarcass = plantsNum - plantsAroundCarcass;
+        this.plantsAroundCarcass = (int) (0.8 * everDayPlantsNum);
+        this.plantsOutsideCarcass = everDayPlantsNum - plantsAroundCarcass;
         getPositionsAroundCarcass(super.positionsOfDeadAnimals);
+        calculatePlantsToGrow(everDayPlantsNum);
         this.positionsOutsideCarcass = generatePositionsOutsideCarcass();
         updateAndRemoveExpiredFertileness();
-        putPlantsAroundCarcass(plantsNum);
-        calculatePlantsToGrow(plantsNum);
+        calculatePlantsToGrow(everDayPlantsNum);
+        putPlantsAroundCarcass();
+        calculatePlantsToGrow(everDayPlantsNum);
         putPlantsOutsideCarcass();
     }
 
