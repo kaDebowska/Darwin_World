@@ -6,6 +6,9 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             minHeight="550.0" minWidth="550.0"
@@ -17,7 +20,19 @@
         </ScrollPane>
     </center>
     <right>
+
+
         <VBox>
+            <HBox>
+                <LineChart fx:id="chart" title="Animals and Plants over Time">
+                    <xAxis>
+                        <NumberAxis label="Days"/>
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis label="Count"/>
+                    </yAxis>
+                </LineChart>
+            </HBox>
             <GridPane fx:id="infoGrid" hgap="75" vgap="10" minWidth="550.0">
                 <Label text="Day:" GridPane.columnIndex="0" GridPane.rowIndex="0" textAlignment="RIGHT"
                        alignment="BASELINE_RIGHT"/>
@@ -38,9 +53,14 @@
                 <Label fx:id="mostCommonGenome" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
             </GridPane>
 
+
             <HBox>
                 <Button fx:id="pauseButton" text="Pause"/>
                 <Button fx:id="resumeButton" text="Resume" disable="true"/>
+            </HBox>
+
+            <HBox>
+                <TextArea fx:id="animalInfo" editable="false"/>
             </HBox>
 
         </VBox>

@@ -6,11 +6,16 @@ import agh.ics.oop.model.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.chart.LineChart;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +51,12 @@ public class SimulationPresenter implements MapChangeListener {
     private Label deadAverage;
     @FXML
     private Label kidsAverage;
-
+    @FXML
+    private TextArea animalInfo;
+    @FXML
+    private LineChart<Number, Number> chart;
+    private XYChart.Series<Number, Number> animalsSeries;
+    private XYChart.Series<Number, Number> plantsSeries;
 
     public void setWorldMap(Simulation simulation) {
         this.simulation = simulation;
@@ -58,6 +68,14 @@ public class SimulationPresenter implements MapChangeListener {
     public void initialize() {
         pauseButton.setOnAction(e -> pauseSimulation());
         resumeButton.setOnAction(e -> resumeSimulation());
+
+        animalsSeries = new XYChart.Series<>();
+        animalsSeries.setName("Animals");
+        chart.getData().add(animalsSeries);
+
+        plantsSeries = new XYChart.Series<>();
+        plantsSeries.setName("Plants");
+        chart.getData().add(plantsSeries);
     }
 
     public void pauseSimulation() {
@@ -107,9 +125,17 @@ public class SimulationPresenter implements MapChangeListener {
                 Optional<WorldElement> element = worldMap.objectAt(position);
                 if (element.isPresent()) {
                     String labelContent = element.map(WorldElement::toString).orElse(EMPTY_CELL);
-                    addLabel(labelContent, x + 1, y + 1);
+                    Label label = addLabel(labelContent, x + 1, y + 1);
 //                    WorldElementBox box = new WorldElementBox(element.get());
 //                    mapGrid.add(box, x + 1, y + 1);
+
+                    label.setOnMouseClicked(event -> {
+                        Optional<WorldElement> clickedElement = worldMap.objectAt(position);
+                        if (clickedElement.isPresent() && clickedElement.get() instanceof Animal) {
+                            Animal animal = (Animal) clickedElement.get();
+                            animalInfo.setText("Animal at " + position + ": " + animal);
+                        }
+                    });
                 } else {
                     addLabel(EMPTY_CELL, x + 1, y + 1);
                 }
@@ -118,11 +144,13 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
 
-    private void addLabel(String text, int colIndex, int rowIndex) {
+    private Label addLabel(String text, int colIndex, int rowIndex) {
         Label label = new Label(text);
         GridPane.setHalignment(label, HPos.CENTER);
         mapGrid.add(label, colIndex, rowIndex);
+        return label;
     }
+
 
     private void clearGrid() {
         mapGrid.getChildren().retainAll(mapGrid.getChildren().get(0)); // hack to retain visible grid lines
@@ -142,6 +170,19 @@ public class SimulationPresenter implements MapChangeListener {
             mostCommonGenome.setText(values[4]);
             deadAverage.setText(values[5]);
             kidsAverage.setText(values[6]);
+
+            int day = Integer.parseInt(values[0]);
+            int animalsCount = Integer.parseInt(values[1]);
+            int plantsCount = Integer.parseInt(values[2]);
+
+            animalsSeries.getData().add(new XYChart.Data<>(day, animalsCount));
+            plantsSeries.getData().add(new XYChart.Data<>(day, plantsCount));
+            for (XYChart.Series<Number, Number> s : chart.getData()) {
+                for (XYChart.Data<Number, Number> d : s.getData()) {
+                    d.getNode().setVisible(false);
+
+                }
+            }
         });
     }
 
