@@ -1,7 +1,10 @@
 package agh.ics.oop.model;
 import agh.ics.oop.model.util.RandomPositionGenerator;
+import agh.ics.oop.presenter.BehaviourVariant;
 
 import java.util.*;
+
+import static agh.ics.oop.presenter.BehaviourVariant.NORMAL_ANIMAL;
 
 public class GlobeMap extends AbstractWorldMap{
     private int plantsOnEquator;
@@ -11,14 +14,27 @@ public class GlobeMap extends AbstractWorldMap{
     private Boundary equatorBounds;
 
     public GlobeMap(int width, int height, int plantsNum){
-        super(width, height, plantsNum, 100, 30, 15, 0, 10);
+        super(NORMAL_ANIMAL, width, height, 2, 50, 10, plantsNum, 100, 30, 15, 0, 10);
         this.grassClumps = new HashMap<>();
         this.equatorBounds = calculateEquator();
         putPlants();
     }
 
-    public GlobeMap(int width, int height, int plantsNum, int startPlantsNum, int plantsEnergy, int healthToReproduce, int reproductionCost, int minMutations, int maxMutations){
-        super(width, height, plantsNum, plantsEnergy, healthToReproduce, reproductionCost, minMutations, maxMutations);
+    public GlobeMap(
+            BehaviourVariant behaviourVariant,
+            int width,
+            int height,
+            int animalStartNumber,
+            int animalStartHealth,
+            int animalGenomeLength,
+            int plantsNum,
+            int startPlantsNum,
+            int platsEnergy,
+            int healthToReproduce,
+            int reproductionCost,
+            int minMutations,
+            int maxMutations){
+        super(behaviourVariant, width, height, animalStartNumber, animalStartHealth, animalGenomeLength, plantsNum, platsEnergy, healthToReproduce, reproductionCost, minMutations, maxMutations);
         this.grassClumps = new HashMap<>();
         this.equatorBounds = calculateEquator();
 

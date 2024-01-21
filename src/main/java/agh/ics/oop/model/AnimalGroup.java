@@ -59,8 +59,9 @@ public class AnimalGroup implements WorldElement {
     }
 
     public List<Animal> getAnimals() {
-        return animals;
+        return new ArrayList<>(animals);
     }
+
 
     public boolean isEmpty() {
         return animals.isEmpty();

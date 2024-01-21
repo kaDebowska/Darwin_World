@@ -6,14 +6,14 @@ public class Animal implements WorldElement {
 
     private int orientation;
     private Vector2d position;
-    private List<Integer> genome;
-    private Iterator<Integer> genomeIterator;
+    protected List<Integer> genome;
+    protected Iterator<Integer> genomeIterator;
     private int health;
     private int age;
     private int plantsEaten = 0;
     private Set<UUID> kids = new HashSet<>();
     private UUID uuid;
-
+    protected static final Random RAND = new Random();
 
 
     public Animal(Vector2d position, int health, int genomeLength) {
@@ -21,12 +21,12 @@ public class Animal implements WorldElement {
         this.orientation = rand.nextInt(8);
         this.position = position;
         this.health = health;
-        this.genome = new ArrayList<>();
+        this.genome = new LinkedList<>();
         for (int i = 0; i < genomeLength; i++) {
             this.genome.add(rand.nextInt(8));
         }
-        this.genomeIterator = genome.iterator();
-        Collections.rotate(this.genome, rand.nextInt(this.genome.size()));
+        this.genomeIterator = genome.listIterator();
+        this.skipToRandomGene();
         this.uuid = UUID.randomUUID();
     }
 
@@ -35,9 +35,9 @@ public class Animal implements WorldElement {
         this.orientation = rand.nextInt(8);
         this.position = position;
         this.health = health;
-        this.genome = new ArrayList<>(genome);
-        this.genomeIterator = this.genome.iterator();
-        Collections.rotate(this.genome, rand.nextInt(this.genome.size()));
+        this.genome = new LinkedList<>(genome);
+        this.genomeIterator = this.genome.listIterator();
+        this.skipToRandomGene();
         this.uuid = UUID.randomUUID();
     }
 
@@ -67,9 +67,14 @@ public class Animal implements WorldElement {
 
     public int getNextGene() {
         if (!genomeIterator.hasNext()) {
-            genomeIterator = genome.iterator();
+            genomeIterator = genome.listIterator();
         }
         return genomeIterator.next();
+    }
+
+    protected void skipToRandomGene() {
+        int jumps = RAND.nextInt(genome.size());
+        genomeIterator = genome.listIterator(jumps);
     }
 
     public void restoreHealth(int energy) {
@@ -138,7 +143,7 @@ public class Animal implements WorldElement {
 
 
     public UUID getId() {
-        return  this.uuid;
+        return this.uuid;
     }
 
     @Override

@@ -1,26 +1,34 @@
 package agh.ics.oop.presenter;
 
-import agh.ics.oop.OptionsParser;
 import agh.ics.oop.Simulation;
 import agh.ics.oop.SimulationEngine;
 import agh.ics.oop.model.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.chart.LineChart;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class SimulationPresenter implements MapChangeListener {
 
-    private WorldMap worldMap;
+    private Simulation simulation;
 
-//    @FXML
-//    private Label infoLabel;
+    @FXML
+    private Button pauseButton;
+    @FXML
+    private Button resumeButton;
 
     private static final int CELL_WIDTH = 40;
     private static final int CELL_HEIGHT = 40;
@@ -29,21 +37,61 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private GridPane mapGrid;
 
-
     @FXML
-    private Label movesLabel;
+    private Label dayNo;
+    @FXML
+    private Label animalNo;
+    @FXML
+    private Label plantsNo;
+    @FXML
+    private Label unoccupiedPositionsNo;
+    @FXML
+    private Label mostCommonGenome;
+    @FXML
+    private Label deadAverage;
+    @FXML
+    private Label kidsAverage;
+    @FXML
+    private TextArea animalInfo;
+    @FXML
+    private LineChart<Number, Number> chart;
+    private XYChart.Series<Number, Number> animalsSeries;
+    private XYChart.Series<Number, Number> plantsSeries;
 
-    private String moves;
-
-
-    public void setMoves(String moves) {
-        this.moves = moves;
+    public void setWorldMap(Simulation simulation) {
+        this.simulation = simulation;
+        AbstractWorldMap worldMap = this.simulation.getMap();
+        worldMap.subscribe(this);
     }
 
+    @FXML
+    public void initialize() {
+        pauseButton.setOnAction(e -> pauseSimulation());
+        resumeButton.setOnAction(e -> resumeSimulation());
 
-    public void setWorldMap(WorldMap map) {
-        this.worldMap = map;
-        this.worldMap.subscribe(this);
+        animalsSeries = new XYChart.Series<>();
+        animalsSeries.setName("Animals");
+        chart.getData().add(animalsSeries);
+
+        plantsSeries = new XYChart.Series<>();
+        plantsSeries.setName("Plants");
+        chart.getData().add(plantsSeries);
+    }
+
+    public void pauseSimulation() {
+        if (simulation != null) {
+            simulation.pause();
+            pauseButton.setDisable(true);
+            resumeButton.setDisable(false);
+        }
+    }
+
+    public void resumeSimulation() {
+        if (simulation != null) {
+            Platform.runLater(simulation::resume);
+            pauseButton.setDisable(false);
+            resumeButton.setDisable(true);
+        }
     }
 
     public void drawMap(WorldMap worldMap) {
@@ -74,19 +122,35 @@ public class SimulationPresenter implements MapChangeListener {
         for (int x = 0; x <= width; x++) {
             for (int y = 0; y <= height; y++) {
                 Vector2d position = new Vector2d(x + boundary.bottomLeft().getX(), boundary.topRight().getY() - y);
-                WorldElement element = worldMap.objectAt(position);
-                String labelContent = (element == null) ? EMPTY_CELL : element.toString();
-                addLabel(labelContent, x + 1, y + 1);
+                Optional<WorldElement> element = worldMap.objectAt(position);
+                if (element.isPresent()) {
+                    String labelContent = element.map(WorldElement::toString).orElse(EMPTY_CELL);
+                    Label label = addLabel(labelContent, x + 1, y + 1);
+//                    WorldElementBox box = new WorldElementBox(element.get());
+//                    mapGrid.add(box, x + 1, y + 1);
+
+                    label.setOnMouseClicked(event -> {
+                        Optional<WorldElement> clickedElement = worldMap.objectAt(position);
+                        if (clickedElement.isPresent() && clickedElement.get() instanceof Animal) {
+                            Animal animal = (Animal) clickedElement.get();
+                            animalInfo.setText("Animal at " + position + ": " + animal);
+                        }
+                    });
+                } else {
+                    addLabel(EMPTY_CELL, x + 1, y + 1);
+                }
             }
         }
     }
 
 
-    private void addLabel(String text, int colIndex, int rowIndex) {
+    private Label addLabel(String text, int colIndex, int rowIndex) {
         Label label = new Label(text);
         GridPane.setHalignment(label, HPos.CENTER);
         mapGrid.add(label, colIndex, rowIndex);
+        return label;
     }
+
 
     private void clearGrid() {
         mapGrid.getChildren().retainAll(mapGrid.getChildren().get(0)); // hack to retain visible grid lines
@@ -98,20 +162,29 @@ public class SimulationPresenter implements MapChangeListener {
     public void onMapChange(WorldMap worldMap, String message) {
         Platform.runLater(() -> {
             this.drawMap(worldMap);
-            this.movesLabel.setText(message);
+            String[] values = message.split(";");
+            dayNo.setText(values[0]);
+            animalNo.setText(values[1]);
+            plantsNo.setText(values[2]);
+            unoccupiedPositionsNo.setText(values[3]);
+            mostCommonGenome.setText(values[4]);
+            deadAverage.setText(values[5]);
+            kidsAverage.setText(values[6]);
+
+            int day = Integer.parseInt(values[0]);
+            int animalsCount = Integer.parseInt(values[1]);
+            int plantsCount = Integer.parseInt(values[2]);
+
+            animalsSeries.getData().add(new XYChart.Data<>(day, animalsCount));
+            plantsSeries.getData().add(new XYChart.Data<>(day, plantsCount));
+            for (XYChart.Series<Number, Number> s : chart.getData()) {
+                for (XYChart.Data<Number, Number> d : s.getData()) {
+                    d.getNode().setVisible(false);
+
+                }
+            }
         });
     }
 
-    @FXML
-    public void onSimulationStartClicked() {
-
-        List<Vector2d> positions = List.of(new Vector2d(0, 0), new Vector2d(2, 2));
-        Simulation grassFieldSimulation = new Simulation(positions, this.worldMap);
-        List<Simulation> simulations = new ArrayList<>();
-        simulations.add(grassFieldSimulation);
-
-        SimulationEngine simulationEngine = new SimulationEngine(simulations);
-        simulationEngine.runAsync();
-    }
 
 }

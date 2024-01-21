@@ -1,7 +1,7 @@
 package agh.ics.oop.model;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
 /**
  * The interface responsible for interacting with the map of the world.
@@ -17,7 +17,7 @@ public interface WorldMap {
      * @param animal The animal to place on the map.
      * @return True if the animal was placed. The animal cannot be placed if the move is not valid.
      */
-    boolean place(Animal animal);
+    void place(Animal animal);
 
     /**
      * Moves an animal (if it is present on the map) according to specified direction.
@@ -44,7 +44,7 @@ public interface WorldMap {
      * @param position The position of the animal.
      * @return animal or null if the position is not occupied.
      */
-    WorldElement objectAt(Vector2d position);
+    Optional<WorldElement> objectAt(Vector2d position);
 
     void subscribe(MapChangeListener listener);
 
@@ -58,16 +58,18 @@ public interface WorldMap {
 
     Boundary getCurrentBounds();
 
-
     void handleEating();
 
     List<Animal> getAnimals();
 
     void handleReproduction();
 
-    void addNewAnimal();
-
     void notifyListeners(String step);
 
     List<Vector2d> removeDeadAnimals();
+
+    void stepCounters();
+
+    void moveAnimals();
+
 }

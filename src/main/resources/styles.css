@@ -27,3 +27,16 @@ ScrollPane {
     -fx-fit-to-height: true;
     -fx-fit-to-width: true;
 }
+
+HBox {
+    -fx-spacing: 10px;
+    -fx-alignment: center;
+    -fx-text-alignment: left;
+}
+
+Label {
+    -fx-alignment: baseline-right;
+    -fx-text-alignment: right;
+}
+
+
