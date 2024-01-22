@@ -77,13 +77,17 @@ public class MapStatistics {
         return String.format("%.2f", averageHealth);
     }
 
+
     public String getMapInformation() {
         String dayNo = String.valueOf(map.getDay());
         String animalNo = String.valueOf(map.getAnimals().size());
         String plantsNo = String.valueOf(map.getGrassClumps().size());
         String averageHealth = getAverageHealth();
-        String unoccupiedPositionsNo = String.valueOf((map.getWidth() * map.getHeight()) - Stream.concat(map.getAnimalGroups().keySet().stream(), map.getGrassClumps().keySet().stream()).collect(Collectors.toSet()).size());
-        String mostCommonGenome = getMostCommonGenome().toString();
+        String unoccupiedPositionsNo = String.valueOf(Math.max((map.getWidth() + 1) * (map.getHeight() + 1) - Stream.concat(map.getAnimalGroups().keySet().stream(),
+                map.getGrassClumps().keySet().stream()).collect(Collectors.toSet()).size(), 0));
+//        String mostCommonGenome = getMostCommonGenome().toString();
+        List<Integer> mostCommonGenomeList = getMostCommonGenome();
+        String mostCommonGenome = getMostCommonGenome() != null ? mostCommonGenomeList.toString() : "-";
         String deadAverage = getAverageLifespanOfDead();
         String kidsAverage = getAverageKidsNo();
 
