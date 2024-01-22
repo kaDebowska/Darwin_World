@@ -1,7 +1,6 @@
 package agh.ics.oop.presenter;
 
 import agh.ics.oop.Simulation;
-import agh.ics.oop.SimulationEngine;
 import agh.ics.oop.model.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -14,14 +13,10 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.chart.LineChart;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
-public class SimulationPresenter implements MapChangeListener {
+public class SimulationPresenter implements MapChangeListener, AnimalObserver {
     private Simulation simulation;
 
     @FXML
@@ -29,34 +24,23 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private Button resumeButton;
 
-    private static final int CELL_WIDTH = 40;
-    private static final int CELL_HEIGHT = 40;
+    private static final int CELL_WIDTH = 30;
+    private static final int CELL_HEIGHT = 30;
     private static final String EMPTY_CELL = " ";
 
     @FXML
-    private GridPane mapGrid;
+    private GridPane mapGrid, infoGridAnimalLong, infoGridAnimal2column;
     @FXML
-    public Label dayNo;
+    private Label animalID, genome, activeGene, health, plantsEaten, kidsNo, offspring, age;
     @FXML
-    private Label avHealth;
-    @FXML
-    private Label animalNo;
-    @FXML
-    private Label plantsNo;
-    @FXML
-    private Label unoccupiedPositionsNo;
-    @FXML
-    private Label mostCommonGenome;
-    @FXML
-    private Label deadAverage;
-    @FXML
-    private Label kidsAverage;
+    public Label dayNo, avHealth, animalNo, plantsNo, unoccupiedPositionsNo, mostCommonGenome, deadAverage, kidsAverage;
     @FXML
     private TextArea animalInfo;
     @FXML
     private LineChart<Number, Number> chart;
     private XYChart.Series<Number, Number> animalsSeries;
     private XYChart.Series<Number, Number> plantsSeries;
+    private Animal selectedAnimal;
 
     public void setWorldMap(Simulation simulation) {
         this.simulation = simulation;
@@ -76,7 +60,28 @@ public class SimulationPresenter implements MapChangeListener {
         plantsSeries = new XYChart.Series<>();
         plantsSeries.setName("Plants");
         chart.getData().add(plantsSeries);
+
+        mapGrid.addEventFilter(AnimalClickedEvent.ANIMAL_CLICKED_EVENT_TYPE, event -> {
+            Animal animal = ((AnimalClickedEvent) event).getAnimal();
+            onAnimalClicked(animal);
+        });
     }
+
+    public void onAnimalClicked(Animal animal) {
+        if (this.selectedAnimal != null) {
+            // Unsubscribe the previously selected animal
+            this.selectedAnimal.unsubscribe(this);
+        }
+
+        infoGridAnimalLong.setVisible(true);
+        infoGridAnimal2column.setVisible(true);
+
+        // Subscribe the newly clicked animal and set it as the selected animal
+        animal.subscribe(this);
+        this.selectedAnimal = animal;
+        this.selectedAnimal.callObservers();
+    }
+
 
     public void pauseSimulation() {
         if (simulation != null) {
@@ -94,7 +99,7 @@ public class SimulationPresenter implements MapChangeListener {
         }
     }
 
-    public void drawMap(WorldMap worldMap) {
+    public void drawMap(WorldMap worldMap, String normalizer) {
         if (worldMap == null) {
             throw new IllegalArgumentException("WorldMap cannot be null");
         }
@@ -124,18 +129,11 @@ public class SimulationPresenter implements MapChangeListener {
                 Vector2d position = new Vector2d(x + boundary.bottomLeft().getX(), boundary.topRight().getY() - y);
                 Optional<WorldElement> element = worldMap.objectAt(position);
                 if (element.isPresent()) {
-                    String labelContent = element.map(WorldElement::toString).orElse(EMPTY_CELL);
-                    Label label = addLabel(labelContent, x + 1, y + 1);
-//                    WorldElementBox box = new WorldElementBox(element.get());
-//                    mapGrid.add(box, x + 1, y + 1);
+//                    String labelContent = element.map(WorldElement::toString).orElse(EMPTY_CELL);
+//                    addLabel(labelContent, x + 1, y + 1);
+                    WorldElementBox box = new WorldElementBox(element.get(), normalizer, this.selectedAnimal);
+                    mapGrid.add(box, x + 1, y + 1);
 
-                    label.setOnMouseClicked(event -> {
-                        Optional<WorldElement> clickedElement = worldMap.objectAt(position);
-                        if (clickedElement.isPresent() && clickedElement.get() instanceof Animal) {
-                            Animal animal = (Animal) clickedElement.get();
-                            animalInfo.setText("Animal at " + position + ": " + animal);
-                        }
-                    });
                 } else {
                     addLabel(EMPTY_CELL, x + 1, y + 1);
                 }
@@ -144,11 +142,10 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
 
-    private Label addLabel(String text, int colIndex, int rowIndex) {
+    private void addLabel(String text, int colIndex, int rowIndex) {
         Label label = new Label(text);
         GridPane.setHalignment(label, HPos.CENTER);
         mapGrid.add(label, colIndex, rowIndex);
-        return label;
     }
 
 
@@ -161,8 +158,8 @@ public class SimulationPresenter implements MapChangeListener {
     @Override
     public void onMapChange(WorldMap worldMap, String message) {
         Platform.runLater(() -> {
-            this.drawMap(worldMap);
             String[] values = message.split(";");
+            this.drawMap(worldMap, values[7]);
             dayNo.setText(values[0]);
             animalNo.setText(values[1]);
             plantsNo.setText(values[2]);
@@ -187,5 +184,20 @@ public class SimulationPresenter implements MapChangeListener {
         });
     }
 
+
+    @Override
+    public void onDailyFatigue(Animal animal, String message) {
+        Platform.runLater(() -> {
+            String[] values = message.split(";");
+            animalID.setText(values[0]);
+            genome.setText(values[1]);
+            activeGene.setText(values[2]);
+            health.setText(values[3]);
+            plantsEaten.setText(values[4]);
+            kidsNo.setText(values[5]);
+            offspring.setText(values[6]);
+            age.setText(values[7]);
+        });
+    }
 
 }

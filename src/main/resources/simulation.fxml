@@ -6,7 +6,6 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <BorderPane xmlns="http://javafx.com/javafx"
@@ -62,9 +61,26 @@
                 <Button fx:id="resumeButton" text="Resume" disable="true"/>
             </HBox>
 
-            <HBox>
-                <TextArea fx:id="animalInfo" editable="false"/>
-            </HBox>
+            <GridPane fx:id="infoGridAnimalLong" hgap="10" vgap="10" visible="false">
+                <Label text="Animal ID:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <Label fx:id="animalID" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                <Label text="Genome:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <Label fx:id="genome" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            </GridPane>
+            <GridPane fx:id="infoGridAnimal2column" hgap="70" vgap="10" visible="false">
+                <Label text="Active Gene:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <Label fx:id="activeGene" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                <Label text="Health:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <Label fx:id="health" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                <Label text="Plants Eaten:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                <Label fx:id="plantsEaten" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                <Label text="Kids Number:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                <Label fx:id="kidsNo" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+                <Label text="Total Offspring:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                <Label fx:id="offspring" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                <Label text="Age:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+                <Label fx:id="age" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+            </GridPane>
 
         </VBox>
     </right>

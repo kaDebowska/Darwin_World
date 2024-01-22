@@ -11,9 +11,12 @@ public class Animal implements WorldElement {
     private int health;
     private int age;
     private int plantsEaten = 0;
-    private Set<UUID> kids = new HashSet<>();
+    private Set<Animal> kids = new HashSet<>();
     private UUID uuid;
     protected static final Random RAND = new Random();
+
+    private final List<AnimalObserver> observers = new ArrayList<>();
+    private final AnimalStatistics statistics = new AnimalStatistics(this);
 
 
     public Animal(Vector2d position, int health, int genomeLength) {
@@ -43,6 +46,10 @@ public class Animal implements WorldElement {
 
     public void countEaten() {
         this.plantsEaten += 1;
+    }
+
+    public int getPlantsEaten() {
+        return plantsEaten;
     }
 
     public void setOrientation(int orientation) {
@@ -84,6 +91,11 @@ public class Animal implements WorldElement {
     public void dailyFatigue() {
         this.health--;
         this.age++;
+        callObservers();
+    }
+
+    public void callObservers() {
+        notifyObservers(statistics.getAnimalInformation());
     }
 
     public int getHealth() {
@@ -103,7 +115,7 @@ public class Animal implements WorldElement {
     }
 
     public void addChildren(Animal other) {
-        this.kids.add(other.getId());
+        this.kids.add(other);
     }
 
     @Override
@@ -139,6 +151,30 @@ public class Animal implements WorldElement {
         this.setOrientation((this.orientation + direction) % 8);
         newPosition = this.position.add(this.toUnitVector(this.orientation));
         this.setPosition(newPosition);
+    }
+
+    public void subscribe(AnimalObserver observer) {
+        observers.add(observer);
+    }
+
+    public void unsubscribe(AnimalObserver observer) {
+        observers.remove(observer);
+    }
+
+    public void notifyObservers(String message) {
+        if (this.observers != null) {
+            for (AnimalObserver observer : observers) {
+                observer.onDailyFatigue(this, message);
+            }
+        }
+    }
+
+    public int getNumberOfDescendants() {
+        int descendants = kids.size();
+        for (Animal kid : kids) {
+            descendants += kid.getNumberOfDescendants();
+        }
+        return descendants;
     }
 
 

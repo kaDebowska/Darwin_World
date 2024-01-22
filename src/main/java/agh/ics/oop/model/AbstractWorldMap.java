@@ -27,7 +27,7 @@ public abstract class AbstractWorldMap implements WorldMap {
     private int animalGenomeLength;
     private UUID uuid;
     private List<Integer> tombsInfo;
-    private Statistics statistics;
+    private MapStatistics statistics;
 
     protected List<Vector2d> positionsOfDeadAnimals;
 
@@ -50,9 +50,8 @@ public abstract class AbstractWorldMap implements WorldMap {
         this.grassClumps = new HashMap<>();
         this.uuid = UUID.randomUUID();
         this.tombsInfo = new ArrayList<>();
-        this.statistics = new Statistics(this);
+        this.statistics = new MapStatistics(this);
     }
-
 
 
     @Override
@@ -236,7 +235,7 @@ public abstract class AbstractWorldMap implements WorldMap {
 
     }
 
-    public synchronized List<Vector2d>  removeDeadAnimals() {
+    public synchronized List<Vector2d> removeDeadAnimals() {
         List<Vector2d> emptyPositions = new ArrayList<>();
         Iterator<Map.Entry<Vector2d, AnimalGroup>> iterator = animalGroups.entrySet().iterator();
         while (iterator.hasNext()) {
@@ -258,13 +257,12 @@ public abstract class AbstractWorldMap implements WorldMap {
                 iterator.remove();
             }
 
-            }
+        }
 
         this.positionsOfDeadAnimals = emptyPositions;
 
         return emptyPositions;
     }
-
 
 
     public List<Animal> getAnimals() {

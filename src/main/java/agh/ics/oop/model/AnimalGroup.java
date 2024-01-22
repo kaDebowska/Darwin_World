@@ -47,7 +47,7 @@ public class AnimalGroup implements WorldElement {
 
     @Override
     public String toString() {
-        return animals.get(0).toString();
+        return getOrderedAnimals().get(0).toString();
     }
 
     public List<Animal> getOrderedAnimals() {

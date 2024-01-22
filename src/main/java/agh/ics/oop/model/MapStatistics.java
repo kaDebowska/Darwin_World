@@ -4,10 +4,10 @@ import java.util.*;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
 
-public class Statistics {
+public class MapStatistics {
     private AbstractWorldMap map;
 
-    public Statistics(AbstractWorldMap map) {
+    public MapStatistics(AbstractWorldMap map) {
         this.map = map;
     }
 
