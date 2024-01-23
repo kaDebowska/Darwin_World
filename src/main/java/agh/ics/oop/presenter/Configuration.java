@@ -9,9 +9,11 @@ public class Configuration implements Serializable {
     private int mapWidth;
     private int mapHeight;
     private BehaviourVariant behaviourVariant;
+    private MapVariant mapVariant;
     private int startAnimals;
     private int startPlants;
     private int everyDayPlants;
+    private int fertilityTime;
     private int plantsEnergy;
     private int initialHealth;
     private int healthToReproduce;
@@ -55,6 +57,22 @@ public class Configuration implements Serializable {
 
     public void setStartPlants(int startPlants) {
         this.startPlants = startPlants;
+    }
+
+    public void setMapVariant(MapVariant mapVariant) {
+        this.mapVariant = mapVariant;
+    }
+
+    public void setFertilityTime(int fertilityTime) {
+        this.fertilityTime = fertilityTime;
+    }
+
+    public MapVariant getMapVariant() {
+        return mapVariant;
+    }
+
+    public int getFertilityTime() {
+        return fertilityTime;
     }
 
     public void setEveryDayPlants(int everyDayPlants) {

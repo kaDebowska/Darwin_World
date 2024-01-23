@@ -56,8 +56,14 @@
                 <Label text="Genome Length:" GridPane.columnIndex="0" GridPane.rowIndex="11"/>
                 <Spinner fx:id="genomeLength" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="11"/>
 
-                <Label text="Behaviour variants:" GridPane.columnIndex="0" GridPane.rowIndex="12"/>
-                <ComboBox fx:id="animalTypeComboBox" GridPane.columnIndex="1" GridPane.rowIndex="12"/>
+                <Label text="Fertility Time:" GridPane.columnIndex="0" GridPane.rowIndex="12"/>
+                <Spinner fx:id="fertilityTime" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="12"/>
+
+                <Label text="Behaviour variants:" GridPane.columnIndex="0" GridPane.rowIndex="13"/>
+                <ComboBox fx:id="animalTypeComboBox" GridPane.columnIndex="1" GridPane.rowIndex="13"/>
+
+                <Label text="Plants growth variants:" GridPane.columnIndex="0" GridPane.rowIndex="14"/>
+                <ComboBox fx:id="plantsGrowingTypeComboBox" GridPane.columnIndex="1" GridPane.rowIndex="14"/>
             </GridPane>
 
 
