@@ -9,7 +9,6 @@ public class WorldMapBuilder {
     private int width;
     private int height;
     private int plantsEnergy;
-    private int boostGrowth = 10;
     private BehaviourVariant behaviourVariant;
     private int animalStartNumber;
     private int animalStartHealth;
@@ -20,6 +19,7 @@ public class WorldMapBuilder {
     private int reproductionCost;
     private int minMutations;
     private int maxMutations;
+    private int daysOfFertility;
 
 
     public WorldMapBuilder setGlobeParameters(int width, int height, int startPlantsNum, int everDayPlantsNum, int plantsEnergy) {
@@ -31,8 +31,8 @@ public class WorldMapBuilder {
         return this;
     }
 
-    public WorldMapBuilder setBoostGrowth(int boostGrowth) {
-        this.boostGrowth = boostGrowth;
+    public WorldMapBuilder setDaysOfFertility(int daysOfFertility) {
+        this.daysOfFertility = daysOfFertility;
         return this;
     }
 
@@ -55,8 +55,8 @@ public class WorldMapBuilder {
 
 
     public AbstractWorldMap build() {
-        if (boostGrowth > 0) {
-            return new CarcassMap(behaviourVariant, width, height, animalStartNumber, animalStartHealth, animalGenomeLength, startPlantsNum, everDayPlantsNum, plantsEnergy, boostGrowth, healthToReproduce, reproductionCost, minMutations, maxMutations);
+        if (daysOfFertility > 0) {
+            return new CarcassMap(behaviourVariant, width, height, animalStartNumber, animalStartHealth, animalGenomeLength, startPlantsNum, everDayPlantsNum, plantsEnergy, daysOfFertility, healthToReproduce, reproductionCost, minMutations, maxMutations);
         } else {
             return new GlobeMap(behaviourVariant, width, height, animalStartNumber, animalStartHealth, animalGenomeLength, startPlantsNum, everDayPlantsNum, plantsEnergy, healthToReproduce, reproductionCost, minMutations, maxMutations);
         }

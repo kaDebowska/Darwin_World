@@ -45,7 +45,7 @@ public class SimulationApp extends Application {
     public void startNewSimulation(BehaviourVariant behaviourVariant, int width, int height, int startAnimalsField,
                                    int startPlantsField, int everyDayPlantsField, int plantsEnergy, int initialHealth, int genomeLength,
                                    int healthToReproduce, int reproductionCost, int minMutations, int maxMutations,
-                                   boolean loggingEnabled, File saveFolder) throws IOException {
+                                   int daysOfFertility, boolean loggingEnabled, File saveFolder) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
         BorderPane viewRoot = loader.load();
@@ -53,6 +53,7 @@ public class SimulationApp extends Application {
         SimulationPresenter presenter = loader.getController();
         AbstractWorldMap map = new WorldMapBuilder()
                 .setGlobeParameters(width, height, startPlantsField, everyDayPlantsField, plantsEnergy)
+                .setDaysOfFertility(daysOfFertility)
                 .setAnimalParameters(behaviourVariant, startAnimalsField, initialHealth, genomeLength)
                 .setReproductionParameters(healthToReproduce, reproductionCost, minMutations, maxMutations)
                 .build();

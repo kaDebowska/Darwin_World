@@ -37,7 +37,11 @@ public class StartPresenter {
     @FXML
     public Spinner<Integer> genomeLength;
     @FXML
+    public Spinner<Integer> fertilityTime;
+    @FXML
     private ComboBox<BehaviourVariant> animalTypeComboBox;
+    @FXML
+    private ComboBox<MapVariant> plantsGrowingTypeComboBox;
     @FXML
     private CheckBox saveLogsCheckBox;
     @FXML
@@ -64,8 +68,17 @@ public class StartPresenter {
         initializeSpinner(genomeLength, 0, 100, 23);
         initializeSpinner(maxMutationField, 0, genomeLength.getValue(), 7);
         initializeSpinner(minMutationField, 0, maxMutationField.getValue(), 2);
+        initializeSpinner(fertilityTime, 0, 100, 0);
         animalTypeComboBox.getItems().addAll(BehaviourVariant.values());
         animalTypeComboBox.setValue(BehaviourVariant.NORMAL_ANIMAL);
+
+
+        plantsGrowingTypeComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            updateFertilityTimeState(fertilityTime, plantsGrowingTypeComboBox.getValue());
+        });
+
+        plantsGrowingTypeComboBox.getItems().addAll(MapVariant.values());
+        plantsGrowingTypeComboBox.setValue(MapVariant.GLOBE_MAP);
 
         mapWidth.valueProperty().addListener((observable, oldValue, newValue) -> {
             updateMaxSpinnerValue(startPlantsField, mapWidth.getValue() * mapHeight.getValue());
@@ -105,6 +118,7 @@ public class StartPresenter {
     private void initializeSpinner(Spinner<Integer> spinner, int min, int max, int initialValue) {
         SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(min, max, initialValue);
         spinner.setValueFactory(valueFactory);
+//        fertilityTime.setDisable(true);
         spinner.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 spinner.increment(0);
@@ -118,6 +132,16 @@ public class StartPresenter {
             currentValue = max;
         }
         spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, max, currentValue));
+    }
+
+    private void updateFertilityTimeState(Spinner<Integer> spinner, MapVariant mapVariant) {
+        if(mapVariant == MapVariant.CARCASS_MAP) {
+            spinner.setDisable(false);
+            spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 1));
+        } else {
+            spinner.setDisable(true);
+            spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 0, 0));
+        }
     }
 
     @FXML
@@ -137,12 +161,14 @@ public class StartPresenter {
             config.setPlantsEnergy(plantsEnergyField.getValue());
             config.setStartAnimals(startAnimalsField.getValue());
             config.setBehaviourVariant(animalTypeComboBox.getValue());
+            config.setMapVariant(plantsGrowingTypeComboBox.getValue());
             config.setInitialHealth(initialHealth.getValue());
             config.setHealthToReproduce(healthToReproduce.getValue());
             config.setReproductionCost(reproductionCost.getValue());
             config.setGenomeLength(genomeLength.getValue());
             config.setMaxMutationField(maxMutationField.getValue());
             config.setMinMutationField(minMutationField.getValue());
+            config.setFertilityTime(fertilityTime.getValue());
             try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file))) {
                 out.writeObject(config);
             } catch (IOException e) {
@@ -170,12 +196,14 @@ public class StartPresenter {
                 plantsEnergyField.getValueFactory().setValue(config.getPlantsEnergy());
                 startAnimalsField.getValueFactory().setValue(config.getStartAnimals());
                 animalTypeComboBox.setValue(config.getBehaviourVariant());
+                plantsGrowingTypeComboBox.setValue(config.getMapVariant());
                 initialHealth.getValueFactory().setValue(config.getInitialHealth());
                 healthToReproduce.getValueFactory().setValue(config.getHealthToReproduce());
                 reproductionCost.getValueFactory().setValue(config.getReproductionCost());
                 genomeLength.getValueFactory().setValue(config.getGenomeLength());
                 maxMutationField.getValueFactory().setValue(config.getMaxMutationField());
                 minMutationField.getValueFactory().setValue(config.getMinMutationField());
+                fertilityTime.getValueFactory().setValue(config.getFertilityTime());
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
@@ -191,6 +219,7 @@ public class StartPresenter {
         int width = mapWidth.getValue() - 1;
         int height = mapHeight.getValue() - 1;
         BehaviourVariant behaviourVariant = animalTypeComboBox.getValue();
+//        MapVariant mapVariant = plantsGrowingTypeComboBox.getValue();
         int plantsEnergy = plantsEnergyField.getValue();
         int animalInitialHealth = initialHealth.getValue();
         int animalGenomeLength = genomeLength.getValue();
@@ -198,11 +227,12 @@ public class StartPresenter {
         int reproductionPrice = reproductionCost.getValue();
         int minMutations = minMutationField.getValue();
         int maxMutations = maxMutationField.getValue();
+        int daysOfFertility = fertilityTime.getValue();
         boolean loggingEnabled = saveLogsCheckBox.isSelected();
         try {
             application.startNewSimulation(behaviourVariant, width, height, animalsAtStart, plantsAtStart, everyDayPlants, plantsEnergy,
                     animalInitialHealth, animalGenomeLength, reproductionTreshold, reproductionPrice, minMutations, maxMutations,
-                    loggingEnabled, this.saveFolder);
+                    daysOfFertility, loggingEnabled, this.saveFolder);
         } catch (IOException e) {
             e.printStackTrace();
         }
