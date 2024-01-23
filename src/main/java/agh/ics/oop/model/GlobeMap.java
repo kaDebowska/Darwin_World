@@ -55,7 +55,7 @@ public class GlobeMap extends AbstractWorldMap{
         // equator that contains only part of one row
         if (this.equatorBounds.topRight().getY() - this.equatorBounds.bottomLeft().getY() == 0){
             width = this.equatorBounds.topRight().getX();
-            height = 0;
+//            height = 0;
         }
         else{
             width = super.width;
@@ -89,12 +89,28 @@ public class GlobeMap extends AbstractWorldMap{
             }
 
         }
+
+
+//        removing positions that contains grass already
+        for (Vector2d grassPosition : grassClumps.keySet()) {
+            if(randomPositionGenerator.getPositions().contains(grassPosition)){
+                randomPositionGenerator.getPositions().remove(grassPosition);
+                randomPositionGenerator.setCounter(randomPositionGenerator.getCounter() - 1);
+            }
+        }
+
         int numberOfEquatorPositions = randomPositionGenerator.getPositions().size();
+
 //        new plants division if equator is too little for 80% of all plants
         if (this.plantsOnEquator > numberOfEquatorPositions){
             this.plantsOnEquator = numberOfEquatorPositions;
             this.plantsOutsideEquator = plantsNum - this.plantsOnEquator;
         }
+//        randomPositionGenerator.setCounter();
+////      new plants division if there is not enough space for plants to put (8 empty places in total -> 10 plants to put)
+//        if (this.positionsOutsideEquator != null && this.plantsOutsideEquator > this.positionsOutsideEquator.getPositions().size()) {
+//            this.plantsOutsideEquator = this.positionsOutsideEquator.getPositions().size();
+//        }
 
         return randomPositionGenerator;
     }
@@ -107,10 +123,18 @@ public class GlobeMap extends AbstractWorldMap{
             positionsOutsideEquator.getPositions().remove(position);
         }
 
+//        removing positions that contains grass already
+        for (Vector2d grassPosition : grassClumps.keySet()) {
+            if(positionsOutsideEquator.getPositions().contains(grassPosition)){
+                positionsOutsideEquator.getPositions().remove(grassPosition);
+                positionsOutsideEquator.setCounter(positionsOutsideEquator.getCounter() - 1);
+            }
+//            positionsOutsideEquator.getPositions().remove(grassPosition);
+        }
+
         positionsOnEquator.setCounter(this.plantsOnEquator);
         positionsOutsideEquator.setCounter(this.plantsOutsideEquator);
         return positionsOutsideEquator;
-
     }
 
 

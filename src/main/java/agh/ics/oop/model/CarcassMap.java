@@ -28,10 +28,9 @@ public class CarcassMap extends AbstractWorldMap{
 
         this.plantsAroundCarcass = (int) (0.8 * startPlantsNum);
         this.plantsOutsideCarcass = startPlantsNum - plantsAroundCarcass;
-        this.positionsOutsideCarcass = generatePositionsOutsideCarcass();
+        this.positionsOutsideCarcass = generatePositionsOutsideCarcass(startPlantsNum);
         updateAndRemoveExpiredFertileness();
-        calculatePlantsToGrow(startPlantsNum);
-        putPlantsOutsideCarcass();
+        putPlantsOutsideCarcass(startPlantsNum);
     }
 
     public CarcassMap(int width, int height, int everDayPlantsNum, int fertilenessTime){
@@ -102,13 +101,18 @@ public class CarcassMap extends AbstractWorldMap{
 
     }
 
-    public RandomPositionGenerator generatePositionsOutsideCarcass() {
+    public RandomPositionGenerator generatePositionsOutsideCarcass(int plantsNum) {
+        calculatePlantsToGrow(plantsNum);
         RandomPositionGenerator positionsOutsideCarcass = new RandomPositionGenerator(this.width, this.height, this.plantsOutsideCarcass);
         if (!this.fertilePlaces.isEmpty()) {
             RandomPositionGenerator positionsAroundCarcass = new RandomPositionGenerator(new ArrayList<>(fertilePlaces.keySet()), this.plantsAroundCarcass);
             for (Vector2d position : positionsAroundCarcass) {
                 positionsOutsideCarcass.getPositions().remove(position);
             }
+        }
+//        removing positions that contains grass already
+        for (Vector2d grassPosition : grassClumps.keySet()) {
+            positionsOutsideCarcass.getPositions().remove(grassPosition);
         }
 
         return positionsOutsideCarcass;
@@ -133,8 +137,8 @@ public class CarcassMap extends AbstractWorldMap{
 
 
 
-    public void putPlantsAroundCarcass(){
-
+    public void putPlantsAroundCarcass(int plantsNum){
+        calculatePlantsToGrow(plantsNum);
         List<Vector2d> positionsList = new ArrayList<>(fertilePlaces.keySet());
         if (!positionsList.isEmpty()) {
             RandomPositionGenerator positionsAroundCarcass = new RandomPositionGenerator(positionsList, this.plantsAroundCarcass);
@@ -148,16 +152,24 @@ public class CarcassMap extends AbstractWorldMap{
 
     }
     public void calculatePlantsToGrow(int plantsNum) {
-        //        new plants division if carcass positions is too little for 80% of all plants
+//        new plants division if carcass positions is too little for 80% of all plants
         if (this.plantsAroundCarcass > fertilePlaces.size()) {
             this.plantsAroundCarcass = fertilePlaces.size();
             this.plantsOutsideCarcass = plantsNum - this.plantsAroundCarcass;
         }
+//      new plants division if there is not enough space for plants to put (8 empty places in total -> 10 plants to put)
+        if (this.positionsOutsideCarcass != null && this.plantsOutsideCarcass > positionsOutsideCarcass.getPositions().size()) {
+            this.plantsOutsideCarcass = positionsOutsideCarcass.getPositions().size();
+        }
     }
 
-    public void putPlantsOutsideCarcass(){
-
+    public void putPlantsOutsideCarcass(int plantsNum){
+        calculatePlantsToGrow(plantsNum);
         this.positionsOutsideCarcass.setCounter(this.plantsOutsideCarcass);
+
+        if (this.positionsOutsideCarcass.getPositions().isEmpty()) {
+            return;
+        }
         for (Vector2d grassPosition : this.positionsOutsideCarcass) {
             grassClumps.put(grassPosition, new Grass(grassPosition));
         }
@@ -170,13 +182,10 @@ public class CarcassMap extends AbstractWorldMap{
         this.plantsAroundCarcass = (int) (0.8 * everDayPlantsNum);
         this.plantsOutsideCarcass = everDayPlantsNum - plantsAroundCarcass;
         getPositionsAroundCarcass(super.positionsOfDeadAnimals);
-        calculatePlantsToGrow(everDayPlantsNum);
-        this.positionsOutsideCarcass = generatePositionsOutsideCarcass();
+        this.positionsOutsideCarcass = generatePositionsOutsideCarcass(everDayPlantsNum);
         updateAndRemoveExpiredFertileness();
-        calculatePlantsToGrow(everDayPlantsNum);
-        putPlantsAroundCarcass();
-        calculatePlantsToGrow(everDayPlantsNum);
-        putPlantsOutsideCarcass();
+        putPlantsAroundCarcass(everDayPlantsNum);
+        putPlantsOutsideCarcass(everDayPlantsNum);
     }
 
 }

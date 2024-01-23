@@ -44,7 +44,12 @@ public class RandomPositionGenerator implements Iterable<Vector2d> {
     }
 
     public void setCounter(int counter) {
-        this.counter = counter;
+        if(counter > positions.size()){
+            this.counter = positions.size();
+        } else {
+            this.counter = counter;
+        }
+
     }
 
     public int getCounter() {
