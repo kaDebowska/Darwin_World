@@ -42,6 +42,7 @@ public class SimulationPresenter implements MapChangeListener, AnimalObserver {
     private XYChart.Series<Number, Number> animalsSeries;
     private XYChart.Series<Number, Number> plantsSeries;
     private Animal selectedAnimal;
+    private String normalizer = "";
 
     public void setWorldMap(Simulation simulation) {
         this.simulation = simulation;
@@ -90,6 +91,8 @@ public class SimulationPresenter implements MapChangeListener, AnimalObserver {
 
             pauseButton.setDisable(true);
             resumeButton.setDisable(false);
+
+            drawMapWithFertilePositions(this.simulation.getMap(), this.normalizer);
         }
     }
 
@@ -102,6 +105,14 @@ public class SimulationPresenter implements MapChangeListener, AnimalObserver {
     }
 
     public void drawMap(WorldMap worldMap, String normalizer) {
+        drawMap(worldMap, normalizer, false);
+    }
+
+    public void drawMapWithFertilePositions(WorldMap worldMap, String normalizer) {
+        drawMap(worldMap, normalizer, true);
+    }
+
+    private void drawMap(WorldMap worldMap, String normalizer, boolean includeFertilePositions) {
         if (worldMap == null) {
             throw new IllegalArgumentException("WorldMap cannot be null");
         }
@@ -130,18 +141,15 @@ public class SimulationPresenter implements MapChangeListener, AnimalObserver {
             for (int y = 0; y <= height; y++) {
                 Vector2d position = new Vector2d(x + boundary.bottomLeft().getX(), boundary.topRight().getY() - y);
                 Optional<WorldElement> element = worldMap.objectAt(position);
-                var isFertilePosition = worldMap.isFertilePosition(position);
+                var isFertilePosition = includeFertilePositions && worldMap.isFertilePosition(position);
                 if (element.isPresent()) {
-//                    String labelContent = element.map(WorldElement::toString).orElse(EMPTY_CELL);
-//                    addLabel(labelContent, x + 1, y + 1);
                     WorldElementBox box = new WorldElementBox(element.get(), normalizer, this.selectedAnimal, isFertilePosition);
                     mapGrid.add(box, x + 1, y + 1);
 
-                } else if(isFertilePosition) {
+                } else if (isFertilePosition) {
                     WorldElementBox box = new WorldElementBox();
                     mapGrid.add(box, x + 1, y + 1);
-                }
-                else {
+                } else {
                     addLabel(EMPTY_CELL, x + 1, y + 1);
                 }
             }
@@ -166,7 +174,8 @@ public class SimulationPresenter implements MapChangeListener, AnimalObserver {
     public void onMapChange(WorldMap worldMap, String message) {
         Platform.runLater(() -> {
             String[] values = message.split(";");
-            this.drawMap(worldMap, values[7]);
+            this.normalizer = values[7];
+            this.drawMap(worldMap, normalizer);
             dayNo.setText(values[0]);
             animalNo.setText(values[1]);
             plantsNo.setText(values[2]);
