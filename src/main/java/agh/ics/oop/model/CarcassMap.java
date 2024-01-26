@@ -3,15 +3,10 @@ package agh.ics.oop.model;
 import agh.ics.oop.model.util.RandomPositionGenerator;
 import agh.ics.oop.presenter.BehaviourVariant;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static agh.ics.oop.presenter.BehaviourVariant.NORMAL_ANIMAL;
+import java.util.*;
 
 public class CarcassMap extends AbstractWorldMap{
-    private Map<Vector2d, Integer> fertilePlaces;
+    private Map<Vector2d, Integer> allFertilePositions;
 
     private RandomPositionGenerator positionsOutsideCarcass;
 
@@ -23,7 +18,7 @@ public class CarcassMap extends AbstractWorldMap{
 
     public CarcassMap(BehaviourVariant behaviourVariant, int width, int height, int animalStartNumber, int animalStartHealth, int animalGenomeLength, int startPlantsNum, int everDayPlantsNum, int plantsEnergy, int fertilenessTime, int healthToReproduce, int reproductionCost, int minMutations, int maxMutations){
         super(behaviourVariant, width, height, animalStartNumber, animalStartHealth, animalGenomeLength, startPlantsNum, everDayPlantsNum, plantsEnergy, healthToReproduce, reproductionCost, minMutations, maxMutations);
-        this.fertilePlaces = new HashMap<>();
+        this.allFertilePositions = new HashMap<>();
         this.fertilenessTime = fertilenessTime;
 
         this.plantsAroundCarcass = (int) (0.8 * startPlantsNum);
@@ -33,18 +28,13 @@ public class CarcassMap extends AbstractWorldMap{
         putPlantsOutsideCarcass(startPlantsNum);
     }
 
-    public CarcassMap(int width, int height, int everDayPlantsNum, int fertilenessTime){
-        super(NORMAL_ANIMAL, width, height, 2, 50, 10, 10, everDayPlantsNum, 30, 15, 20, 0, 10);
-        this.fertilePlaces = new HashMap<>();
-        this.fertilenessTime = fertilenessTime;
+
+    public Map<Vector2d, Integer> getAllFertilePositions() {
+        return allFertilePositions;
     }
 
-    public Map<Vector2d, Integer> getFertilePlaces() {
-        return fertilePlaces;
-    }
 
     public Map<Vector2d, Integer> getPositionsAroundCarcass(List<Vector2d> positionsOfDeadAnimals) {
-
 
         for (Vector2d position : positionsOfDeadAnimals) {
             int maxX = position.getX() + 1;
@@ -92,20 +82,26 @@ public class CarcassMap extends AbstractWorldMap{
                     positionsAroundCarcass.setCounter(positionsAroundCarcass.getCounter() + 1);
                 }
             }
+
+
             for(Vector2d positionAroundCarcass : positionsAroundCarcass){
-                this.fertilePlaces.put(positionAroundCarcass, this.fertilenessTime);
+                this.allFertilePositions.put(positionAroundCarcass, this.fertilenessTime);
+
             }
+            this.fertilePositions = new ArrayList<>(this.allFertilePositions.keySet());
+
         }
 
-        return this.fertilePlaces;
+        return this.allFertilePositions;
 
     }
 
     public RandomPositionGenerator generatePositionsOutsideCarcass(int plantsNum) {
         calculatePlantsToGrow(plantsNum);
         RandomPositionGenerator positionsOutsideCarcass = new RandomPositionGenerator(this.width, this.height, this.plantsOutsideCarcass);
-        if (!this.fertilePlaces.isEmpty()) {
-            RandomPositionGenerator positionsAroundCarcass = new RandomPositionGenerator(new ArrayList<>(fertilePlaces.keySet()), this.plantsAroundCarcass);
+        if (!this.allFertilePositions.isEmpty()) {
+            RandomPositionGenerator positionsAroundCarcass = new RandomPositionGenerator(new ArrayList<>(allFertilePositions.keySet()), this.plantsAroundCarcass);
+//            removing positions that are carcass
             for (Vector2d position : positionsAroundCarcass) {
                 positionsOutsideCarcass.getPositions().remove(position);
             }
@@ -122,12 +118,13 @@ public class CarcassMap extends AbstractWorldMap{
 
 
     public void updateAndRemoveExpiredFertileness() {
-        fertilePlaces.entrySet().removeIf(entry -> {
+        allFertilePositions.entrySet().removeIf(entry -> {
             entry.setValue(entry.getValue() - 1);
             Vector2d position = entry.getKey();
 
             if (entry.getValue() <= 0) {
                 this.positionsOutsideCarcass.getPositions().add(position);
+                this.fertilePositions.remove(position);
                 return true;
             }
 
@@ -139,12 +136,17 @@ public class CarcassMap extends AbstractWorldMap{
 
     public void putPlantsAroundCarcass(int plantsNum){
         calculatePlantsToGrow(plantsNum);
-        List<Vector2d> positionsList = new ArrayList<>(fertilePlaces.keySet());
+        List<Vector2d> positionsList = new ArrayList<>(allFertilePositions.keySet());
         if (!positionsList.isEmpty()) {
             RandomPositionGenerator positionsAroundCarcass = new RandomPositionGenerator(positionsList, this.plantsAroundCarcass);
 
             for (Vector2d grassPosition : positionsAroundCarcass) {
-                grassClumps.put(grassPosition, new Grass(grassPosition));
+//                grass is already in this position
+                if (this.grassClumps.containsKey(grassPosition)) {
+                    positionsAroundCarcass.setCounter(positionsAroundCarcass.getCounter() + 1);
+                } else {
+                    grassClumps.put(grassPosition, new Grass(grassPosition));
+                }
             }
             positionsAroundCarcass.setCounter(this.plantsAroundCarcass);
         }
@@ -153,8 +155,8 @@ public class CarcassMap extends AbstractWorldMap{
     }
     public void calculatePlantsToGrow(int plantsNum) {
 //        new plants division if carcass positions is too little for 80% of all plants
-        if (this.plantsAroundCarcass > fertilePlaces.size()) {
-            this.plantsAroundCarcass = fertilePlaces.size();
+        if (this.plantsAroundCarcass > allFertilePositions.size()) {
+            this.plantsAroundCarcass = allFertilePositions.size();
             this.plantsOutsideCarcass = plantsNum - this.plantsAroundCarcass;
         }
 //      new plants division if there is not enough space for plants to put (8 empty places in total -> 10 plants to put)

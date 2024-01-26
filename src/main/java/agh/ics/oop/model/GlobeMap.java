@@ -13,12 +13,6 @@ public class GlobeMap extends AbstractWorldMap{
     private RandomPositionGenerator positionsOutsideEquator;
     private Boundary equatorBounds;
 
-    public GlobeMap(int width, int height, int everDayPlantsNum){
-        super(NORMAL_ANIMAL, width, height, 2, 50, 10, 10, everDayPlantsNum, 30, 15, 20, 0, 10);
-        this.grassClumps = new HashMap<>();
-        this.equatorBounds = calculateEquator();
-        putPlants();
-    }
 
     public GlobeMap(
             BehaviourVariant behaviourVariant,
@@ -42,6 +36,7 @@ public class GlobeMap extends AbstractWorldMap{
         this.plantsOutsideEquator = startPlantsNum - plantsOnEquator;
 
         this.positionsOnEquator = generateEquatorPositions(startPlantsNum);
+        this.fertilePositions = new RandomPositionGenerator(this.positionsOnEquator).getPositions();
         this.positionsOutsideEquator = generatePositionsOutsideEquator();
 
         putPlantsOnEquator();
@@ -106,11 +101,7 @@ public class GlobeMap extends AbstractWorldMap{
             this.plantsOnEquator = numberOfEquatorPositions;
             this.plantsOutsideEquator = plantsNum - this.plantsOnEquator;
         }
-//        randomPositionGenerator.setCounter();
-////      new plants division if there is not enough space for plants to put (8 empty places in total -> 10 plants to put)
-//        if (this.positionsOutsideEquator != null && this.plantsOutsideEquator > this.positionsOutsideEquator.getPositions().size()) {
-//            this.plantsOutsideEquator = this.positionsOutsideEquator.getPositions().size();
-//        }
+
 
         return randomPositionGenerator;
     }

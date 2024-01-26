@@ -29,6 +29,9 @@ public abstract class AbstractWorldMap implements WorldMap {
     private List<Integer> tombsInfo;
     private MapStatistics statistics;
 
+
+    protected List<Vector2d> fertilePositions;
+
     protected List<Vector2d> positionsOfDeadAnimals;
 
     public AbstractWorldMap(BehaviourVariant behaviourVariant, int width, int height, int animalStartNumber, int animalStartHealth, int animalGenomeLength, int startPlantsNum, int everDayPlantsNum, int plantsEnergy, int healthToReproduce, int reproductionCost, int minMutations, int maxMutations) {
@@ -51,6 +54,7 @@ public abstract class AbstractWorldMap implements WorldMap {
         this.uuid = UUID.randomUUID();
         this.tombsInfo = new ArrayList<>();
         this.statistics = new MapStatistics(this);
+        this.fertilePositions = new ArrayList<>();
     }
 
 
@@ -78,25 +82,36 @@ public abstract class AbstractWorldMap implements WorldMap {
         return (12 - orientation) % 8;
     }
 
-    @Override
-    public void move(Animal animal) {
-        Vector2d oldPosition = animal.getPosition();
-        int direction = animal.getNextGene();
-        animal.move(direction);
-        Vector2d newPosition = animal.getPosition();
-
+    public Vector2d movingOnTheGlobe(Animal animal, Vector2d newPosition){
         if (this.isTopOrBottomMapEdge(newPosition) & this.isLeftOrRightMapEdge(newPosition)) {
-            newPosition = new Vector2d(abs(newPosition.getX() - this.width) - 1, abs(newPosition.getY() - 1));
+            newPosition = new Vector2d(abs(newPosition.getX() - this.width) - 1, abs(newPosition.getY()) - 1);
             animal.setPosition(newPosition);
             animal.setOrientation(reflect(animal.getOrientation()));
         } else if (this.isLeftOrRightMapEdge(newPosition)) {
             newPosition = new Vector2d((abs(newPosition.getX() - this.width) - 1), newPosition.getY());
             animal.setPosition(newPosition);
         } else if (this.isTopOrBottomMapEdge(newPosition)) {
-            newPosition = new Vector2d(newPosition.getX(), abs(newPosition.getY()) - 1);
+            var direction = animal.getOrientation();
+//            if direction is not diagonally
+            if(direction % 2 == 0) {
+                newPosition = new Vector2d(newPosition.getX(), abs(newPosition.getY()) - 1);
+            } else if(direction == 1 || direction == 3) {
+                newPosition = new Vector2d(newPosition.getX() - 1, abs(newPosition.getY()) - 1);
+            } else if (direction == 5 || direction == 7) {
+                newPosition = new Vector2d(newPosition.getX() + 1, abs(newPosition.getY()) - 1);
+            }
             animal.setPosition(newPosition);
             animal.setOrientation(reflect(animal.getOrientation()));
         }
+        return newPosition;
+    }
+
+    @Override
+    public void move(Animal animal) {
+        Vector2d oldPosition = animal.getPosition();
+        int direction = animal.getNextGene();
+        animal.move(direction);
+        Vector2d newPosition = movingOnTheGlobe(animal, animal.getPosition());
 
         if (!oldPosition.equals(newPosition)) {
             AnimalGroup oldGroup = animalGroups.get(oldPosition);
@@ -325,6 +340,11 @@ public abstract class AbstractWorldMap implements WorldMap {
 
     public String getMapInformation() {
         return statistics.getMapInformation();
+    }
+
+    @Override
+    public boolean isFertilePosition(Vector2d position) {
+        return this.fertilePositions.contains(position);
     }
 
     @Override

@@ -67,6 +67,7 @@ public class Simulation implements Runnable {
                 map.stepCounters();
                 map.notifyListeners(map.getMapInformation());
 
+
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);

@@ -115,7 +115,6 @@ class Vector2dTest {
         assertEquals(vector0.substract(vector2), vector2.opposite());
     }
 
-    //    This one is strange
     @Test
     void testExceedingExtremeCases() {
         assertEquals(vector2, maxVector.add(maxVector));

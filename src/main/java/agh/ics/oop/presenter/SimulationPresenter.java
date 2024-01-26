@@ -13,6 +13,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.chart.LineChart;
+import javafx.scene.shape.Rectangle;
 
 import java.util.Optional;
 
@@ -86,6 +87,7 @@ public class SimulationPresenter implements MapChangeListener, AnimalObserver {
     public void pauseSimulation() {
         if (simulation != null) {
             simulation.pause();
+
             pauseButton.setDisable(true);
             resumeButton.setDisable(false);
         }
@@ -128,13 +130,18 @@ public class SimulationPresenter implements MapChangeListener, AnimalObserver {
             for (int y = 0; y <= height; y++) {
                 Vector2d position = new Vector2d(x + boundary.bottomLeft().getX(), boundary.topRight().getY() - y);
                 Optional<WorldElement> element = worldMap.objectAt(position);
+                var isFertilePosition = worldMap.isFertilePosition(position);
                 if (element.isPresent()) {
 //                    String labelContent = element.map(WorldElement::toString).orElse(EMPTY_CELL);
 //                    addLabel(labelContent, x + 1, y + 1);
-                    WorldElementBox box = new WorldElementBox(element.get(), normalizer, this.selectedAnimal);
+                    WorldElementBox box = new WorldElementBox(element.get(), normalizer, this.selectedAnimal, isFertilePosition);
                     mapGrid.add(box, x + 1, y + 1);
 
-                } else {
+                } else if(isFertilePosition) {
+                    WorldElementBox box = new WorldElementBox();
+                    mapGrid.add(box, x + 1, y + 1);
+                }
+                else {
                     addLabel(EMPTY_CELL, x + 1, y + 1);
                 }
             }

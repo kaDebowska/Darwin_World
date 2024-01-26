@@ -72,4 +72,6 @@ public interface WorldMap {
 
     void moveAnimals();
 
+    boolean isFertilePosition(Vector2d position);
+
 }

@@ -1,6 +1,7 @@
 package agh.ics.oop.model;
 
 import agh.ics.oop.presenter.AnimalClickedEvent;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.StackPane;
 import javafx.scene.control.Label;
 import javafx.scene.shape.Rectangle;
@@ -11,11 +12,19 @@ public class WorldElementBox extends StackPane {
     private static final int BOX_SIZE = 30;
     private static Rectangle lastClickedBox = null; // Add this line
 
-    public WorldElementBox(WorldElement element, String avHealthStr, Animal providedAnimal) {
+    public WorldElementBox(WorldElement element, String avHealthStr, Animal providedAnimal, boolean isFertilePosition) {
         Rectangle box = new Rectangle(BOX_SIZE, BOX_SIZE);
         box.setOpacity(0.7);
 
         double avHealth = Double.parseDouble(avHealthStr.replace(',', '.'));
+
+        if(isFertilePosition) {
+            DropShadow dropShadow = new DropShadow();
+            dropShadow.setColor(Color.BLUE);
+            box.setEffect(dropShadow);
+
+//            box.setStroke(Color.BLUE);
+        }
 
         Label label = null;
         Color normalColor;
@@ -62,6 +71,20 @@ public class WorldElementBox extends StackPane {
         if (label != null) {
             this.getChildren().add(label);
         }
+    }
+
+    public WorldElementBox() {
+        Rectangle box = new Rectangle(BOX_SIZE, BOX_SIZE);
+        box.setOpacity(0.7);
+
+        box.setFill(Color.WHITE);
+
+        DropShadow dropShadow = new DropShadow();
+        dropShadow.setColor(Color.BLUE);
+        box.setEffect(dropShadow);
+
+        this.getChildren().add(box);
+
     }
 }
 

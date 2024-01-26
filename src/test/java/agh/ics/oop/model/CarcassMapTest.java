@@ -1,19 +1,22 @@
 package agh.ics.oop.model;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static agh.ics.oop.presenter.BehaviourVariant.NORMAL_ANIMAL;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CarcassMapTest {
 
+
     @Test
     public void testGettingPositionsAroundCarcass(){
         Animal animal1 = new Animal(new Vector2d(2, 2), 0, 5);
-        CarcassMap carcassMap1 = new CarcassMap(10, 10, 10, 7);
+        CarcassMap carcassMap1 = new CarcassMap(NORMAL_ANIMAL,10, 10, 2, 50, 10, 10, 7,30, 7, 15, 20, 0, 10);
         carcassMap1.place(animal1);
         List<Vector2d> positionsOfDeadAnimals1 = carcassMap1.removeDeadAnimals();
         Map<Vector2d, Integer> fertilePlaces1 = carcassMap1.getPositionsAroundCarcass(positionsOfDeadAnimals1);
@@ -34,7 +37,7 @@ class CarcassMapTest {
         assertEquals(fertilePlaces1Test, fertilePlaces1);
 
         Animal animal2 = new Animal(new Vector2d(10, 10), 0, 5);
-        CarcassMap carcassMap2 = new CarcassMap(10, 10, 10, 7);
+        CarcassMap carcassMap2 = new CarcassMap(NORMAL_ANIMAL,10, 10, 2, 50, 10, 10, 7,30, 7, 15, 20, 0, 10);
         carcassMap2.place(animal2);
         List<Vector2d> positionsOfDeadAnimals2 = carcassMap2.removeDeadAnimals();
         Map<Vector2d, Integer> fertilePlaces2 = carcassMap2.getPositionsAroundCarcass(positionsOfDeadAnimals2);
@@ -53,7 +56,7 @@ class CarcassMapTest {
 
 
         Animal animal3 = new Animal(new Vector2d(0, 10), 0, 5);
-        CarcassMap carcassMap3 = new CarcassMap(10, 10, 10, 7);
+        CarcassMap carcassMap3 = new CarcassMap(NORMAL_ANIMAL,10, 10, 2, 50, 10, 10, 7,30, 7, 15, 20, 0, 10);
         carcassMap3.place(animal3);
         List<Vector2d> positionsOfDeadAnimals3 = carcassMap3.removeDeadAnimals();
         Map<Vector2d, Integer> fertilePlaces3 = carcassMap3.getPositionsAroundCarcass(positionsOfDeadAnimals3);
@@ -71,7 +74,8 @@ class CarcassMapTest {
         assertEquals(fertilePlaces3Test, fertilePlaces3);
 
         Animal animal4 = new Animal(new Vector2d(0, 0), 0, 5);
-        CarcassMap carcassMap4 = new CarcassMap(10, 10, 10, 7);
+
+        CarcassMap carcassMap4 = new CarcassMap(NORMAL_ANIMAL,10, 10, 2, 50, 10, 10, 7,30, 7, 15, 20, 0, 10);
         carcassMap4.place(animal4);
         List<Vector2d> positionsOfDeadAnimals4 = carcassMap4.removeDeadAnimals();
         Map<Vector2d, Integer> fertilePlaces4 = carcassMap4.getPositionsAroundCarcass(positionsOfDeadAnimals4);
@@ -89,7 +93,7 @@ class CarcassMapTest {
         assertEquals(fertilePlaces4Test, fertilePlaces4);
 
         Animal animal5 = new Animal(new Vector2d(10, 0), 0, 5);
-        CarcassMap carcassMap5 = new CarcassMap(10, 10, 10, 7);
+        CarcassMap carcassMap5 = new CarcassMap(NORMAL_ANIMAL,10, 10, 2, 50, 10, 10, 7,30, 7, 15, 20, 0, 10);
         carcassMap5.place(animal5);
         List<Vector2d> positionsOfDeadAnimals5 = carcassMap5.removeDeadAnimals();
         Map<Vector2d, Integer> fertilePlaces5 = carcassMap5.getPositionsAroundCarcass(positionsOfDeadAnimals5);
@@ -108,7 +112,7 @@ class CarcassMapTest {
 
 
         Animal animal6 = new Animal(new Vector2d(0, 5), 0, 5);
-        CarcassMap carcassMap6 = new CarcassMap(10, 10, 10, 7);
+        CarcassMap carcassMap6 = new CarcassMap(NORMAL_ANIMAL,10, 10, 2, 50, 10, 10, 7,30, 7, 15, 20, 0, 10);
         carcassMap6.place(animal6);
         List<Vector2d> positionsOfDeadAnimals6 = carcassMap6.removeDeadAnimals();
         Map<Vector2d, Integer> fertilePlaces6 = carcassMap6.getPositionsAroundCarcass(positionsOfDeadAnimals6);
@@ -130,7 +134,7 @@ class CarcassMapTest {
 
 
         Animal animal7 = new Animal(new Vector2d(10, 5), 0, 5);
-        CarcassMap carcassMap7 = new CarcassMap(10, 10, 10, 7);
+        CarcassMap carcassMap7 = new CarcassMap(NORMAL_ANIMAL,10, 10, 2, 50, 10, 10, 7,30, 7, 15, 20, 0, 10);
         carcassMap7.place(animal7);
         List<Vector2d> positionsOfDeadAnimals7 = carcassMap7.removeDeadAnimals();
         Map<Vector2d, Integer> fertilePlaces7 = carcassMap7.getPositionsAroundCarcass(positionsOfDeadAnimals7);
@@ -153,7 +157,7 @@ class CarcassMapTest {
 
 
         Animal animal8 = new Animal(new Vector2d(1, 10), 0, 5);
-        CarcassMap carcassMap8 = new CarcassMap(10, 10, 10, 7);
+        CarcassMap carcassMap8 = new CarcassMap(NORMAL_ANIMAL,10, 10, 2, 50, 10, 10, 7,30, 7, 15, 20, 0, 10);
         carcassMap8.place(animal8);
 
         List<Vector2d> positionsOfDeadAnimals8 = carcassMap8.removeDeadAnimals();
@@ -173,7 +177,7 @@ class CarcassMapTest {
 
 
         Animal animal9 = new Animal(new Vector2d(1, 0), 0, 5);
-        CarcassMap carcassMap9 = new CarcassMap(10, 10, 10, 7);
+        CarcassMap carcassMap9 = new CarcassMap(NORMAL_ANIMAL,10, 10, 2, 50, 10, 10, 7,30, 7, 15, 20, 0, 10);
         carcassMap9.place(animal9);
         List<Vector2d> positionsOfDeadAnimals9 = carcassMap9.removeDeadAnimals();
         Map<Vector2d, Integer> fertilePlaces9 = carcassMap9.getPositionsAroundCarcass(positionsOfDeadAnimals9);
