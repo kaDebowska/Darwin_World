@@ -135,7 +135,7 @@ public class StartPresenter {
     }
 
     private void updateFertilityTimeState(Spinner<Integer> spinner, MapVariant mapVariant) {
-        if(mapVariant == MapVariant.CARCASS_MAP) {
+        if (mapVariant == MapVariant.CARCASS_MAP) {
             spinner.setDisable(false);
             spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 17));
         } else {

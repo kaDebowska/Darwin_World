@@ -92,7 +92,9 @@ public class SimulationPresenter implements MapChangeListener, AnimalObserver {
             pauseButton.setDisable(true);
             resumeButton.setDisable(false);
 
-            drawMapWithFertilePositions(this.simulation.getMap(), this.normalizer);
+            Platform.runLater(() -> {
+                drawMapWithFertilePositions(this.simulation.getMap(), this.normalizer);
+            });
         }
     }
 
